@@ -9,15 +9,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #0b1320;
-    color: #f1f5f9;
+    background-color: #314A6F;
+    color: #ffffff;
   }
 
   /* Dynamic Canvas Container Panel */
   .panel-frame {
     position: relative;
-    border: 3px solid #334155;
-    box-shadow: 6px 6px 0px #020617;
+    border: 3px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
   }
 
   /* Background Scene Container with Cover and Smooth Transitions */
@@ -35,7 +35,7 @@
   .scene-mood-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.75) 60%, rgba(15, 23, 42, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(49, 74, 111, 0.45) 0%, rgba(30, 48, 75, 0.75) 60%, rgba(20, 32, 50, 0.95) 100%);
     z-index: 1;
     pointer-events: none;
   }
@@ -51,10 +51,10 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0f172a;
+    background: #1e304b;
   }
   ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 999px;
   }
 </style>
@@ -62,21 +62,21 @@
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
 
   <!-- TOP APP BAR / BRANDING -->
-  <header class="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-slate-800">
+  <header class="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-teal-400 text-slate-950 font-black text-xl flex items-center justify-center -rotate-3 shadow-md">
+      <div class="w-10 h-10 rounded-xl bg-white text-[#314A6F] font-black text-xl flex items-center justify-center -rotate-3 shadow-md">
         ↗
       </div>
       <div>
-        <span class="text-[10px] font-extrabold tracking-widest text-teal-400 uppercase block">A SOAR Story</span>
-        <h1 class="text-lg font-bold text-slate-100 tracking-tight leading-none">BETWEEN STOPS</h1>
+        <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A SOAR Story</span>
+        <h1 class="text-lg font-bold text-white tracking-tight leading-none">BETWEEN STOPS</h1>
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button id="soundBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition">
+      <button id="soundBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/30 bg-[#314A6F]/80 text-white hover:bg-white hover:text-[#314A6F] transition">
         ♫ Sound off
       </button>
-      <button id="helpBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition">
+      <button id="helpBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/30 bg-[#314A6F]/80 text-white hover:bg-white hover:text-[#314A6F] transition">
         How to play?
       </button>
     </div>
@@ -89,7 +89,7 @@
     <section class="lg:col-span-8 flex flex-col gap-5">
 
       <!-- GRAPHIC NOVEL CANVASTAGE -->
-      <div class="panel-frame rounded-2xl bg-slate-900 overflow-hidden relative">
+      <div class="panel-frame rounded-2xl bg-[#1e304b] overflow-hidden relative">
         
         <!-- Environment Image Background Layer -->
         <div id="sceneBgLayer"></div>
@@ -101,43 +101,43 @@
         <canvas id="comicCanvas" class="w-full h-[320px] sm:h-[400px] lg:h-[420px] block cursor-pointer"></canvas>
 
         <!-- Vignette Caption Box -->
-        <div class="absolute top-4 left-4 right-4 sm:right-auto max-w-md bg-slate-950/90 border border-slate-700/80 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl z-[10]">
+        <div class="absolute top-4 left-4 right-4 sm:right-auto max-w-md bg-[#1e304b]/95 border border-white/30 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl z-[10]">
           <div class="flex items-center justify-between gap-2 mb-1.5">
-            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
+            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white text-[#314A6F] font-bold border border-white">
               SCENE 01 · MRT CARRIAGE
             </span>
-            <span id="variantBadge" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <span id="variantBadge" class="text-[10px] font-bold text-white/80 uppercase tracking-wider">
               Standard State
             </span>
           </div>
-          <p id="sceneDescription" class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+          <p id="sceneDescription" class="text-xs sm:text-sm text-white leading-relaxed font-medium">
             The carriage is packed. He stands, face blank, gripping the strap.
           </p>
         </div>
 
         <!-- Visual Bleed Overlay (Fades in when holding choices) -->
-        <div id="bleedOverlay" class="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 bg-gradient-to-t from-teal-500/20 to-transparent z-[4]"></div>
+        <div id="bleedOverlay" class="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 bg-gradient-to-t from-white/20 to-transparent z-[4]"></div>
         
         <!-- Interactive Hint Badge -->
-        <div id="holdHint" class="absolute bottom-3 right-3 text-[10px] font-bold text-slate-300 bg-slate-950/85 px-3 py-1.5 rounded-lg border border-slate-700/80 pointer-events-none backdrop-blur-md z-[10] shadow-md">
+        <div id="holdHint" class="absolute bottom-3 right-3 text-[10px] font-bold text-white bg-[#1e304b]/90 px-3 py-1.5 rounded-lg border border-white/30 pointer-events-none backdrop-blur-md z-[10] shadow-md">
           💡 Click or Hold Choice to Reflect
         </div>
       </div>
 
       <!-- STORY QUESTION & INTERACTIVE CHOICES PANEL -->
-      <div id="storyPanel" class="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4">
+      <div id="storyPanel" class="bg-[#1e304b] border border-white/20 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4">
         
         <!-- Progress Bar & Question Counter -->
-        <div class="flex items-center justify-between text-xs font-semibold text-slate-400">
-          <span id="chapterLabel" class="text-teal-400 uppercase tracking-wider">Stop 1 of 5</span>
-          <div class="flex-1 mx-4 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-            <div id="progressBar" class="h-full bg-teal-400 transition-all duration-300" style="width: 10%;"></div>
+        <div class="flex items-center justify-between text-xs font-semibold text-white/70">
+          <span id="chapterLabel" class="text-white uppercase tracking-wider font-bold">Stop 1 of 5</span>
+          <div class="flex-1 mx-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-white transition-all duration-300" style="width: 10%;"></div>
           </div>
-          <span id="qCountLabel">01 / 10</span>
+          <span id="qCountLabel" class="text-white">01 / 10</span>
         </div>
 
         <!-- Current Question Header -->
-        <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight leading-snug">
+        <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
           Tired out for no reason?
         </h2>
 
@@ -147,41 +147,41 @@
         </div>
 
         <!-- Narrative Reflection Feedback Box -->
-        <div id="replyBox" class="hidden bg-teal-950/50 border border-teal-500/30 p-4 rounded-xl text-teal-200 text-xs sm:text-sm leading-relaxed transition-all">
-          <strong class="block text-[10px] uppercase tracking-widest text-teal-400 font-extrabold mb-1">
+        <div id="replyBox" class="hidden bg-white/10 border border-white/30 p-4 rounded-xl text-white text-xs sm:text-sm leading-relaxed transition-all">
+          <strong class="block text-[10px] uppercase tracking-widest text-white font-extrabold mb-1">
             What the story notices
           </strong>
           <span id="replyText">...</span>
         </div>
 
         <!-- Footer Navigation Row -->
-        <div class="flex items-center justify-between gap-3 pt-2 border-t border-slate-800/80">
-          <span id="microcopy" class="text-xs text-slate-400 font-medium">
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+          <span id="microcopy" class="text-xs text-white/70 font-medium">
             Choose the answer that feels closest today.
           </span>
-          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-teal-400 text-slate-950 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-teal-300 transition-all shadow-lg">
+          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg">
             Choose an answer →
           </button>
         </div>
       </div>
 
       <!-- OUTCOME / ENDING SCREEN (HIDDEN UNTIL FINISH) -->
-      <div id="endScreen" class="hidden bg-slate-900 border border-teal-500/40 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-amber-400 text-slate-950 font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl">
+      <div id="endScreen" class="hidden bg-[#1e304b] border border-white/30 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl">
           ✦
         </div>
-        <span class="text-xs font-extrabold text-teal-400 tracking-widest uppercase">The Next Stop</span>
-        <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-100">
+        <span class="text-xs font-extrabold text-white/80 tracking-widest uppercase">The Next Stop</span>
+        <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-white">
           You don't have to carry it alone.
         </h2>
-        <p id="endText" class="text-sm text-slate-300 max-w-lg leading-relaxed">
+        <p id="endText" class="text-sm text-white/90 max-w-lg leading-relaxed">
           Wei Jie sits with his headphones in...
         </p>
-        <blockquote id="endLine" class="text-sm font-semibold italic text-teal-300 bg-slate-950/80 p-4 rounded-xl border border-teal-500/30 max-w-md my-2">
+        <blockquote id="endLine" class="text-sm font-semibold italic text-white bg-[#314A6F]/80 p-4 rounded-xl border border-white/30 max-w-md my-2">
           "This sandwich is too big for me. Want half? No pressure."
         </blockquote>
         <div class="flex items-center gap-3 mt-2">
-          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-teal-400 text-slate-950 hover:bg-teal-300 transition">
+          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] hover:bg-white/90 transition">
             Replay the story ↺
           </button>
         </div>
@@ -193,10 +193,10 @@
     <aside class="lg:col-span-4 flex flex-col gap-4">
 
       <!-- ROUTE PROGRESS MAP CARD -->
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
+      <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Your Route</h3>
-          <span id="routeStatus" class="text-[10px] font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">0 / 5 Scenes</span>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Your Route</h3>
+          <span id="routeStatus" class="text-[10px] font-bold text-[#314A6F] bg-white px-2 py-0.5 rounded border border-white">0 / 5 Scenes</span>
         </div>
         <div id="mapList" class="flex flex-col gap-2.5">
           <!-- Route items populated dynamically -->
@@ -204,52 +204,52 @@
       </div>
 
       <!-- SPECTRUM RESONANCE METERS -->
-      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
+      <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Story Signals</h3>
-          <span class="text-[10px] font-semibold text-slate-400">Resonance</span>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Story Signals</h3>
+          <span class="text-[10px] font-semibold text-white/70">Resonance</span>
         </div>
         <div class="space-y-3">
           <div>
             <div class="flex justify-between text-xs font-semibold mb-1">
-              <span class="text-teal-300">Guarded (A)</span>
-              <span id="aCount" class="text-slate-400">0</span>
+              <span class="text-white">Guarded (A)</span>
+              <span id="aCount" class="text-white/70">0</span>
             </div>
-            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div id="aMeter" class="h-full bg-teal-400 transition-all duration-300" style="width: 0%;"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between text-xs font-semibold mb-1">
-              <span class="text-amber-300">Wavering (B)</span>
-              <span id="bCount" class="text-slate-400">0</span>
-            </div>
-            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div id="bMeter" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%;"></div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="aMeter" class="h-full bg-white transition-all duration-300" style="width: 0%;"></div>
             </div>
           </div>
           <div>
             <div class="flex justify-between text-xs font-semibold mb-1">
-              <span class="text-rose-300">Open (C)</span>
-              <span id="cCount" class="text-slate-400">0</span>
+              <span class="text-white/90">Wavering (B)</span>
+              <span id="bCount" class="text-white/70">0</span>
             </div>
-            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div id="cMeter" class="h-full bg-rose-400 transition-all duration-300" style="width: 0%;"></div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="bMeter" class="h-full bg-white/80 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-white/80">Open (C)</span>
+              <span id="cCount" class="text-white/70">0</span>
+            </div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="cMeter" class="h-full bg-white/60 transition-all duration-300" style="width: 0%;"></div>
             </div>
           </div>
         </div>
-        <p class="text-[11px] text-slate-400 leading-relaxed mt-4 pt-3 border-t border-slate-800">
+        <p class="text-[11px] text-white/70 leading-relaxed mt-4 pt-3 border-t border-white/10">
           Your choices shape Wei Jie's perspective and the classmate's outreach.
         </p>
       </div>
 
       <!-- SUPPORT CARD -->
-      <div class="bg-slate-900/90 border border-teal-500/30 p-4 rounded-2xl shadow-lg">
-        <h3 class="text-xs font-bold text-teal-300 mb-1">A Gentle Reminder</h3>
-        <p class="text-xs text-slate-300 leading-relaxed mb-3">
+      <div class="bg-[#1e304b]/90 border border-white/30 p-4 rounded-2xl shadow-lg">
+        <h3 class="text-xs font-bold text-white mb-1">A Gentle Reminder</h3>
+        <p class="text-xs text-white/80 leading-relaxed mb-3">
           This story is a check-in, not a test. Take your time or pause whenever needed.
         </p>
-        <button id="pauseBtn" class="w-full py-2 rounded-xl text-xs font-bold border border-teal-500/40 text-teal-200 hover:bg-teal-500/10 transition">
+        <button id="pauseBtn" class="w-full py-2 rounded-xl text-xs font-bold border border-white/40 text-white hover:bg-white hover:text-[#314A6F] transition">
           Take a breather
         </button>
       </div>
@@ -259,13 +259,13 @@
   </div>
 
   <!-- MODAL DIALOG -->
-  <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl">
-      <h3 id="modalTitle" class="text-lg font-bold text-slate-100 mb-2">Take your time</h3>
-      <p id="modalText" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
+  <div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+      <h3 id="modalTitle" class="text-lg font-bold text-white mb-2">Take your time</h3>
+      <p id="modalText" class="text-xs sm:text-sm text-white/80 leading-relaxed mb-5">
         There is no timer and no wrong choice. Choose what feels closest to you today.
       </p>
-      <button id="closeModal" class="w-full py-2.5 rounded-xl bg-teal-400 text-slate-950 font-bold text-xs hover:bg-teal-300 transition">
+      <button id="closeModal" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition">
         Back to story
       </button>
     </div>
@@ -487,11 +487,11 @@
         bgLayer.style.backgroundImage = `url('${encodeURI(scene.bgImage)}')`;
       } else {
         const fallbackGradients = [
-          'radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)',
-          'radial-gradient(circle at center, #312e81 0%, #1e1b4b 100%)',
-          'radial-gradient(circle at center, #1f2937 0%, #111827 100%)',
-          'radial-gradient(circle at center, #44403c 0%, #1c1917 100%)',
-          'radial-gradient(circle at center, #78350f 0%, #0f172a 100%)'
+          'radial-gradient(circle at center, #314A6F 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #3c5a85 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #273b59 0%, #16243a 100%)',
+          'radial-gradient(circle at center, #415e8c 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #2b4263 0%, #16243a 100%)'
         ];
         bgLayer.style.backgroundImage = fallbackGradients[scene.id] || fallbackGradients[0];
       }
@@ -530,16 +530,16 @@
         const isSelected = selectedAns === i;
         btn.className = `p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full ${
           isSelected
-            ? 'bg-teal-500/20 border-teal-400 text-teal-100 shadow-lg'
-            : 'bg-slate-800/80 border-slate-700/80 text-slate-200 hover:border-slate-500 hover:bg-slate-800'
+            ? 'bg-white text-[#314A6F] border-white shadow-lg font-semibold'
+            : 'bg-[#314A6F]/70 border-white/20 text-white hover:border-white/50 hover:bg-[#314A6F]'
         }`;
 
         btn.innerHTML = `
           <div class="flex items-center justify-between mb-2">
-            <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-teal-400 text-slate-950' : 'bg-slate-700 text-slate-300'} text-xs font-black flex items-center justify-center">
+            <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-[#314A6F] text-white' : 'bg-white/20 text-white'} text-xs font-black flex items-center justify-center">
               ${String.fromCharCode(65 + i)}
             </span>
-            <span class="text-[10px] text-slate-400 font-semibold uppercase">
+            <span class="text-[10px] ${isSelected ? 'text-[#314A6F]/80' : 'text-white/70'} font-semibold uppercase">
               ${['A little', 'Sometimes', 'Often'][i]}
             </span>
           </div>
@@ -662,7 +662,7 @@
       } else {
         // Procedural vector character fallback reflecting scene states
         const r = 35 * finalScale;
-        c.fillStyle = ansState === 2 ? '#2dd4bf' : ansState === 1 ? '#fbbf24' : '#64748b';
+        c.fillStyle = '#ffffff';
         c.beginPath();
         c.arc(0, -r, r, 0, Math.PI * 2);
         c.fill();
@@ -707,14 +707,14 @@
         const item = document.createElement('div');
         item.className = `flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
           isCurrent
-            ? 'bg-teal-500/20 border-teal-400 text-teal-200'
+            ? 'bg-white text-[#314A6F] border-white'
             : isDone
-            ? 'bg-slate-800/60 border-slate-700/60 text-slate-300'
-            : 'bg-slate-900/40 border-slate-800/40 text-slate-500 opacity-60'
+            ? 'bg-[#314A6F]/60 border-white/20 text-white'
+            : 'bg-[#1e304b]/40 border-white/10 text-white/50'
         }`;
 
         item.innerHTML = `
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isCurrent ? 'bg-teal-400 text-slate-950' : 'bg-slate-800'}">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isCurrent ? 'bg-[#314A6F] text-white' : 'bg-white/10'}">
             ${sc.icon}
           </div>
           <div class="flex-1 min-w-0">
