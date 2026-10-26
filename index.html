@@ -676,7 +676,7 @@
           const dy = clickY - b.y;
           if (Math.sqrt(dx * dx + dy * dy) < b.r + 10) {
             showThought(b);
-            if (soundOn) playTone(800);
+            playButtonClick();
 
             if (!b.heard) {
               b.heard = true;
@@ -849,6 +849,7 @@
     }
 
     function selectChoice(ansIdx) {
+      playButtonClick();
       if (Date.now() - questionStartTime >= 180000) {
         unlockBadge('look_inward');
       }
@@ -861,8 +862,6 @@
       }
       userAnswers[currentQIdx] = ansIdx;
       document.getElementById('streakVal').textContent = `${streakCount}x`;
-      
-      if (soundOn) playTone(500 + ansIdx * 120);
 
       if (currentQIdx >= 4) {
         unlockBadge('deep_reflection');
@@ -873,6 +872,7 @@
 
     function nextQuestion() {
       if (userAnswers[currentQIdx] === null) return;
+      playButtonClick();
       if (currentQIdx < 9) {
         currentQIdx++;
         renderQuestion();
@@ -987,7 +987,7 @@
         drawSprite(c, 8, -w * 0.18, h * 0.52, stateScale);
         drawSprite(c, 9, w * 0.18, h * 0.52, stateScale);
       } else if (currentQIdx === 9) {
-        // For Scene 5 / Question 10 (currentQIdx === 9), render spriteKey 10 (boy_sandwich_ohone.png)
+        // Scene 5 / Question 10 uses sprite 10 (boy_sandwich_ohone.png)
         drawSprite(c, 10, 0, h * 0.55, stateScale);
       } else {
         let spriteKey = currentQIdx % 8;
@@ -1135,6 +1135,7 @@
     }
 
     function restartStory() {
+      playButtonClick();
       currentQIdx = 0;
       userAnswers = new Array(10).fill(null);
       insightXP = 0;
@@ -1156,6 +1157,7 @@
     }
 
     function openBreatherModal() {
+      playButtonClick();
       clearInterval(breatherTimerInterval);
       const modal = document.getElementById('modal');
       const modalTitle = document.getElementById('modalTitle');
@@ -1196,9 +1198,9 @@
       modal.classList.remove('hidden');
       modal.classList.add('flex');
 
-      document.getElementById('breatheOption1').addEventListener('click', startBreathingExercise);
-      document.getElementById('breatheOption2').addEventListener('click', startMusicExercise);
-      document.getElementById('breatheOption3').addEventListener('click', startOutdoorExercise);
+      document.getElementById('breatheOption1').addEventListener('click', () => { playButtonClick(); startBreathingExercise(); });
+      document.getElementById('breatheOption2').addEventListener('click', () => { playButtonClick(); startMusicExercise(); });
+      document.getElementById('breatheOption3').addEventListener('click', () => { playButtonClick(); startOutdoorExercise(); });
     }
 
     function startBreathingExercise() {
@@ -1261,6 +1263,7 @@
       `;
 
       document.getElementById('doneMusicBtn').addEventListener('click', () => {
+        playButtonClick();
         document.getElementById('modal').classList.add('hidden');
       });
     }
@@ -1286,6 +1289,7 @@
       `;
 
       document.getElementById('doneWalkBtn').addEventListener('click', () => {
+        playButtonClick();
         document.getElementById('modal').classList.add('hidden');
       });
     }
@@ -1296,6 +1300,7 @@
 
       const modal = document.getElementById('modal');
       document.getElementById('helpBtn').addEventListener('click', () => {
+        playButtonClick();
         document.getElementById('modalTitle').textContent = "How to play?";
         document.getElementById('modalBody').innerHTML = `
           <p class="text-xs sm:text-sm text-white/80 leading-relaxed">
@@ -1311,6 +1316,7 @@
       document.getElementById('pauseBtn').addEventListener('click', openBreatherModal);
 
       document.getElementById('closeModal').addEventListener('click', () => {
+        playButtonClick();
         clearInterval(breatherTimerInterval);
         modal.classList.add('hidden');
         modal.classList.remove('flex');
@@ -1318,23 +1324,17 @@
 
       const soundBtn = document.getElementById('soundBtn');
       soundBtn.addEventListener('click', () => {
+        playButtonClick();
         soundOn = !soundOn;
         soundBtn.textContent = soundOn ? "♫ Sound on" : "♫ Sound off";
       });
     }
 
-    function playTone(freq) {
+    function playButtonClick() {
+      if (!soundOn) return;
       try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.value = 0.05;
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.15);
+        const audio = new Audio('buttonClick.mp3');
+        audio.play().catch(e => {});
       } catch (e) {}
     }
   </script>
