@@ -183,7 +183,7 @@
           Tired out for no reason?
         </h2>
 
-        <!-- Interactive Hold-to-Select Choice Buttons -->
+        <!-- Interactive Choice Buttons -->
         <div id="choicesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-3 my-1">
           <!-- Dynamically populated choices -->
         </div>
@@ -202,7 +202,7 @@
         <!-- Footer Navigation Row -->
         <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
           <span id="microcopy" class="text-xs text-white/70 font-medium">
-            Press & Hold or Tap an option to reflect and select.
+            Tap an option to reflect and select.
           </span>
           <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg flex items-center gap-2">
             <span>Choose an answer</span>
@@ -354,8 +354,8 @@
         { id: 0, title: "MRT Carriage", location: "SCENE 01 · MRT CARRIAGE", icon: "🚇", bgImage: "MRT.jpg" },
         { id: 1, title: "School Corridor", location: "SCENE 02 · SCHOOL CORRIDOR", icon: "🏫", bgImage: "School Corridor.jpg" },
         { id: 2, title: "Void Deck", location: "SCENE 03 · VOID DECK", icon: "🏢", bgImage: "HDB Void Deck.jpg" },
-        { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "" },
-        { id: 4, title: "Dining Table", location: "SCENE 05 · HOME DINING TABLE", icon: "🍊", bgImage: "" }
+        { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
+        { id: 4, title: "Boys Room", location: "SCENE 05 · BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
       ],
       sceneVariants: [
         [
@@ -380,7 +380,7 @@
         ],
         [
           "The snack sits unopened. He scrolls like nothing's wrong.",
-          "The snack is untouched, and Mum's footsteps fade. His phone goes dark in his hand.",
+          "The snack is untouched, and mum's footsteps fade. His phone goes dark in his hand.",
           "The snack is pushed away. The dark screen shows his own face."
         ]
       ],
@@ -448,7 +448,7 @@
         {
           sceneIdx: 3,
           text: "How often did you feel depressed?",
-          thoughts: [{ type: "body", text: "My chest feels like a grey blanket. Everything's turned down low." }, { type: "mind", text: "Everyone has bad days. I shouldn't make this a big deal." }, { type: "unsaid", text: "I can't remember the last time something felt properly good." }],
+          thoughts: [{ type: "body", text: "One shoe on. The results slip is right there face-down." }, { type: "mind", text: "I don't really get depressed; that's not me." }, { type: "unsaid", text: "I keep telling myself I'm fine so I don't have to explain it." }],
           answers: [
             { text: "I don't really get depressed; that's not me.", reply: "You know yourself. Just leave room for 'not me' to mean 'not lately'." },
             { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yes, grey is a thing. You described it accurately. You don't need a bigger word." },
@@ -458,17 +458,17 @@
         {
           sceneIdx: 3,
           text: "How often did you feel that everything was an effort?",
-          thoughts: [{ type: "body", text: "One shoe on. My arms feel too heavy to reach for the other." }, { type: "mind", text: "It's just shoes. Why is this so hard?" }, { type: "unsaid", text: "If I say how hard this is, it'll sound ridiculous." }],
+          thoughts: [{ type: "body", text: "My hand is stalled on the shoelaces." }, { type: "mind", text: "Tying my shoes feels like a whole mountain now." }, { type: "unsaid", text: "I just want to sit here on the floor until tomorrow." }],
           answers: [
-            { text: "Just normal school tiredness, nothing weird.", reply: "Normal tiredness usually lifts with rest. Notice if this doesn't." },
-            { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. Small things getting heavy is one of the clearest ways to describe this." },
+            { text: "Just normal school tiredness, nothing weird", reply: "Normal tiredness usually lifts with rest. Notice if this doesn't." },
+            { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. Small things getting heavy is one of the clearest ways to describe this" },
             { text: "Everything. Literally everything feels like climbing a hill lately.", reply: "A hill with no rest stop. No wonder you're wiped." }
           ]
         },
         {
           sceneIdx: 4,
           text: "How often did you feel so sad that nothing could cheer you up?",
-          thoughts: [{ type: "body", text: "My favourite snack is right there, but I feel no pull toward it." }, { type: "mind", text: "Mum went out of her way for this. I should be happier." }, { type: "unsaid", text: "I wish I could feel the way I used to." }],
+          thoughts: [{ type: "body", text: "The snack is right there. I haven't moved to open it." }, { type: "mind", text: "Mum set it down so gently. I wish I wanted it." }, { type: "unsaid", text: "I don't want to break her heart by telling her it didn't help." }],
           answers: [
             { text: "I still like the things I used to like, don't worry.", reply: "'Don't worry' sounds like it's meant for someone else. You don't have to perform it here." },
             { text: "My mum got my favourite snack and I just. Didn't want it. That's never happened before.", reply: "That moment stuck with you for a reason. Your mum probably noticed it too." },
@@ -478,7 +478,7 @@
         {
           sceneIdx: 4,
           text: "How often did you feel worthless?",
-          thoughts: [{ type: "body", text: "My shoulders are curled in, like I'm trying to take up less space." }, { type: "mind", text: "I did well, and it still feels like I didn't do enough." }, { type: "unsaid", text: "What if people only like me when I do well?" }],
+          thoughts: [{ type: "body", text: "My phone screen went dark and showed my own face." }, { type: "mind", text: "I got a good score and I still feel empty." }, { type: "unsaid", text: "I don't know how to make any of this make sense." }],
           answers: [
             { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Overthinking is real. So is the feeling underneath it. Both can be there." },
             { text: "I got a good score and I still feel like I'm not enough somehow. Make it make sense.", reply: "It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at." },
@@ -512,7 +512,6 @@
     let particles = [];
     let emotionalCapacity = 100;
     
-    // Timer for "Little Look Inward" badge (3 minutes = 180,000 ms)
     let questionStartTime = Date.now();
     let breatherTimerInterval = null;
 
@@ -520,7 +519,7 @@
     const comicCanvas = document.getElementById('comicCanvas');
     const ctx = comicCanvas ? comicCanvas.getContext('2d') : null;
 
-    // --- SPRITE SHEET ANIMATION CONFIGURATION ---
+    // --- SPRITE SHEETS CONFIGURATION ---
     const spriteSheets = {
       0: { src: 'character_tired.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       1: { src: 'character_nervous.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
@@ -529,12 +528,14 @@
       4: { src: 'character_bench_restless.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       5: { src: 'character_pacing.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
       6: { src: 'character_depressed.png', rows: 2, cols: 3, totalFrames: 6, fps: 6 },
-      7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 }
+      7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      8: { src: 'character_scroll phone.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      9: { src: 'mother_sandwich.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
+      10: { src: 'boy_sandwich_ohone.png', rows: 2, cols: 3, totalFrames: 6, fps: 8 }
     };
 
     const loadedSprites = {};
 
-    // Preload all sprite sheets
     Object.keys(spriteSheets).forEach(key => {
       const config = spriteSheets[key];
       const img = new Image();
@@ -543,7 +544,6 @@
       loadedSprites[key] = img;
     });
 
-    // Fallback single image support
     const characterImg = new Image();
     characterImg.src = 'character.png';
     let characterLoaded = false;
@@ -606,9 +606,8 @@
       activeThoughtId = null;
       const q = storyData.questions[currentQIdx];
       const selectedAns = userAnswers[currentQIdx];
-      const variantIdx = selectedAns !== null ? selectedAns : 0;
       const desc = document.getElementById('sceneDescription');
-      desc.textContent = storyData.sceneVariants[q.sceneIdx][variantIdx];
+      desc.textContent = storyData.sceneVariants[q.sceneIdx][selectedAns !== null ? selectedAns : 0];
       desc.classList.remove('italic');
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
     }
@@ -666,7 +665,6 @@
       updateThoughtCounter();
     }
 
-    // --- CANVAS INTERACTION & PARTICLE SYSTEMS ---
     if (comicCanvas) {
       comicCanvas.addEventListener('click', (e) => {
         const rect = comicCanvas.getBoundingClientRect();
@@ -766,7 +764,6 @@
       document.getElementById('badgeCountLabel').textContent = `${unlockedCount} / ${gameBadges.length}`;
     }
 
-    // --- SCENE & VISUAL SETTER ---
     function setSceneVisual(scene) {
       const bgLayer = document.getElementById('sceneBgLayer');
       if (!bgLayer) return;
@@ -785,9 +782,8 @@
       }
     }
 
-    // --- RENDER QUESTION & UI ---
     function renderQuestion() {
-      questionStartTime = Date.now(); // Start timer for "Little Look Inward" badge
+      questionStartTime = Date.now();
 
       const q = storyData.questions[currentQIdx];
       const currentScene = storyData.scenes[q.sceneIdx];
@@ -797,15 +793,13 @@
       spawnFloatingThoughts();
 
       const variantIdx = selectedAns !== null ? selectedAns : 0;
-      const sceneDesc = storyData.sceneVariants[q.sceneIdx][variantIdx];
-      document.getElementById('sceneDescription').textContent = sceneDesc;
+      document.getElementById('sceneDescription').textContent = storyData.sceneVariants[q.sceneIdx][variantIdx];
       document.getElementById('sceneTag').textContent = currentScene.location;
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
 
       document.getElementById('chapterLabel').textContent = `Stop ${q.sceneIdx + 1} of 5`;
       document.getElementById('qCountLabel').textContent = `${String(currentQIdx + 1).padStart(2, '0')} / 10`;
       document.getElementById('progressBar').style.width = `${((currentQIdx + 1) / 10) * 100}%`;
-
       document.getElementById('questionText').textContent = q.text;
 
       const choicesContainer = document.getElementById('choicesContainer');
@@ -855,9 +849,7 @@
     }
 
     function selectChoice(ansIdx) {
-      // Check if user took 3+ minutes (180,000 ms) to reflect and answer
-      const elapsed = Date.now() - questionStartTime;
-      if (elapsed >= 180000) {
+      if (Date.now() - questionStartTime >= 180000) {
         unlockBadge('look_inward');
       }
 
@@ -890,7 +882,6 @@
       }
     }
 
-    // --- CANVAS DRAWING CODE ---
     function drawComicPanel() {
       if (!ctx || !comicCanvas) return;
       const w = comicCanvas.width / (window.devicePixelRatio || 1);
@@ -899,10 +890,7 @@
       ctx.clearRect(0, 0, w, h);
 
       const q = storyData.questions[currentQIdx];
-      const sceneIdx = q.sceneIdx;
-      const currentAns = userAnswers[currentQIdx];
-
-      drawCharacter(ctx, sceneIdx, currentAns, w, h);
+      drawCharacter(ctx, q.sceneIdx, userAnswers[currentQIdx], w, h);
 
       activeFloatingBubbles.forEach(b => {
         const type = THOUGHT_TYPES[b.type];
@@ -945,37 +933,14 @@
       });
     }
 
-    function drawCharacter(c, sceneIdx, ansState, w, h) {
-      const cx = w * 0.5;
-      const cy = h * 0.58;
-
-      let stateScale = 1.0;
-      if (ansState === 0) {
-        stateScale = 0.92;
-      } else if (ansState === 1) {
-        stateScale = 1.0;
-      } else if (ansState === 2) {
-        stateScale = 1.08;
-      }
-
-      const finalScale = stateScale;
-
-      c.save();
-      c.translate(cx, cy);
-
-      c.save();
-      c.fillStyle = 'rgba(255, 255, 255, 0.08)';
-      c.beginPath();
-      c.arc(0, -30, 80 * finalScale, 0, Math.PI * 2);
-      c.fill();
-      c.restore();
-
-      const spriteKey = currentQIdx % 8;
+    function drawSprite(c, spriteKey, offsetX, targetH, stateScale) {
       const config = spriteSheets[spriteKey];
       const spriteImg = loadedSprites[spriteKey];
 
       if (config && config.loaded && spriteImg) {
-        const frameIndex = Math.floor(Date.now() / (1000 / config.fps)) % config.totalFrames;
+        // Slow down sprite 8 (boy on phone) so it animates gently without bobbing too much
+        const fps = (spriteKey === 8) ? config.fps * 0.35 : config.fps;
+        const frameIndex = Math.floor(Date.now() / (1000 / fps)) % config.totalFrames;
         const row = Math.floor(frameIndex / config.cols);
         const col = frameIndex % config.cols;
 
@@ -983,9 +948,11 @@
         const frameHeight = spriteImg.height / config.rows;
 
         const aspect = frameWidth / frameHeight || 1;
-        const targetHeight = h * 0.55 * finalScale;
+        const targetHeight = targetH * stateScale;
         const targetWidth = targetHeight * aspect;
 
+        c.save();
+        c.translate(offsetX, 0);
         c.drawImage(
           spriteImg,
           col * frameWidth,
@@ -997,30 +964,83 @@
           targetWidth,
           targetHeight
         );
-      } else if (characterLoaded) {
-        const aspect = characterImg.width / characterImg.height || 1;
-        const targetHeight = h * 0.55 * finalScale;
-        const targetWidth = targetHeight * aspect;
+        c.restore();
+      }
+    }
 
-        c.drawImage(
-          characterImg,
-          -targetWidth / 2,
-          -targetHeight / 2,
-          targetWidth,
-          targetHeight
-        );
+    function drawCharacter(c, sceneIdx, ansState, w, h) {
+      const cy = h * 0.58;
+      let stateScale = ansState === 0 ? 0.92 : (ansState === 2 ? 1.08 : 1.0);
+
+      c.save();
+      c.translate(w * 0.5, cy);
+
+      c.save();
+      c.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      c.beginPath();
+      c.arc(0, -30, 80 * stateScale, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+
+      // For Scene 5 / Question 9 (currentQIdx === 8), render both character (key 8) and mother (key 9)
+      if (currentQIdx === 8) {
+        drawSprite(c, 8, -w * 0.18, h * 0.52, stateScale);
+        drawSprite(c, 9, w * 0.18, h * 0.52, stateScale);
+      } else if (currentQIdx === 9) {
+        // For Scene 5 / Question 10 (currentQIdx === 9), render spriteKey 10 (boy_sandwich_ohone.png)
+        drawSprite(c, 10, 0, h * 0.55, stateScale);
       } else {
-        const r = 35 * finalScale;
-        c.fillStyle = '#ffffff';
-        c.beginPath();
-        c.arc(0, -r, r, 0, Math.PI * 2);
-        c.fill();
+        let spriteKey = currentQIdx % 8;
+        const config = spriteSheets[spriteKey];
+        const spriteImg = loadedSprites[spriteKey];
+
+        if (config && config.loaded && spriteImg) {
+          const frameIndex = Math.floor(Date.now() / (1000 / config.fps)) % config.totalFrames;
+          const row = Math.floor(frameIndex / config.cols);
+          const col = frameIndex % config.cols;
+
+          const frameWidth = spriteImg.width / config.cols;
+          const frameHeight = spriteImg.height / config.rows;
+
+          const aspect = frameWidth / frameHeight || 1;
+          const targetHeight = h * 0.55 * stateScale;
+          const targetWidth = targetHeight * aspect;
+
+          c.drawImage(
+            spriteImg,
+            col * frameWidth,
+            row * frameHeight,
+            frameWidth,
+            frameHeight,
+            -targetWidth / 2,
+            -targetHeight / 2,
+            targetWidth,
+            targetHeight
+          );
+        } else if (characterLoaded) {
+          const aspect = characterImg.width / characterImg.height || 1;
+          const targetHeight = h * 0.55 * stateScale;
+          const targetWidth = targetHeight * aspect;
+
+          c.drawImage(
+            characterImg,
+            -targetWidth / 2,
+            -targetHeight / 2,
+            targetWidth,
+            targetHeight
+          );
+        } else {
+          const r = 35 * stateScale;
+          c.fillStyle = '#ffffff';
+          c.beginPath();
+          c.arc(0, -r, r, 0, Math.PI * 2);
+          c.fill();
+        }
       }
 
       c.restore();
     }
 
-    // --- METERS & ROUTE MAP ---
     function updateMetersAndRoute() {
       const counts = [0, 0, 0];
       userAnswers.forEach(a => { if (a !== null) counts[a]++; });
@@ -1075,7 +1095,6 @@
       });
     }
 
-    // --- ENDING SCREEN ---
     function showEnding() {
       const counts = [0, 0, 0];
       userAnswers.forEach(a => { if (a !== null) counts[a]++; });
@@ -1136,7 +1155,6 @@
       renderQuestion();
     }
 
-    // --- BREATHER & MODAL SYSTEM ---
     function openBreatherModal() {
       clearInterval(breatherTimerInterval);
       const modal = document.getElementById('modal');
@@ -1185,8 +1203,7 @@
 
     function startBreathingExercise() {
       unlockBadge('pause_button');
-      let timeLeft = 90; // 90 second countdown
-
+      let timeLeft = 90;
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
 
@@ -1209,7 +1226,6 @@
         const promptEl = document.getElementById('breathPrompt');
 
         if (timerEl) timerEl.textContent = `${mins}:${secs}`;
-        
         if (promptEl) {
           const mod = timeLeft % 8;
           if (mod > 4) promptEl.textContent = "Breathe in...";
@@ -1274,7 +1290,6 @@
       });
     }
 
-    // --- EVENT LISTENERS & AUDIO SYNTH ---
     function setupEventListeners() {
       document.getElementById('nextBtn').addEventListener('click', nextQuestion);
       document.getElementById('restartBtn').addEventListener('click', restartStory);
