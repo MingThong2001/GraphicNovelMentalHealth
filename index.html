@@ -422,7 +422,7 @@
           answers: [
             { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
             { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "Blanking like that is worth remembering. It's a clue, not a flaw." },
-            { text: "More than I want to admit, if I'm honest.", reply: "You admitted it anyway. That took more than it looked like." }
+            { text: "More than I want to admit, if I'honest.", reply: "You admitted it anyway. That took more than it looked like." }
           ]
         },
         {
@@ -512,6 +512,11 @@
     let particles = [];
     let emotionalCapacity = 100;
     
+    let isShowingBranchScene = false;
+    let isShowingSnackScene = false;
+    let currentBranchData = null;
+    let branchAnswerSelected = null;
+
     let questionStartTime = Date.now();
     let breatherTimerInterval = null;
 
@@ -531,7 +536,19 @@
       7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       8: { src: 'character_scroll phone.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       9: { src: 'mother_sandwich.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
-      10: { src: 'boy_sandwich_ohone.png', rows: 2, cols: 3, totalFrames: 6, fps: 8 }
+      10: { src: 'boy_sandwich_ohone.png', rows: 2, cols: 3, totalFrames: 6, fps: 8 },
+      // Snack interlude (plays between Q3 and the branch scenes) - adjust rows/cols/totalFrames to match your sheets
+      11: { src: 'boy_snack.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      12: { src: 'character_tired1.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      // Branch scene sprites, one per path (A / B / C)
+      13: { src: 'branch_a.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      14: { src: 'branch_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      15: { src: 'branch_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      // Snack interlude sprites for path B and path C
+      16: { src: 'boy_snack_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      17: { src: 'character_tired1_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      18: { src: 'boy_snack_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      19: { src: 'character_tired1_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 }
     };
 
     const loadedSprites = {};
@@ -604,6 +621,19 @@
     function restoreCaption() {
       clearTimeout(thoughtTimer);
       activeThoughtId = null;
+
+      if (isShowingSnackScene) {
+        document.getElementById('sceneDescription').textContent = SNACK_SCENE_TEXT;
+        document.getElementById('variantBadge').textContent = 'Interlude';
+        return;
+      }
+
+      if (isShowingBranchScene && currentBranchData) {
+        document.getElementById('sceneDescription').textContent = currentBranchData.happens;
+        document.getElementById('variantBadge').textContent = currentBranchData.tag;
+        return;
+      }
+
       const q = storyData.questions[currentQIdx];
       const selectedAns = userAnswers[currentQIdx];
       const desc = document.getElementById('sceneDescription');
@@ -614,6 +644,14 @@
 
     function updateThoughtCounter() {
       const el = document.getElementById('thoughtBubbleCount');
+      if (isShowingSnackScene) {
+        el.textContent = '🍪 Snack Interlude';
+        return;
+      }
+      if (isShowingBranchScene) {
+        el.textContent = '💬 Interactive Branch Scene';
+        return;
+      }
       if (userAnswers[currentQIdx] !== null) {
         el.textContent = '💭 Thoughts locked in';
         return;
@@ -640,7 +678,7 @@
 
       restoreCaption();
 
-      if (userAnswers[currentQIdx] !== null) {
+      if (isShowingSnackScene || isShowingBranchScene || userAnswers[currentQIdx] !== null) {
         activeFloatingBubbles = [];
         updateThoughtCounter();
         return;
@@ -648,7 +686,13 @@
 
       const q = storyData.questions[currentQIdx];
       activeFloatingBubbles = (q.thoughts || []).map((t, i) => {
-        const anchor = THOUGHT_ANCHORS[t.type] || { x: 0.5, y: 0.4 };
+        // Question 9: spread the bubbles around the boy and mum so they don't cover the sprites
+        const Q9_ANCHORS = {
+          body:   { x: 0.12, y: 0.52 },
+          mind:   { x: 0.50, y: 0.22 },
+          unsaid: { x: 0.88, y: 0.52 }
+        };
+        const anchor = (currentQIdx === 8 ? Q9_ANCHORS[t.type] : THOUGHT_ANCHORS[t.type]) || { x: 0.5, y: 0.4 };
         return {
           id: i,
           type: t.type,
@@ -667,6 +711,7 @@
 
     if (comicCanvas) {
       comicCanvas.addEventListener('click', (e) => {
+        if (isShowingBranchScene) return;
         const rect = comicCanvas.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
@@ -782,8 +827,177 @@
       }
     }
 
+    const SNACK_SCENE_TEXT = "A classmate slides over, holding a half-eaten snack. Wei Jie looks up, too tired to say anything.";
+    const SNACK_BUBBLE_TEXT = ["Eh, you want some?", "I can't finish."];
+    let snackSceneStart = Date.now();
+    let mumWalkStart = 0;
+
+    // Per-path sprites for the snack interlude: index 0 = path A, 1 = path B, 2 = path C
+    // (keys refer to spriteSheets; point each path to its own sheets)
+    const SNACK_PATH_SPRITES = [
+      { boy: 11, tired: 12 },
+      { boy: 16, tired: 17 },
+      { boy: 18, tired: 19 }
+    ];
+
+    // Per-path sprite for the branch scene: index 0 = A, 1 = B, 2 = C
+    const BRANCH_PATH_SPRITES = [13, 14, 15];
+
+    function renderSnackScene() {
+      snackSceneStart = Date.now();
+      isShowingSnackScene = true;
+      isShowingBranchScene = false;
+      currentBranchData = null;
+      branchAnswerSelected = null;
+
+      setSceneVisual({ id: 1, bgImage: "School Corridor.jpg" });
+      spawnFloatingThoughts();
+
+      document.getElementById('sceneTag').textContent = "SCENE 02A · SNACK INTERLUDE";
+      document.getElementById('variantBadge').textContent = "Interlude";
+      document.getElementById('sceneDescription').textContent = SNACK_SCENE_TEXT;
+      document.getElementById('sceneDescription').classList.remove('italic');
+
+      document.getElementById('chapterLabel').textContent = "Scene 2A · Story Interlude";
+      document.getElementById('qCountLabel').textContent = "INTERLUDE";
+      document.getElementById('questionText').textContent = "Someone is offering you a snack.";
+
+      document.getElementById('choicesContainer').innerHTML = '';
+      document.getElementById('replyBox').classList.add('hidden');
+
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = false;
+      nextBtn.querySelector('span').textContent = 'Continue';
+
+      updateMetersAndRoute();
+      drawComicPanel();
+    }
+
+    function renderBranchScene(ansIdx) {
+      isShowingSnackScene = false;
+      isShowingBranchScene = true;
+      branchAnswerSelected = null;
+
+      const branches = [
+        {
+          tag: "BRANCH A · BRUSHES IT OFF",
+          title: "Have you ever brushed something off because you thought it wasn't serious enough to matter?",
+          earlier: "“It passes after a bit; it's not a big deal.”",
+          happens: "Wei Jie remembers telling himself that his nervousness wasn't a big deal. He accepts the sandwich and changes the subject.",
+          thought: "“It's probably nothing. I'll be fine.”",
+          options: [
+            "Yeah, I tend to do that.",
+            "Sometimes, I guess.",
+            "Not really.",
+            "I'd rather not say."
+          ]
+        },
+        {
+          tag: "BRANCH B · STARTS ACKNOWLEDGING",
+          title: "Have you noticed something affecting you more than you initially admitted?",
+          earlier: "“Maybe sometimes it's a lot. I can't even focus on the worksheet.”",
+          happens: "Wei Jie remembers staring at his unfinished worksheet. He pauses before accepting the sandwich.",
+          thought: "“Maybe it has been affecting me more than I thought.”",
+          options: [
+            "Yeah, more than I realised.",
+            "Maybe, I'm still figuring it out.",
+            "Not that I can think of.",
+            "I'd rather not say."
+          ]
+        },
+        {
+          tag: "BRANCH C · ACKNOWLEDGES STRUGGLE",
+          title: "If you've been feeling stuck, is there someone you might feel comfortable talking to?",
+          earlier: "“Some days nothing helps. I just sit there stuck.”",
+          happens: "Wei Jie remembers being stuck at the locker. He looks at his classmate and considers saying something, even if he doesn't know how to explain it.",
+          thought: "“I don't really know what's wrong. But maybe I don't have to figure it out alone.”",
+          options: [
+            "Yeah, there's someone I trust.",
+            "Maybe, but I'm not sure who.",
+            "I can't think of anyone right now.",
+            "I'd rather not say."
+          ]
+        }
+      ];
+
+      currentBranchData = branches[ansIdx] || branches[0];
+
+      setSceneVisual({ id: 1, bgImage: "School Corridor.jpg" });
+      spawnFloatingThoughts();
+
+      document.getElementById('sceneTag').textContent = "SCENE 02B · REFLECTION BRANCH";
+      document.getElementById('variantBadge').textContent = currentBranchData.tag;
+      document.getElementById('sceneDescription').textContent = currentBranchData.happens;
+
+      document.getElementById('chapterLabel').textContent = "Scene 2B · Story Branch";
+      document.getElementById('qCountLabel').textContent = "BRANCH";
+      document.getElementById('questionText').textContent = currentBranchData.title;
+
+      renderBranchChoices();
+
+      const replyBox = document.getElementById('replyBox');
+      replyBox.classList.add('hidden');
+
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = true;
+      nextBtn.querySelector('span').textContent = 'Select an option to continue';
+
+      updateMetersAndRoute();
+      drawComicPanel();
+    }
+
+    function renderBranchChoices() {
+      const choicesContainer = document.getElementById('choicesContainer');
+      choicesContainer.innerHTML = '';
+
+      currentBranchData.options.forEach((optText, i) => {
+        const btn = document.createElement('button');
+        const isSelected = branchAnswerSelected === i;
+        btn.className = `group relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full overflow-hidden ${
+          isSelected
+            ? 'bg-white text-[#314A6F] border-white shadow-lg font-semibold scale-[1.02]'
+            : 'bg-[#314A6F]/70 border-white/20 text-white hover:border-white/50 hover:bg-[#314A6F]'
+        }`;
+
+        btn.innerHTML = `
+          <div class="flex items-center justify-between mb-2 pointer-events-none">
+            <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-[#314A6F] text-white' : 'bg-white/20 text-white'} text-xs font-black flex items-center justify-center">
+              ${i + 1}
+            </span>
+            <span class="text-[10px] ${isSelected ? 'text-[#314A6F]/80' : 'text-white/70'} font-semibold uppercase">
+              Reflection Choice
+            </span>
+          </div>
+          <p class="text-xs font-medium leading-snug pointer-events-none">${optText}</p>
+        `;
+
+        btn.addEventListener('click', () => selectBranchChoice(i));
+        choicesContainer.appendChild(btn);
+      });
+    }
+
+    function selectBranchChoice(optIdx) {
+      playButtonClick();
+      branchAnswerSelected = optIdx;
+
+      renderBranchChoices();
+
+      const replyBox = document.getElementById('replyBox');
+      replyBox.classList.remove('hidden');
+      document.getElementById('replyText').textContent = `Wei Jie: ${currentBranchData.thought}`;
+
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = false;
+      nextBtn.querySelector('span').textContent = 'Continue to Question 4';
+    }
+
     function renderQuestion() {
       questionStartTime = Date.now();
+      if (currentQIdx === 8 && userAnswers[8] === null) mumWalkStart = Date.now();
+      else if (currentQIdx !== 8) mumWalkStart = 0;
+      isShowingSnackScene = false;
+      isShowingBranchScene = false;
+      currentBranchData = null;
 
       const q = storyData.questions[currentQIdx];
       const currentScene = storyData.scenes[q.sceneIdx];
@@ -849,6 +1063,7 @@
     }
 
     function selectChoice(ansIdx) {
+      if (isShowingBranchScene || isShowingSnackScene) return;
       playButtonClick();
       if (Date.now() - questionStartTime >= 180000) {
         unlockBadge('look_inward');
@@ -871,8 +1086,27 @@
     }
 
     function nextQuestion() {
-      if (userAnswers[currentQIdx] === null) return;
       playButtonClick();
+
+      if (isShowingSnackScene) {
+        renderBranchScene(userAnswers[2] !== null ? userAnswers[2] : 0);
+        return;
+      }
+      
+      if (isShowingBranchScene) {
+        currentQIdx = 3; // Move directly to Question 4
+        renderQuestion();
+        return;
+      }
+
+      if (userAnswers[currentQIdx] === null) return;
+
+      // Check if we just completed Question 3 (index 2)
+      if (currentQIdx === 2) {
+        renderSnackScene();
+        return;
+      }
+
       if (currentQIdx < 9) {
         currentQIdx++;
         renderQuestion();
@@ -889,8 +1123,14 @@
 
       ctx.clearRect(0, 0, w, h);
 
-      const q = storyData.questions[currentQIdx];
-      drawCharacter(ctx, q.sceneIdx, userAnswers[currentQIdx], w, h);
+      if (isShowingSnackScene) {
+        drawCharacter(ctx, 1, 1, w, h);
+      } else if (isShowingBranchScene) {
+        drawCharacter(ctx, 1, userAnswers[2] !== null ? userAnswers[2] : 0, w, h);
+      } else {
+        const q = storyData.questions[currentQIdx];
+        drawCharacter(ctx, q.sceneIdx, userAnswers[currentQIdx], w, h);
+      }
 
       activeFloatingBubbles.forEach(b => {
         const type = THOUGHT_TYPES[b.type];
@@ -982,15 +1222,62 @@
       c.fill();
       c.restore();
 
-      // For Scene 5 / Question 9 (currentQIdx === 8), render both character (key 8) and mother (key 9)
-      if (currentQIdx === 8) {
-        drawSprite(c, 8, -w * 0.18, h * 0.52, stateScale);
-        drawSprite(c, 9, w * 0.18, h * 0.52, stateScale);
-      } else if (currentQIdx === 9) {
-        // Scene 5 / Question 10 uses sprite 10 (boy_sandwich_ohone.png)
+      if (isShowingSnackScene) {
+        // Both sprite sheets play at the same time, side by side
+        const spriteH = h * 0.52;
+        let pathSprites = SNACK_PATH_SPRITES[userAnswers[2] !== null ? userAnswers[2] : 0] || SNACK_PATH_SPRITES[0];
+        // fall back to path A sheets until this path's own sheets exist
+        if (!(spriteSheets[pathSprites.boy].loaded && spriteSheets[pathSprites.tired].loaded)) pathSprites = SNACK_PATH_SPRITES[0];
+
+        // Snack boy walks in from the left toward the tired character (on the right)
+        const walkT = Math.min(1, (Date.now() - snackSceneStart) / 2500);
+        const eased = 1 - Math.pow(1 - walkT, 3);
+        const snackX = (-w * 0.40) + ((-w * 0.08) - (-w * 0.40)) * eased;
+
+        drawSprite(c, pathSprites.tired, w * 0.18, spriteH, stateScale);
+        drawSprite(c, pathSprites.boy, snackX, spriteH, stateScale);
+
+        // Cute speech bubble above the snack boy (follows him)
+        const bob = Math.sin(Date.now() * 0.003) * 3;
+        const bw = 176, bh = 58;
+        const bubbleCx = Math.max(-w / 2 + bw / 2 + 8, snackX);
+        const bx = bubbleCx - bw / 2;
+        const by = -spriteH * 0.5 - bh - 14 + bob;
+        c.save();
+        c.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        c.shadowBlur = 10;
+        c.fillStyle = '#ffffff';
+        c.beginPath();
+        c.roundRect(bx, by, bw, bh, 18);
+        c.fill();
+        c.beginPath();
+        c.moveTo(bubbleCx - 16, by + bh - 1);
+        c.lineTo(bubbleCx - 4, by + bh + 16);
+        c.lineTo(bubbleCx + 6, by + bh - 1);
+        c.closePath();
+        c.fill();
+        c.shadowBlur = 0;
+        c.fillStyle = '#314A6F';
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.font = 'bold 13px Inter, sans-serif';
+        c.fillText(SNACK_BUBBLE_TEXT[0], bubbleCx, by + 22);
+        c.fillText(SNACK_BUBBLE_TEXT[1], bubbleCx, by + 40);
+        c.restore();
+      } else if (!isShowingBranchScene && currentQIdx === 8) {
+        // Pair is centred on the middle of the three thought bubbles; mum walks in from the right toward the boy
+        const mumT = mumWalkStart ? Math.min(1, (Date.now() - mumWalkStart) / 2500) : 1;
+        const mumEased = 1 - Math.pow(1 - mumT, 3);
+        const mumX = (w * 0.42) + ((w * 0.09) - (w * 0.42)) * mumEased;
+        c.save();
+        drawSprite(c, 8, -w * 0.09, h * 0.52, stateScale);
+        drawSprite(c, 9, mumX, h * 0.52, stateScale);
+        c.restore();
+      } else if (!isShowingBranchScene && currentQIdx === 9) {
         drawSprite(c, 10, 0, h * 0.55, stateScale);
       } else {
-        let spriteKey = currentQIdx % 8;
+        let spriteKey = isShowingBranchScene ? (BRANCH_PATH_SPRITES[userAnswers[2] !== null ? userAnswers[2] : 0] || 2) : (currentQIdx % 8);
+        if (isShowingBranchScene && !(spriteSheets[spriteKey] && spriteSheets[spriteKey].loaded)) spriteKey = 2; // fallback until path sheet exists
         const config = spriteSheets[spriteKey];
         const spriteImg = loadedSprites[spriteKey];
 
@@ -1067,7 +1354,7 @@
       if (!mapList) return;
       mapList.innerHTML = '';
 
-      const currentSceneIdx = storyData.questions[currentQIdx].sceneIdx;
+      const currentSceneIdx = (isShowingBranchScene || isShowingSnackScene) ? 1 : storyData.questions[currentQIdx].sceneIdx;
 
       storyData.scenes.forEach((sc, i) => {
         const isCurrent = i === currentSceneIdx;
@@ -1143,6 +1430,10 @@
       totalThoughtsPopped = 0;
       thoughtsHeard = Array.from({ length: 10 }, () => []);
       emotionalCapacity = 100;
+      isShowingSnackScene = false;
+      isShowingBranchScene = false;
+      currentBranchData = null;
+      branchAnswerSelected = null;
 
       document.getElementById('scoreVal').textContent = '0';
       document.getElementById('streakVal').textContent = '0x';
