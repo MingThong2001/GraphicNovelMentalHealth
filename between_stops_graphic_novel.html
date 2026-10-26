@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Between Stops — An Interactive Graphic Novel</title>
+<style>
+:root{--ink:#18242b;--paper:#f6f0e6;--muted:#aab5b5;--teal:#7ed0c2;--coral:#f09a82;--yellow:#f2d58b;--night:#111b27;--panel:#1d2b38;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:#101923;color:#f7f4ee}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.app{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;max-width:1500px;margin:auto;padding:18px}
+main{min-width:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 2px 14px}
+.brand{display:flex;gap:11px;align-items:center}.brandmark{width:38px;height:38px;border-radius:12px;background:var(--teal);color:#13232c;display:grid;place-items:center;font-weight:900;font-size:20px;transform:rotate(-4deg)}
+.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-weight:800}.brand h1{font-size:17px;margin:2px 0 0;letter-spacing:-.03em}.top-actions{display:flex;gap:8px}.quiet-btn{background:transparent;color:#d6dedf;border:1px solid var(--line);padding:9px 12px;border-radius:999px;font-size:12px}.quiet-btn:hover{background:#263744}
+.stage{position:relative;min-height:590px;height:min(72vh,780px);overflow:hidden;border-radius:24px;background:#263b48;border:1px solid rgba(255,255,255,.12);isolation:isolate;box-shadow:0 25px 70px #0005}
+.scene-art{position:absolute;inset:0;overflow:hidden;transition:background 1s ease}
+.scene-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,15,23,.02) 25%,rgba(7,15,23,.18) 50%,rgba(7,15,23,.88) 100%);pointer-events:none}
+.art-sky{position:absolute;inset:0 0 38%;background:linear-gradient(160deg,#9ac9c2,#e3d8b8 65%,#f4c7a2)}
+.sun{position:absolute;width:95px;height:95px;border-radius:50%;background:#f9e2a3;right:14%;top:12%;box-shadow:0 0 65px #f9e2a366}
+.buildings{position:absolute;bottom:32%;left:0;right:0;height:38%;display:flex;align-items:flex-end;gap:5px;padding:0 3%}
+.building{position:relative;flex:1;min-width:25px;background:#d2bba1;height:75%;border-radius:2px 2px 0 0;box-shadow:inset 0 0 0 2px #7e928e}
+.building:nth-child(2n){height:95%;background:#91b5b1}.building:nth-child(3n){height:65%;background:#e2c7a3}
+.building:before{content:"";position:absolute;inset:10px 7px;background:repeating-linear-gradient(90deg,transparent 0 11px,#e9e5cf 11px 16px),repeating-linear-gradient(0deg,transparent 0 13px,#e9e5cf 13px 18px);opacity:.85}
+.mrt-sign{position:absolute;top:16%;left:5%;background:#137c75;color:#fff;padding:7px 12px;border-radius:3px;font-weight:900;letter-spacing:.1em;font-size:12px;box-shadow:4px 4px 0 #123e43}
+.ground{position:absolute;left:0;right:0;bottom:0;height:39%;background:linear-gradient(#536e6c,#283d48)}
+.floor-lines{position:absolute;inset:0;background:repeating-linear-gradient(170deg,transparent 0 39px,#d0d4c622 40px 42px)}
+.character{position:absolute;z-index:2;bottom:22%;left:50%;width:175px;height:260px;transform:translateX(-50%);transition:all .6s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 12px 9px #0003)}
+.char-head{position:absolute;top:7px;left:48px;width:79px;height:87px;border-radius:45% 48% 44% 48%;background:#b97853;border:3px solid #293a42;z-index:2}
+.hair{position:absolute;top:-7px;left:-2px;width:83px;height:39px;border-radius:48% 55% 18% 15%;background:#17252a;transform:rotate(-5deg)}
+.hair:after{content:"";position:absolute;right:4px;top:24px;width:26px;height:21px;border-radius:0 0 100% 0;background:#17252a;transform:rotate(-16deg)}
+.ear{position:absolute;top:40px;width:13px;height:20px;border-radius:50%;background:#b97853;border:2px solid #293a42}.ear.l{left:-8px}.ear.r{right:-8px}
+.face{position:absolute;top:44px;left:17px;width:7px;height:4px;background:#27343a;border-radius:50%;box-shadow:29px 0 #27343a}
+.face:after{content:"";position:absolute;width:16px;height:7px;border-bottom:2px solid #75483a;top:17px;left:9px;border-radius:50%}
+.neck{position:absolute;top:80px;left:78px;width:22px;height:27px;background:#a96a49}
+.body{position:absolute;top:93px;left:24px;width:125px;height:142px;background:#e4a06f;border:3px solid #293a42;border-radius:35px 35px 13px 13px;clip-path:polygon(15% 0,85% 0,100% 100%,0 100%)}
+.bagstrap{position:absolute;top:97px;left:104px;width:13px;height:130px;background:#324c58;transform:rotate(-7deg);border-radius:8px;z-index:3}
+.arm{position:absolute;top:110px;width:27px;height:100px;background:#b97853;border:3px solid #293a42;border-radius:16px;z-index:4;transform-origin:top}
+.arm.l{left:29px;transform:rotate(12deg)}.arm.r{right:22px;transform:rotate(-8deg)}
+.legs{position:absolute;bottom:0;left:48px;width:82px;height:70px;display:flex;gap:8px}
+.leg{flex:1;background:#283a48;border:3px solid #293a42;border-radius:7px 7px 2px 2px}
+.shoe{position:absolute;bottom:0;left:39px;width:49px;height:17px;border-radius:12px 5px 4px 5px;background:#e9e3d7;border:3px solid #293a42}
+.shoe.two{left:92px;transform:scaleX(-1)}
+.prop{position:absolute;z-index:3;left:50%;bottom:26%;transform:translateX(72px);width:56px;height:72px;border:2px solid #394d52;background:#f4e9d1;border-radius:3px;box-shadow:5px 6px 0 #17252a55;display:none;color:#253c45;font-size:9px;font-weight:900;text-align:center;padding-top:15px;rotate:5deg}
+.prop:before{content:"CHECK-IN";display:block;border-bottom:1px solid #9aa9a0;padding-bottom:4px;margin-bottom:5px}
+.art-caption{position:absolute;z-index:4;top:22px;left:24px;max-width:58%}.art-caption .location{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:900;color:#fff;background:#14252bbd;padding:8px 10px;border-radius:5px;display:inline-block}.art-caption p{font-size:13px;line-height:1.5;color:#f7f4ee;text-shadow:0 2px 8px #0005;max-width:300px}
+.story-overlay{position:absolute;z-index:5;bottom:0;left:0;right:0;padding:26px 28px 24px;display:grid;gap:12px}
+.progress-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#cbd6d4;font-weight:800}
+.progress-track{height:4px;background:#ffffff2b;border-radius:9px;overflow:hidden;flex:1;margin:0 12px}.progress-fill{height:100%;width:0;background:var(--teal);transition:width .4s}
+.question{font-size:clamp(21px,3vw,31px);line-height:1.15;letter-spacing:-.04em;margin:0;max-width:760px}
+.narration{margin:0;color:#d4dedc;font-size:13px;line-height:1.55;max-width:720px;min-height:20px}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:3px}
+.choice{position:relative;text-align:left;padding:14px 13px 13px;background:#f4f0e7;color:#1d2b31;border:2px solid transparent;border-radius:12px;min-height:112px;transition:transform .18s,background .18s,border .18s;overflow:hidden}
+.choice:hover{transform:translateY(-4px);background:#fff}.choice:active{transform:scale(.985)}.choice.selected{border-color:var(--teal);background:#d9f3e9}
+.choice .letter{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:7px;background:#d5e5de;font-size:11px;font-weight:900;margin-bottom:9px}
+.choice .choice-text{display:block;font-size:12px;line-height:1.4;font-weight:700}.choice .hint{display:block;margin-top:9px;font-size:10px;color:#647678}
+.choice.selected:after{content:"✓";position:absolute;right:11px;top:11px;color:#187b6c;font-weight:900}
+.reply{display:none;background:#e3f2e9;color:#1d3938;padding:15px 17px;border-radius:13px;line-height:1.5;font-size:14px;animation:rise .35s both}
+.reply.show{display:block}.reply strong{display:block;font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px;color:#28796e}
+.next-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.next-btn{border:0;border-radius:999px;padding:12px 18px;background:var(--teal);color:#12282e;font-size:12px;font-weight:900;letter-spacing:.02em;transition:transform .2s,opacity .2s}.next-btn:disabled{opacity:.35;cursor:not-allowed}.next-btn:not(:disabled):hover{transform:translateY(-2px)}.microcopy{font-size:11px;color:#b7c6c6}
+aside{display:flex;flex-direction:column;gap:14px}.side-card{border:1px solid var(--line);border-radius:18px;background:#17232e;padding:17px}.side-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.side-head h2{font-size:13px;margin:0;letter-spacing:-.01em}.tiny{font-size:10px;color:#a9b8bb}
+.map-list{display:grid;gap:10px}.map-item{display:flex;gap:11px;align-items:center;opacity:.52;transition:opacity .3s}.map-item.active,.map-item.done{opacity:1}.map-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:#293a44;display:grid;place-items:center;font-size:16px;border:1px solid #ffffff12}.map-item.active .map-icon{background:#d6f1e5;color:#173b3a}.map-item.done .map-icon{background:#7ed0c2;color:#183438}.map-copy{min-width:0}.map-copy b{display:block;font-size:11px}.map-copy span{font-size:10px;color:#a9b8bb}
+.meter{display:grid;gap:12px}.meter-line{display:grid;grid-template-columns:54px 1fr 20px;gap:9px;align-items:center;font-size:11px}.meter-track{height:6px;border-radius:8px;background:#2c3a44;overflow:hidden}.meter-fill{height:100%;width:0;border-radius:8px;transition:width .45s}.meter-line:nth-child(1) .meter-fill{background:#7ed0c2}.meter-line:nth-child(2) .meter-fill{background:#f2d58b}.meter-line:nth-child(3) .meter-fill{background:#f09a82}
+.note{font-size:11px;color:#a9b8bb;line-height:1.55;margin:12px 0 0}.support{background:#203a40;border:1px solid #315b5d}.support h2{font-size:13px;margin:0 0 8px}.support p{font-size:11px;line-height:1.6;color:#d4e2df;margin:0 0 12px}.support button{border:1px solid #6caaa2;background:transparent;color:#d8f3ec;border-radius:999px;padding:8px 11px;font-size:11px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:#e3f2e9;color:#173438;border-radius:999px;padding:10px 15px;font-size:12px;font-weight:800;opacity:0;pointer-events:none;transition:.3s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
+.end-screen{position:absolute;z-index:10;inset:0;background:linear-gradient(145deg,#142733,#31545a);display:none;align-items:center;justify-content:center;padding:26px}.end-screen.show{display:flex;animation:fade .5s both}.end-card{max-width:540px;text-align:center}.end-stamp{width:72px;height:72px;border-radius:24px;background:var(--yellow);color:#22363c;margin:0 auto 18px;display:grid;place-items:center;font-size:30px;transform:rotate(-7deg)}.end-card h2{font-size:clamp(30px,4vw,45px);line-height:1.02;letter-spacing:-.05em;margin:10px 0 14px}.end-card p{color:#d5e1de;font-size:14px;line-height:1.7}.end-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:20px}.end-actions button{border:0;border-radius:999px;padding:12px 17px;background:var(--teal);color:#12282e;font-weight:900;font-size:12px}.end-actions .secondary{background:transparent;color:#f7f4ee;border:1px solid #ffffff44}
+.modal{position:fixed;inset:0;background:#071018c9;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modal.show{display:flex}.modal-card{max-width:480px;width:100%;background:#f6f0e6;color:#203138;border-radius:22px;padding:25px}.modal-card h2{margin:0 0 8px;font-size:22px}.modal-card p{font-size:13px;line-height:1.7}.modal-card button{border:0;background:#183e43;color:white;border-radius:999px;padding:11px 16px;font-weight:800}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes fade{from{opacity:0}to{opacity:1}}
+.stage.scene-mrt .scene-art{background:linear-gradient(#a6d2c7,#f0d7b0 55%,#4d6c70 56%)}.stage.scene-school .scene-art{background:linear-gradient(130deg,#f0c6a1,#a3c6bd 45%,#718f8d)}.stage.scene-void .scene-art{background:linear-gradient(#1f3849,#486d70 52%,#172a34)}.stage.scene-home .scene-art{background:linear-gradient(130deg,#d7b9a0,#f2d9b6 52%,#6e7e71)}.stage.scene-table .scene-art{background:linear-gradient(130deg,#c9bca1,#e9d8b7 45%,#8f9e87)}
+.stage.scene-school .art-sky{background:linear-gradient(150deg,#9bc7c3,#e7c9a8)}.stage.scene-void .art-sky{background:linear-gradient(150deg,#1b3548,#5a7779)}.stage.scene-home .art-sky,.stage.scene-table .art-sky{background:linear-gradient(150deg,#f3d5b2,#e6bda0)}
+.stage.scene-void .sun{background:#f5dca5;width:48px;height:48px;right:20%;top:15%;box-shadow:0 0 35px #f5dca555}.stage.scene-home .sun,.stage.scene-table .sun{background:#f6d8a6}
+@media(max-width:1000px){.app{grid-template-columns:minmax(0,1fr);max-width:900px}.stage{height:auto;min-height:650px}.side-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.support{grid-column:1/-1}aside{gap:14px}}
+@media(max-width:620px){.app{padding:10px;gap:12px}.topbar{align-items:flex-start}.top-actions .quiet-btn{padding:8px 10px}.top-actions .quiet-btn:first-child{display:none}.stage{min-height:700px;border-radius:18px}.art-caption{left:17px;top:17px;max-width:75%}.character{transform:translateX(-50%) scale(.83);transform-origin:bottom center;bottom:28%}.prop{bottom:30%;transform:translateX(50px) scale(.8)}.story-overlay{padding:20px 15px 15px;gap:10px}.question{font-size:24px}.choices{grid-template-columns:1fr;gap:7px}.choice{min-height:0;padding:10px 12px;display:grid;grid-template-columns:25px 1fr;gap:0 8px;align-items:start}.choice .letter{grid-row:span 2;margin:0}.choice .choice-text{font-size:12px}.choice .hint{margin-top:3px}.narration{font-size:12px}.side-grid{grid-template-columns:1fr}.support{grid-column:auto}.side-card{padding:14px}.map-list{grid-template-columns:1fr 1fr}.map-item{gap:7px}.map-icon{width:29px;height:29px;flex-basis:29px}.microcopy{max-width:55%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<main>
+  <header class="topbar">
+    <div class="brand"><div class="brandmark">↗</div><div><div class="eyebrow">A SOAR story</div><h1>BETWEEN STOPS</h1></div></div>
+    <div class="top-actions"><button class="quiet-btn" id="soundBtn" aria-pressed="false">♫ Sound off</button><button class="quiet-btn" id="helpBtn">How to play ?</button></div>
+  </header>
+  <section class="stage scene-mrt" id="stage" aria-label="Interactive graphic novel scene">
+    <div class="scene-art">
+      <div class="art-sky"></div><div class="sun"></div><div class="mrt-sign" id="sign">MRT · EAST WEST LINE</div>
+      <div class="buildings" id="buildings"><div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div><div class="building"></div></div>
+      <div class="ground"><div class="floor-lines"></div></div>
+      <div class="character" id="character" aria-label="Wei Jie, the main character">
+        <div class="char-head"><div class="hair"></div><div class="ear l"></div><div class="ear r"></div><div class="face"></div></div><div class="neck"></div><div class="body"></div><div class="bagstrap"></div><div class="arm l"></div><div class="arm r"></div><div class="legs"><div class="leg"></div><div class="leg"></div></div><div class="shoe"></div><div class="shoe two"></div>
+      </div>
+      <div class="prop" id="prop">Q7<br>CHECK-IN</div>
+      <div class="art-caption"><span class="location" id="location">SCENE 01 · MRT CARRIAGE</span><p id="sceneCaption">The train sways. Wei Jie keeps one hand wrapped around the strap, even when the carriage slows.</p></div>
+    </div>
+    <div class="story-overlay" id="storyOverlay">
+      <div class="progress-row"><span id="chapterLabel">CHAPTER 01</span><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><span id="progressText">01 / 10</span></div>
+      <h2 class="question" id="question">Tired out for no reason?</h2>
+      <p class="narration" id="narration">A small check-in. There are no right answers, and you can take your time.</p>
+      <div class="choices" id="choices"></div>
+      <div class="reply" id="reply" aria-live="polite"><strong>What the story notices</strong><span id="replyText"></span></div>
+      <div class="next-row"><span class="microcopy" id="microcopy">Choose the answer that feels closest today.</span><button class="next-btn" id="nextBtn" disabled>Choose an answer →</button></div>
+    </div>
+    <div class="end-screen" id="endScreen"><div class="end-card"><div class="end-stamp">✦</div><div class="eyebrow">THE NEXT STOP</div><h2 id="endTitle">You don't have to carry it alone.</h2><p id="endText"></p><p id="endLine"></p><div class="end-actions"><button id="restartBtn">Replay the story ↺</button><button class="secondary" id="supportBtn">Find support</button></div></div></div>
+  </section>
+</main>
+<aside>
+  <div class="side-grid">
+    <section class="side-card">
+      <div class="side-head"><h2>Your route</h2><span class="tiny" id="routeStatus">0 / 5 scenes</span></div>
+      <div class="map-list" id="mapList">
+        <div class="map-item active" data-scene="0"><div class="map-icon">🚇</div><div class="map-copy"><b>MRT carriage</b><span>Noticing tiredness</span></div></div>
+        <div class="map-item" data-scene="1"><div class="map-icon">🏫</div><div class="map-copy"><b>School corridor</b><span>Making room for nerves</span></div></div>
+        <div class="map-item" data-scene="2"><div class="map-icon">🏢</div><div class="map-copy"><b>Void deck</b><span>Listening to your body</span></div></div>
+        <div class="map-item" data-scene="3"><div class="map-icon">👟</div><div class="map-copy"><b>Home doorway</b><span>Small things, heavy days</span></div></div>
+        <div class="map-item" data-scene="4"><div class="map-icon">🍊</div><div class="map-copy"><b>Dining table</b><span>Letting someone in</span></div></div>
+      </div>
+    </section>
+    <section class="side-card">
+      <div class="side-head"><h2>Story signals</h2><span class="tiny">Just for this story</span></div>
+      <div class="meter">
+        <div class="meter-line"><span>Guarded</span><div class="meter-track"><div class="meter-fill" id="aMeter"></div></div><b id="aCount">0</b></div>
+        <div class="meter-line"><span>Wavering</span><div class="meter-track"><div class="meter-fill" id="bMeter"></div></div><b id="bCount">0</b></div>
+        <div class="meter-line"><span>Open</span><div class="meter-track"><div class="meter-fill" id="cMeter"></div></div><b id="cCount">0</b></div>
+      </div>
+      <p class="note">Your choices shape the story’s ending, not a diagnosis or score. No answer is better than another.</p>
+    </section>
+    <section class="side-card support">
+      <h2>A gentle reminder</h2>
+      <p>This story is a check-in, not a test. You can pause, skip a question, or reach out to someone you trust.</p>
+      <button id="pauseBtn">Take a breather</button>
+    </section>
+  </div>
+</aside>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><h2 id="modalTitle">Take your time</h2><p id="modalText">There is no timer and no perfect way to answer. Choose what feels closest, or pause whenever you need.</p><button id="closeModal">Back to story</button></div></div>
+<script>
+const questions = [
+ {scene:0,chapter:1,title:"MRT carriage",location:"SCENE 01 · MRT CARRIAGE",caption:"The train sways. Wei Jie keeps one hand wrapped around the strap, even when the carriage slows.",q:"Tired out for no reason?",answers:[
+ ["I'm fine, just didn't sleep much.","Sleep explains some tiredness, not all of it. Worth noticing which kind this is."],
+ ["I don't even do anything, and I'm already dead by 3 pm; it's so weird.","So weird is you spotting a pattern. Don't talk yourself out of spotting it."],
+ ["Every day. I don't know why I'm always this tired.","Every day is not a small thing. You don't need a reason to take it seriously."]]},
+ {scene:0,chapter:1,title:"MRT carriage",location:"SCENE 01 · MRT CARRIAGE",caption:"The train pulls away from the platform. Around him, everyone is going somewhere.",q:"How often did you feel nervous?",answers:[
+ ["Nah, I'm good.","Look at your grip on that strap. You don't have to agree with it yet."],
+ ["Not nervous nervous. Just... new school, new everything.","Big change, big load. 'Just' is shrinking something that isn't small."],
+ ["Honestly kind of a lot. I don't really talk about it, though.","Saying it here counts. Not talking about it is common; doesn't mean you don't need to."]]},
+ {scene:1,chapter:2,title:"School corridor",location:"SCENE 02 · SCHOOL CORRIDOR",caption:"The bell has gone. Voices spill down the corridor, but Wei Jie can hear his own pulse.",q:"How often did you feel so nervous that nothing could calm you down?",answers:[
+ ["It passes after a bit; it's not a big deal.","If it passes, good. If it keeps coming back, that matters more than how fast it leaves."],
+ ["Okay, maybe sometimes it's a lot. Like I can't even focus on the worksheet.","Once it takes your focus, it's no longer background noise. That's useful to know."],
+ ["Some days nothing helps. I just sit there stuck.","Stuck is a real place to be. Nothing working today doesn't mean nothing ever will."]]},
+ {scene:1,chapter:2,title:"School corridor",location:"SCENE 02 · SCHOOL CORRIDOR",caption:"The locker door catches the light. A half-finished worksheet is folded in his hand.",q:"How often did you feel hopeless?",answers:[
+ ["Not really, I'm just tired.","Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now."],
+ ["I don't know, man. Sometimes I just stand there and forget what I'm even doing.","Blanking like that is worth remembering. It's a clue, not a flaw."],
+ ["More than I want to admit, if I'm honest.","You admitted it anyway. That took more than it looked like."]]},
+ {scene:2,chapter:3,title:"Void deck",location:"SCENE 03 · VOID DECK",caption:"At the void deck, uncles are halfway through a chess game. Wei Jie's foot keeps tapping.",q:"How often did you feel restless or fidgety?",answers:[
+ ["I'm just a fidgety person, always have been.","Maybe. People also tap when something's pressing on them. Both can be true."],
+ ["My leg just does its own thing now. I don't even notice till someone points it out.","Your body is talking even when you aren't. Worth listening to what it says."],
+ ["All the time. I can't sit still even when I try really hard to.","Trying harder isn't the fix. Being worn out from fighting it makes sense."]]},
+ {scene:2,chapter:3,title:"Void deck",location:"SCENE 03 · VOID DECK",caption:"The evening lights flick on. One lap becomes two, then five. The block stays the same.",q:"How often did you feel so restless you could not sit still?",answers:[
+ ["Sometimes I just need to walk, that's all.","Walking helps plenty of people. It's still fair to ask what you're walking away from."],
+ ["I walked around the void deck like five times yesterday. For no reason.","Five laps is a reason you haven't named yet. You don't have to name it today."],
+ ["A lot more than I used to. It's getting kind of annoying, actually.","'More than I used to' is the important half. Change is worth tracking."]]},
+ {scene:3,chapter:4,title:"Home doorway",location:"SCENE 04 · HOME DOORWAY",caption:"A results slip rests on the shoe rack. The corridor light hums softly behind him.",q:"How often did you feel depressed?",answers:[
+ ["I don't really get depressed; that's not me.","You know yourself. Just leave room for 'not me' to mean 'not lately'."],
+ ["I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?","Yes, grey is a thing. You described it accurately. You don't need a bigger word."],
+ ["More than none of the time, let's just say that.","That's a careful answer, and we'll take it as exactly as you meant it."]]},
+ {scene:3,chapter:4,title:"Home doorway",location:"SCENE 04 · HOME DOORWAY",caption:"One shoe is on. The other waits beside the slip. He takes longer than usual to bend down.",q:"How often did you feel that everything was an effort?",answers:[
+ ["Just normal school tiredness, nothing weird.","Normal tiredness usually lifts with rest. Notice if this doesn't."],
+ ["Even tying my shoes feels like a whole task now. That's so dumb to say out loud.","It isn't dumb. Small things getting heavy is one of the clearest ways to describe this."],
+ ["Everything. Literally everything feels like climbing a hill lately.","A hill with no rest stop. No wonder you're wiped."]]},
+ {scene:4,chapter:5,title:"Home dining table",location:"SCENE 05 · HOME DINING TABLE",caption:"Mum sets down his favourite snack. The familiar smell fills the room, but he doesn't reach for it.",q:"How often did you feel so sad that nothing could cheer you up?",answers:[
+ ["I still like the things I used to like, don't worry.","'Don't worry' sounds like it's meant for someone else. You don't have to perform it here."],
+ ["My mum got my favourite snack and I just. Didn't want it. That's never happened before.","That moment stuck with you for a reason. Your mum probably noticed it too."],
+ ["Honestly, nothing's been working lately. Not even the stuff I usually like.","Nothing working is exhausting in its own way. You said it plainly. Keep that."]]},
+ {scene:4,chapter:5,title:"Home dining table",location:"SCENE 05 · HOME DINING TABLE",caption:"The phone screen goes dark. In the reflection, he catches his own eyes for a second.",q:"How often did you feel worthless?",answers:[
+ ["I know I did okay, I'm not worthless, I'm just overthinking.","Overthinking is real. So is the feeling underneath it. Both can be there."],
+ ["I got a good score and I still feel like I'm not enough somehow. Make it make sense.","It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at."],
+ ["More than I'd like to say. I don't know how to explain it properly.","You said it, and that was the hard part. You don't have to explain it properly."]]}
+];
+const sceneNames=["MRT carriage","School corridor","Void deck","Home doorway","Home dining table"];
+const sceneCaptions=[
+ ["The carriage is packed. He stands, face blank, gripping the strap.","A seat opens beside him. He doesn't take it. Strap still in hand.","He's sitting, bag pulled into his lap, strap wound around his fist."],
+ ["Between lessons. Classmates stream past. He opens his locker as if nothing happened.","The corridor has emptied. Worksheet half-done in his hand, he stares into the locker.","He's the last one out. He reaches the locker slowly and doesn't open it."],
+ ["Evening. Uncles play chess nearby. He gets up, 'just stretching.'","The void deck is empty, and the lights flick on. The bench is still shaking from his leg.","It's dark. A neighbour waves. He doesn't wave back, because he's already pacing."],
+ ["He pockets the slip and sits to tie his shoes like it's any other day.","The slip lies face-down. He's on the floor with one shoe on, looking at the other.","He crumples the slip in his fist. One shoe is half-laced, and he's stalling."],
+ ["The snack sits unopened. He scrolls like nothing's wrong.","The snack is untouched, and Mum's footsteps fade. His phone goes dark in his hand.","The snack is pushed away. The dark screen shows his own face."]
+];
+let index=0, answers=[], selected=null, soundOn=false;
+const $=id=>document.getElementById(id);
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2100)}
+function updateMeters(){let counts=[0,0,0];answers.forEach(a=>{if(a!==null)counts[a]++});['a','b','c'].forEach((x,i)=>{$(x+'Count').textContent=counts[i];$(x+'Meter').style.width=(counts[i]/10*100)+'%'});$('progressFill').style.width=(answers.filter(a=>a!==null).length/10*100)+'%';$('progressText').textContent=String(index+1).padStart(2,'0')+' / 10';$('routeStatus').textContent=new Set(answers.map((a,i)=>a!==null?questions[i].scene:null).filter(v=>v!==null)).size+' / 5 scenes'}
+function setSceneVisual(q){const stage=$('stage');stage.className='stage '+['scene-mrt','scene-school','scene-void','scene-home','scene-table'][q.scene];$('location').textContent=q.location;$('chapterLabel').textContent='CHAPTER '+String(q.chapter).padStart(2,'0');$('sign').textContent=['MRT · EAST WEST LINE','SCHOOL BLOCK B','BLOCK 214 · VOID DECK','HOME · LEVEL 08','HOME · DINING TABLE'][q.scene];$('sceneCaption').textContent=q.caption;
+ const char=$('character');char.style.left=['50%','57%','45%','54%','49%'][q.scene];char.style.bottom=q.scene===2?'17%':'22%';char.style.transform='translateX(-50%) scale('+(q.scene===1?'.92':'1')+')';
+ $('prop').style.display=q.scene===3?'block':'none';
+ const buildings=$('buildings');buildings.style.opacity=q.scene===0?'.95':q.scene===1?'.65':q.scene===2?'.35':'.45';
+ document.querySelectorAll('.map-item').forEach((el,i)=>{el.classList.toggle('active',i===q.scene);el.classList.toggle('done',answers.some((a,j)=>questions[j].scene===i&&a!==null)&&i!==q.scene)});
+}
+function render(){selected=answers[index]??null;const q=questions[index];setSceneVisual(q);$('question').textContent=q.q;$('narration').textContent=index===0?'A small check-in. There are no right answers, and you can take your time.':"No score to chase. Just notice what feels true for you today.";
+$('choices').innerHTML='';q.answers.forEach((ans,i)=>{const b=document.createElement('button');b.className='choice'+(selected===i?' selected':'');b.setAttribute('aria-pressed',selected===i?'true':'false');b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span><span class="choice-text"></span><span class="hint">'+['A little / not much','Some of the time','Often / more than I say'][i]+'</span>';b.querySelector('.choice-text').textContent=ans[0];b.addEventListener('click',()=>choose(i));$('choices').appendChild(b)});
+if(selected!==null){$('replyText').textContent=q.answers[selected][1];$('reply').classList.add('show');$('nextBtn').disabled=false;$('nextBtn').textContent=index===9?'See where the story goes →':'Continue the story →';$('microcopy').textContent='Your choice is saved for this playthrough.'}else{$('reply').classList.remove('show');$('nextBtn').disabled=false;$('nextBtn').textContent='Skip for now →';$('microcopy').textContent='Choose an answer, or skip if you need.'}
+updateMeters()}
+function choose(i){answers[index]=i;selected=i;render();$('nextBtn').focus({preventScroll:true});if(soundOn){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=520+i*80;g.gain.value=.035;o.start();o.stop(ctx.currentTime+.07)}catch(e){}}}
+function next(){if(selected===null){answers[index]=null}if(index<9){index++;render()}else endStory()}
+function endStory(){const counts=[0,0,0];answers.forEach(a=>{if(a!==null)counts[a]++});let lean=counts[0]>counts[1]&&counts[0]>counts[2]?'guarded':counts[2]>counts[0]&&counts[2]>counts[1]?'open':'wavering';const ending={
+guarded:{title:"You can leave the door open a little.",text:"Wei Jie sits with his headphones in and his lunch untouched. He has built a wall out of “I'm fine.” A classmate sits nearby, not demanding an explanation.",line:"“This sandwich is too big for me. Want half? No pressure.”"},
+wavering:{title:"You don't need the perfect words.",text:"Wei Jie almost says something, then swallows it. His classmate notices he has been quiet all day, but doesn't push him to explain.",line:"“You've looked like that since morning. Half a sandwich. I'm not asking anything yet.”"},
+open:{title:"You don't have to carry it alone.",text:"Wei Jie is tired of carrying everything by himself. The seat across from him is empty, until a classmate sits down and leaves room for whatever comes next.",line:"“Hey, I don't know what's up, but I've got half a sandwich and no plans.”"}
+}[lean];
+$('endTitle').textContent=ending.title;$('endText').textContent=ending.text;$('endLine').textContent=ending.line;$('storyOverlay').style.display='none';$('endScreen').classList.add('show');$('progressFill').style.width='100%';$('progressText').textContent='10 / 10';$('routeStatus').textContent='5 / 5 scenes';toast('Story complete · You unlocked the “A Little Closer” ending')}
+function restart(){index=0;answers=[];selected=null;$('endScreen').classList.remove('show');$('storyOverlay').style.display='grid';render();toast('A fresh journey begins')}
+$('nextBtn').addEventListener('click',next);$('restartBtn').addEventListener('click',restart);
+$('helpBtn').addEventListener('click',()=>$('modal').classList.add('show'));$('pauseBtn').addEventListener('click',()=>{$('modalTitle').textContent='Take a breather';$('modalText').textContent='Look away from the screen, unclench your jaw, and take one slow breath. Your place in the story will be here when you are ready.';$('modal').classList.add('show')});
+$('closeModal').addEventListener('click',()=>{$('modal').classList.remove('show');$('modalTitle').textContent='Take your time';$('modalText').textContent='There is no timer and no perfect way to answer. Choose what feels closest, or pause whenever you need.'});
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;$('soundBtn').textContent=soundOn?'♫ Sound on':'♫ Sound off';$('soundBtn').setAttribute('aria-pressed',soundOn?'true':'false');toast(soundOn?'Soft choice cues enabled':'Sound cues off')});
+$('supportBtn').addEventListener('click',()=>{$('modalTitle').textContent='You deserve support';$('modalText').textContent='If things have felt heavy for a while, consider talking to someone you trust, a school counsellor, or a mental health professional. If you are in immediate danger or might hurt yourself, contact local emergency services. This story cannot assess your mental health, and you do not need to wait until things feel “serious enough” to ask for help.';$('modal').classList.add('show')});
+document.addEventListener('keydown',e=>{if($('modal').classList.contains('show')){if(e.key==='Escape')$('modal').classList.remove('show');return}if(e.key==='1'||e.key==='2'||e.key==='3'){const n=Number(e.key)-1;if($('endScreen').classList.contains('show'))return;choose(n)}if(e.key==='Enter'&&document.activeElement.tagName!=='BUTTON')next();if(e.key==='ArrowRight'&&selected!==null)next()});
+render();
+</script>
+</body>
+</html>

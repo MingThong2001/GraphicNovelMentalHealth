@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Between Stops — An Interactive Graphic Novel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0b1320;
+    color: #f1f5f9;
+  }
+
+  /* Dynamic Canvas Container Panel */
+  .panel-frame {
+    position: relative;
+    border: 3px solid #334155;
+    box-shadow: 6px 6px 0px #020617;
+  }
+
+  /* Background Scene Container with Cover and Smooth Transitions */
+  #sceneBgLayer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 0.6s ease-in-out, filter 0.4s ease;
+    z-index: 0;
+  }
+
+  /* Dark Atmospheric Mood Overlay to ensure UI text contrast */
+  .scene-mood-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.75) 60%, rgba(15, 23, 42, 0.95) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Canvas Drawing Layer */
+  #comicCanvas {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Custom scrollbar for side panel */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 999px;
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
+
+  <!-- TOP APP BAR / BRANDING -->
+  <header class="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-teal-400 text-slate-950 font-black text-xl flex items-center justify-center -rotate-3 shadow-md">
+        ↗
+      </div>
+      <div>
+        <span class="text-[10px] font-extrabold tracking-widest text-teal-400 uppercase block">A SOAR Story</span>
+        <h1 class="text-lg font-bold text-slate-100 tracking-tight leading-none">BETWEEN STOPS</h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="soundBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition">
+        ♫ Sound off
+      </button>
+      <button id="helpBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition">
+        How to play?
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP GRID LAYOUT -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+
+    <!-- LEFT / MAIN STAGE & CHOICE CONTROLS (8 COLS) -->
+    <section class="lg:col-span-8 flex flex-col gap-5">
+
+      <!-- GRAPHIC NOVEL CANVASTAGE -->
+      <div class="panel-frame rounded-2xl bg-slate-900 overflow-hidden relative">
+        
+        <!-- Environment Image Background Layer -->
+        <div id="sceneBgLayer"></div>
+
+        <!-- Atmospheric Dark Gradient Overlay for Readability -->
+        <div class="scene-mood-overlay"></div>
+
+        <!-- Canvas Element -->
+        <canvas id="comicCanvas" class="w-full h-[320px] sm:h-[400px] lg:h-[420px] block cursor-pointer"></canvas>
+
+        <!-- Vignette Caption Box -->
+        <div class="absolute top-4 left-4 right-4 sm:right-auto max-w-md bg-slate-950/90 border border-slate-700/80 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl z-[10]">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
+              SCENE 01 · MRT CARRIAGE
+            </span>
+            <span id="variantBadge" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Standard State
+            </span>
+          </div>
+          <p id="sceneDescription" class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+            The carriage is packed. He stands, face blank, gripping the strap.
+          </p>
+        </div>
+
+        <!-- Visual Bleed Overlay (Fades in when holding choices) -->
+        <div id="bleedOverlay" class="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 bg-gradient-to-t from-teal-500/20 to-transparent z-[4]"></div>
+        
+        <!-- Interactive Hint Badge -->
+        <div id="holdHint" class="absolute bottom-3 right-3 text-[10px] font-bold text-slate-300 bg-slate-950/85 px-3 py-1.5 rounded-lg border border-slate-700/80 pointer-events-none backdrop-blur-md z-[10] shadow-md">
+          💡 Click or Hold Choice to Reflect
+        </div>
+      </div>
+
+      <!-- STORY QUESTION & INTERACTIVE CHOICES PANEL -->
+      <div id="storyPanel" class="bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4">
+        
+        <!-- Progress Bar & Question Counter -->
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-400">
+          <span id="chapterLabel" class="text-teal-400 uppercase tracking-wider">Stop 1 of 5</span>
+          <div class="flex-1 mx-4 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-teal-400 transition-all duration-300" style="width: 10%;"></div>
+          </div>
+          <span id="qCountLabel">01 / 10</span>
+        </div>
+
+        <!-- Current Question Header -->
+        <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight leading-snug">
+          Tired out for no reason?
+        </h2>
+
+        <!-- Choices Container -->
+        <div id="choicesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-3 my-1">
+          <!-- Dynamically populated choices -->
+        </div>
+
+        <!-- Narrative Reflection Feedback Box -->
+        <div id="replyBox" class="hidden bg-teal-950/50 border border-teal-500/30 p-4 rounded-xl text-teal-200 text-xs sm:text-sm leading-relaxed transition-all">
+          <strong class="block text-[10px] uppercase tracking-widest text-teal-400 font-extrabold mb-1">
+            What the story notices
+          </strong>
+          <span id="replyText">...</span>
+        </div>
+
+        <!-- Footer Navigation Row -->
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-slate-800/80">
+          <span id="microcopy" class="text-xs text-slate-400 font-medium">
+            Choose the answer that feels closest today.
+          </span>
+          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-teal-400 text-slate-950 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-teal-300 transition-all shadow-lg">
+            Choose an answer →
+          </button>
+        </div>
+      </div>
+
+      <!-- OUTCOME / ENDING SCREEN (HIDDEN UNTIL FINISH) -->
+      <div id="endScreen" class="hidden bg-slate-900 border border-teal-500/40 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-amber-400 text-slate-950 font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl">
+          ✦
+        </div>
+        <span class="text-xs font-extrabold text-teal-400 tracking-widest uppercase">The Next Stop</span>
+        <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-100">
+          You don't have to carry it alone.
+        </h2>
+        <p id="endText" class="text-sm text-slate-300 max-w-lg leading-relaxed">
+          Wei Jie sits with his headphones in...
+        </p>
+        <blockquote id="endLine" class="text-sm font-semibold italic text-teal-300 bg-slate-950/80 p-4 rounded-xl border border-teal-500/30 max-w-md my-2">
+          "This sandwich is too big for me. Want half? No pressure."
+        </blockquote>
+        <div class="flex items-center gap-3 mt-2">
+          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-teal-400 text-slate-950 hover:bg-teal-300 transition">
+            Replay the story ↺
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT / SIDEBAR DASHBOARD & METERS (4 COLS) -->
+    <aside class="lg:col-span-4 flex flex-col gap-4">
+
+      <!-- ROUTE PROGRESS MAP CARD -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Your Route</h3>
+          <span id="routeStatus" class="text-[10px] font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">0 / 5 Scenes</span>
+        </div>
+        <div id="mapList" class="flex flex-col gap-2.5">
+          <!-- Route items populated dynamically -->
+        </div>
+      </div>
+
+      <!-- SPECTRUM RESONANCE METERS -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Story Signals</h3>
+          <span class="text-[10px] font-semibold text-slate-400">Resonance</span>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-teal-300">Guarded (A)</span>
+              <span id="aCount" class="text-slate-400">0</span>
+            </div>
+            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="aMeter" class="h-full bg-teal-400 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-amber-300">Wavering (B)</span>
+              <span id="bCount" class="text-slate-400">0</span>
+            </div>
+            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="bMeter" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-rose-300">Open (C)</span>
+              <span id="cCount" class="text-slate-400">0</span>
+            </div>
+            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="cMeter" class="h-full bg-rose-400 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed mt-4 pt-3 border-t border-slate-800">
+          Your choices shape Wei Jie's perspective and the classmate's outreach.
+        </p>
+      </div>
+
+      <!-- SUPPORT CARD -->
+      <div class="bg-slate-900/90 border border-teal-500/30 p-4 rounded-2xl shadow-lg">
+        <h3 class="text-xs font-bold text-teal-300 mb-1">A Gentle Reminder</h3>
+        <p class="text-xs text-slate-300 leading-relaxed mb-3">
+          This story is a check-in, not a test. Take your time or pause whenever needed.
+        </p>
+        <button id="pauseBtn" class="w-full py-2 rounded-xl text-xs font-bold border border-teal-500/40 text-teal-200 hover:bg-teal-500/10 transition">
+          Take a breather
+        </button>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- MODAL DIALOG -->
+  <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+      <h3 id="modalTitle" class="text-lg font-bold text-slate-100 mb-2">Take your time</h3>
+      <p id="modalText" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
+        There is no timer and no wrong choice. Choose what feels closest to you today.
+      </p>
+      <button id="closeModal" class="w-full py-2.5 rounded-xl bg-teal-400 text-slate-950 font-bold text-xs hover:bg-teal-300 transition">
+        Back to story
+      </button>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    // --- STORY DATA ---
+    const storyData = {
+      scenes: [
+        { id: 0, title: "MRT Carriage", location: "SCENE 01 · MRT CARRIAGE", icon: "🚇", bgImage: "MRT.jpg" },
+        { id: 1, title: "School Corridor", location: "SCENE 02 · SCHOOL CORRIDOR", icon: "🏫", bgImage: "School Corridor.jpg" },
+        { id: 2, title: "Void Deck", location: "SCENE 03 · VOID DECK", icon: "🏢", bgImage: "HDB Void Deck.jpg" },
+        { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "" },
+        { id: 4, title: "Dining Table", location: "SCENE 05 · HOME DINING TABLE", icon: "🍊", bgImage: "" }
+      ],
+      sceneVariants: [
+        [
+          "The carriage is packed. He stands, face blank, gripping the strap.",
+          "A seat opens beside him. He doesn't take it. Strap still in hand.",
+          "He's sitting, bag pulled into his lap, strap wound around his fist."
+        ],
+        [
+          "Between lessons. Classmates stream past. He opens his locker as if nothing happened.",
+          "The corridor has emptied. Worksheet half-done in his hand, he stares into the locker.",
+          "He's the last one out. He reaches the locker slowly and doesn't open it."
+        ],
+        [
+          "Evening. Uncles play chess nearby. He gets up, 'just stretching.'",
+          "The void deck is empty, and the lights flick on. The bench is still shaking from his leg.",
+          "It's dark. A neighbour waves. He doesn't wave back, because he's already pacing."
+        ],
+        [
+          "He pockets the slip and sits to tie his shoes like it's any other day.",
+          "The slip lies face-down. He's on the floor with one shoe on, looking at the other.",
+          "He crumples the slip in his fist. One shoe is half-laced, and he's stalling."
+        ],
+        [
+          "The snack sits unopened. He scrolls like nothing's wrong.",
+          "The snack is untouched, and Mum's footsteps fade. His phone goes dark in his hand.",
+          "The snack is pushed away. The dark screen shows his own face."
+        ]
+      ],
+      questions: [
+        {
+          sceneIdx: 0,
+          text: "Tired out for no reason?",
+          answers: [
+            { text: "I'm fine, just didn't sleep much.", reply: "Sleep explains some tiredness, not all of it. Worth noticing which kind this is." },
+            { text: "I don't even do anything, and I'm already dead by 3 pm; it's so weird.", reply: "So weird is you spotting a pattern. Don't talk yourself out of spotting it." },
+            { text: "Every day. I don't know why I'm always this tired.", reply: "Every day is not a small thing. You don't need a reason to take it seriously." }
+          ]
+        },
+        {
+          sceneIdx: 0,
+          text: "How often did you feel nervous?",
+          answers: [
+            { text: "Nah, I'm good.", reply: "Look at your grip on that strap. You don't have to agree with it yet." },
+            { text: "Not nervous nervous. Just... new school, new everything.", reply: "Big change, big load. 'Just' is shrinking something that isn't small." },
+            { text: "Honestly kind of a lot. I don't really talk about it, though.", reply: "Saying it here counts. Not talking about it is common; doesn't mean you don't need to." }
+          ]
+        },
+        {
+          sceneIdx: 1,
+          text: "How often did you feel so nervous that nothing could calm you down?",
+          answers: [
+            { text: "It passes after a bit; it's not a big deal.", reply: "If it passes, good. If it keeps coming back, that matters more than how fast it leaves." },
+            { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on the worksheet.", reply: "Once it takes your focus, it's no longer background noise. That's useful to know." },
+            { text: "Some days nothing helps. I just sit there stuck.", reply: "Stuck is a real place to be. Nothing working today doesn't mean nothing ever will." }
+          ]
+        },
+        {
+          sceneIdx: 1,
+          text: "How often did you feel hopeless?",
+          answers: [
+            { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
+            { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "Blanking like that is worth remembering. It's a clue, not a flaw." },
+            { text: "More than I want to admit, if I'm honest.", reply: "You admitted it anyway. That took more than it looked like." }
+          ]
+        },
+        {
+          sceneIdx: 2,
+          text: "How often did you feel restless or fidgety?",
+          answers: [
+            { text: "I'm just a fidgety person, always have been.", reply: "Maybe. People also tap when something's pressing on them. Both can be true." },
+            { text: "My leg just does its own thing now. I don't even notice till someone points it out.", reply: "Your body is talking even when you aren't. Worth listening to what it says." },
+            { text: "All the time. I can't sit still even when I try really hard to.", reply: "Trying harder isn't the fix. Being worn out from fighting it makes sense." }
+          ]
+        },
+        {
+          sceneIdx: 2,
+          text: "How often did you feel so restless you could not sit still?",
+          answers: [
+            { text: "Sometimes I just need to walk, that's all.", reply: "Walking helps plenty of people. It's still fair to ask what you're walking away from." },
+            { text: "I walked around the void deck like five times yesterday. For no reason.", reply: "Five laps is a reason you haven't named yet. You don't have to name it today." },
+            { text: "A lot more than I used to. It's getting kind of annoying, actually.", reply: "'More than I used to' is the important half. Change is worth tracking." }
+          ]
+        },
+        {
+          sceneIdx: 3,
+          text: "How often did you feel depressed?",
+          answers: [
+            { text: "I don't really get depressed; that's not me.", reply: "You know yourself. Just leave room for 'not me' to mean 'not lately'." },
+            { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yes, grey is a thing. You described it accurately. You don't need a bigger word." },
+            { text: "More than none of the time, let's just say that.", reply: "That's a careful answer, and we'll take it as exactly as you meant it." }
+          ]
+        },
+        {
+          sceneIdx: 3,
+          text: "How often did you feel that everything was an effort?",
+          answers: [
+            { text: "Just normal school tiredness, nothing weird.", reply: "Normal tiredness usually lifts with rest. Notice if this doesn't." },
+            { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. Small things getting heavy is one of the clearest ways to describe this." },
+            { text: "Everything. Literally everything feels like climbing a hill lately.", reply: "A hill with no rest stop. No wonder you're wiped." }
+          ]
+        },
+        {
+          sceneIdx: 4,
+          text: "How often did you feel so sad that nothing could cheer you up?",
+          answers: [
+            { text: "I still like the things I used to like, don't worry.", reply: "'Don't worry' sounds like it's meant for someone else. You don't have to perform it here." },
+            { text: "My mum got my favourite snack and I just. Didn't want it. That's never happened before.", reply: "That moment stuck with you for a reason. Your mum probably noticed it too." },
+            { text: "Honestly, nothing's been working lately. Not even the stuff I usually like.", reply: "Nothing working is exhausting in its own way. You said it plainly. Keep that." }
+          ]
+        },
+        {
+          sceneIdx: 4,
+          text: "How often did you feel worthless?",
+          answers: [
+            { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Overthinking is real. So is the feeling underneath it. Both can be there." },
+            { text: "I got a good score and I still feel like I'm not enough somehow. Make it make sense.", reply: "It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at." },
+            { text: "More than I'd like to say. I don't know how to explain it properly.", reply: "You said it, and that was the hard part. You don't have to explain it properly." }
+          ]
+        }
+      ]
+    };
+
+    // --- STATE MANAGEMENT ---
+    let currentQIdx = 0;
+    let userAnswers = new Array(10).fill(null);
+    let soundOn = false;
+
+    // --- DOM ELEMENT REFERENCES ---
+    const comicCanvas = document.getElementById('comicCanvas');
+    const ctx = comicCanvas ? comicCanvas.getContext('2d') : null;
+
+    // --- SPRITE SHEET ANIMATION CONFIGURATION ---
+    const spriteSheets = {
+      0: { src: 'character_tired.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      1: { src: 'character_nervous.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      2: { src: 'character_nervous_01.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      3: { src: 'character_hopeless.png', rows: 2, cols: 3, totalFrames: 6, fps: 6 },
+      4: { src: 'character_bench_restless.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      5: { src: 'character_pacing.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
+      6: { src: 'character_depressed.png', rows: 2, cols: 3, totalFrames: 6, fps: 6 },
+      7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 }
+    };
+
+    const loadedSprites = {};
+
+    // Preload all sprite sheets
+    Object.keys(spriteSheets).forEach(key => {
+      const config = spriteSheets[key];
+      const img = new Image();
+      img.src = config.src;
+      img.onload = () => {
+        config.loaded = true;
+      };
+      loadedSprites[key] = img;
+    });
+
+    // Fallback single image support
+    const characterImg = new Image();
+    characterImg.src = 'character.png';
+    let characterLoaded = false;
+    characterImg.onload = () => { characterLoaded = true; };
+
+    let animFrameId = null;
+
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      setupCanvasResolution();
+      renderRouteMap();
+      renderQuestion();
+      setupEventListeners();
+      startAnimationLoop();
+    });
+
+    function startAnimationLoop() {
+      function loop() {
+        drawComicPanel();
+        animFrameId = requestAnimationFrame(loop);
+      }
+      if (!animFrameId) {
+        loop();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      setupCanvasResolution();
+      drawComicPanel();
+    });
+
+    function setupCanvasResolution() {
+      if (!comicCanvas) return;
+      const rect = comicCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      comicCanvas.width = rect.width * dpr;
+      comicCanvas.height = rect.height * dpr;
+      if (ctx) ctx.scale(dpr, dpr);
+    }
+
+    // --- SCENE & VISUAL SETTER ---
+    function setSceneVisual(scene) {
+      const bgLayer = document.getElementById('sceneBgLayer');
+      if (!bgLayer) return;
+
+      if (scene.bgImage && scene.bgImage.trim() !== '') {
+        bgLayer.style.backgroundImage = `url('${encodeURI(scene.bgImage)}')`;
+      } else {
+        const fallbackGradients = [
+          'radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)',
+          'radial-gradient(circle at center, #312e81 0%, #1e1b4b 100%)',
+          'radial-gradient(circle at center, #1f2937 0%, #111827 100%)',
+          'radial-gradient(circle at center, #44403c 0%, #1c1917 100%)',
+          'radial-gradient(circle at center, #78350f 0%, #0f172a 100%)'
+        ];
+        bgLayer.style.backgroundImage = fallbackGradients[scene.id] || fallbackGradients[0];
+      }
+    }
+
+    // --- RENDER QUESTION & UI ---
+    function renderQuestion() {
+      const q = storyData.questions[currentQIdx];
+      const currentScene = storyData.scenes[q.sceneIdx];
+      const selectedAns = userAnswers[currentQIdx];
+
+      // Update Environmental Image Background
+      setSceneVisual(currentScene);
+
+      // Update Scene Description Variant based on last answer
+      const variantIdx = selectedAns !== null ? selectedAns : 0;
+      const sceneDesc = storyData.sceneVariants[q.sceneIdx][variantIdx];
+      document.getElementById('sceneDescription').textContent = sceneDesc;
+      document.getElementById('sceneTag').textContent = currentScene.location;
+      document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
+
+      // Progress Tracker
+      document.getElementById('chapterLabel').textContent = `Stop ${q.sceneIdx + 1} of 5`;
+      document.getElementById('qCountLabel').textContent = `${String(currentQIdx + 1).padStart(2, '0')} / 10`;
+      document.getElementById('progressBar').style.width = `${((currentQIdx + 1) / 10) * 100}%`;
+
+      // Header Question
+      document.getElementById('questionText').textContent = q.text;
+
+      // Render Choice Buttons
+      const choicesContainer = document.getElementById('choicesContainer');
+      choicesContainer.innerHTML = '';
+
+      q.answers.forEach((ans, i) => {
+        const btn = document.createElement('button');
+        const isSelected = selectedAns === i;
+        btn.className = `p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full ${
+          isSelected
+            ? 'bg-teal-500/20 border-teal-400 text-teal-100 shadow-lg'
+            : 'bg-slate-800/80 border-slate-700/80 text-slate-200 hover:border-slate-500 hover:bg-slate-800'
+        }`;
+
+        btn.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-teal-400 text-slate-950' : 'bg-slate-700 text-slate-300'} text-xs font-black flex items-center justify-center">
+              ${String.fromCharCode(65 + i)}
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold uppercase">
+              ${['A little', 'Sometimes', 'Often'][i]}
+            </span>
+          </div>
+          <p class="text-xs font-medium leading-snug">${ans.text}</p>
+        `;
+
+        btn.addEventListener('click', () => selectChoice(i));
+        choicesContainer.appendChild(btn);
+      });
+
+      // Reflection Box
+      const replyBox = document.getElementById('replyBox');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (selectedAns !== null) {
+        replyBox.classList.remove('hidden');
+        document.getElementById('replyText').textContent = q.answers[selectedAns].reply;
+        nextBtn.disabled = false;
+        nextBtn.textContent = currentQIdx === 9 ? 'See Ending →' : 'Continue →';
+      } else {
+        replyBox.classList.add('hidden');
+        nextBtn.disabled = true;
+        nextBtn.textContent = 'Choose an answer →';
+      }
+
+      updateMetersAndRoute();
+      drawComicPanel();
+    }
+
+    function selectChoice(ansIdx) {
+      userAnswers[currentQIdx] = ansIdx;
+      if (soundOn) playTone(500 + ansIdx * 100);
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (userAnswers[currentQIdx] === null) return;
+      if (currentQIdx < 9) {
+        currentQIdx++;
+        renderQuestion();
+      } else {
+        showEnding();
+      }
+    }
+
+    // --- CANVAS DRAWING CODE ---
+    function drawComicPanel() {
+      if (!ctx || !comicCanvas) return;
+      const w = comicCanvas.width / (window.devicePixelRatio || 1);
+      const h = comicCanvas.height / (window.devicePixelRatio || 1);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const q = storyData.questions[currentQIdx];
+      const sceneIdx = q.sceneIdx;
+      const currentAns = userAnswers[currentQIdx];
+
+      drawCharacter(ctx, sceneIdx, currentAns, w, h);
+    }
+
+    function drawCharacter(c, sceneIdx, ansState, w, h) {
+      const cx = w * 0.5;
+      const cy = h * 0.58;
+
+      let stateScale = 1.0;
+      if (ansState === 0) {
+        stateScale = 0.92;
+      } else if (ansState === 1) {
+        stateScale = 1.0;
+      } else if (ansState === 2) {
+        stateScale = 1.08;
+      }
+
+      const finalScale = stateScale;
+
+      c.save();
+      c.translate(cx, cy);
+
+      // Determine active sprite sheet key
+      const spriteKey = currentQIdx % 8;
+      const config = spriteSheets[spriteKey];
+      const spriteImg = loadedSprites[spriteKey];
+
+      if (config && config.loaded && spriteImg) {
+        const frameIndex = Math.floor(Date.now() / (1000 / config.fps)) % config.totalFrames;
+        const row = Math.floor(frameIndex / config.cols);
+        const col = frameIndex % config.cols;
+
+        const frameWidth = spriteImg.width / config.cols;
+        const frameHeight = spriteImg.height / config.rows;
+
+        const aspect = frameWidth / frameHeight || 1;
+        const targetHeight = h * 0.55 * finalScale;
+        const targetWidth = targetHeight * aspect;
+
+        c.drawImage(
+          spriteImg,
+          col * frameWidth,
+          row * frameHeight,
+          frameWidth,
+          frameHeight,
+          -targetWidth / 2,
+          -targetHeight / 2,
+          targetWidth,
+          targetHeight
+        );
+      } else if (characterLoaded) {
+        // Draw single character image fallback
+        const aspect = characterImg.width / characterImg.height || 1;
+        const targetHeight = h * 0.55 * finalScale;
+        const targetWidth = targetHeight * aspect;
+
+        c.drawImage(
+          characterImg,
+          -targetWidth / 2,
+          -targetHeight / 2,
+          targetWidth,
+          targetHeight
+        );
+      } else {
+        // Procedural vector character fallback reflecting scene states
+        const r = 35 * finalScale;
+        c.fillStyle = ansState === 2 ? '#2dd4bf' : ansState === 1 ? '#fbbf24' : '#64748b';
+        c.beginPath();
+        c.arc(0, -r, r, 0, Math.PI * 2);
+        c.fill();
+      }
+
+      c.restore();
+    }
+
+    // --- METERS & ROUTE MAP ---
+    function updateMetersAndRoute() {
+      const counts = [0, 0, 0];
+      userAnswers.forEach(a => { if (a !== null) counts[a]++; });
+
+      document.getElementById('aCount').textContent = counts[0];
+      document.getElementById('bCount').textContent = counts[1];
+      document.getElementById('cCount').textContent = counts[2];
+
+      const answeredTotal = userAnswers.filter(a => a !== null).length;
+      const denominator = answeredTotal || 1;
+
+      document.getElementById('aMeter').style.width = `${(counts[0] / denominator) * 100}%`;
+      document.getElementById('bMeter').style.width = `${(counts[1] / denominator) * 100}%`;
+      document.getElementById('cMeter').style.width = `${(counts[2] / denominator) * 100}%`;
+
+      const scenesVisited = new Set(userAnswers.map((a, i) => a !== null ? storyData.questions[i].sceneIdx : null).filter(v => v !== null));
+      document.getElementById('routeStatus').textContent = `${scenesVisited.size} / 5 Scenes`;
+
+      renderRouteMap();
+    }
+
+    function renderRouteMap() {
+      const mapList = document.getElementById('mapList');
+      if (!mapList) return;
+      mapList.innerHTML = '';
+
+      const currentSceneIdx = storyData.questions[currentQIdx].sceneIdx;
+
+      storyData.scenes.forEach((sc, i) => {
+        const isCurrent = i === currentSceneIdx;
+        const isDone = userAnswers.some((a, qI) => storyData.questions[qI].sceneIdx === i && a !== null) && !isCurrent;
+
+        const item = document.createElement('div');
+        item.className = `flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
+          isCurrent
+            ? 'bg-teal-500/20 border-teal-400 text-teal-200'
+            : isDone
+            ? 'bg-slate-800/60 border-slate-700/60 text-slate-300'
+            : 'bg-slate-900/40 border-slate-800/40 text-slate-500 opacity-60'
+        }`;
+
+        item.innerHTML = `
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isCurrent ? 'bg-teal-400 text-slate-950' : 'bg-slate-800'}">
+            ${sc.icon}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold leading-none mb-1">${sc.title}</h4>
+            <span class="text-[10px] block opacity-80 truncate">${sc.location}</span>
+          </div>
+        `;
+        mapList.appendChild(item);
+      });
+    }
+
+    // --- ENDING SCREEN ---
+    function showEnding() {
+      const counts = [0, 0, 0];
+      userAnswers.forEach(a => { if (a !== null) counts[a]++; });
+
+      let lean = 'wavering';
+      if (counts[0] > counts[1] && counts[0] > counts[2]) lean = 'guarded';
+      if (counts[2] > counts[0] && counts[2] > counts[1]) lean = 'open';
+
+      const endings = {
+        guarded: {
+          title: "You can leave the door open a little.",
+          text: "Wei Jie sits with his headphones in and his lunch untouched. He has built a wall out of 'fine'. A classmate sits nearby, not demanding an explanation.",
+          line: '"This sandwich is too big for me. Want half? No pressure."'
+        },
+        wavering: {
+          title: "You don't need the perfect words.",
+          text: "Wei Jie almost says something, then swallows it. His classmate notices he has been quiet all day, but doesn't push him to explain.",
+          line: '"You\'ve looked like that since morning. Half a sandwich. I\'m not asking anything yet."'
+        },
+        open: {
+          title: "You don't have to carry it alone.",
+          text: "Wei Jie is tired of carrying everything by himself. The seat across from him is empty, until a classmate sits down and leaves room for whatever comes next.",
+          line: '"Hey, I don\'t know what\'s up, but I\'ve got half a sandwich and no plans."'
+        }
+      };
+
+      const ending = endings[lean];
+      document.getElementById('endTitle').textContent = ending.title;
+      document.getElementById('endText').textContent = ending.text;
+      document.getElementById('endLine').textContent = ending.line;
+
+      document.getElementById('storyPanel').classList.add('hidden');
+      document.getElementById('endScreen').classList.remove('hidden');
+    }
+
+    function restartStory() {
+      currentQIdx = 0;
+      userAnswers = new Array(10).fill(null);
+      document.getElementById('endScreen').classList.add('hidden');
+      document.getElementById('storyPanel').classList.remove('hidden');
+      renderQuestion();
+    }
+
+    // --- EVENT LISTENERS & AUDIO SYNTH ---
+    function setupEventListeners() {
+      document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+      document.getElementById('restartBtn').addEventListener('click', restartStory);
+
+      const modal = document.getElementById('modal');
+      document.getElementById('helpBtn').addEventListener('click', () => {
+        document.getElementById('modalTitle').textContent = "How to play?";
+        document.getElementById('modalText').textContent = "Read each scene stop and reflect on the question. Choose the statement that feels closest to your experience today. There are no right or wrong answers.";
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+
+      document.getElementById('pauseBtn').addEventListener('click', () => {
+        document.getElementById('modalTitle').textContent = "Take a breather";
+        document.getElementById('modalText').textContent = "Unclench your jaw, relax your shoulders, and take one deep breath. Your place in the story will be saved.";
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+
+      document.getElementById('closeModal').addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+
+      const soundBtn = document.getElementById('soundBtn');
+      soundBtn.addEventListener('click', () => {
+        soundOn = !soundOn;
+        soundBtn.textContent = soundOn ? "♫ Sound on" : "♫ Sound off";
+      });
+    }
+
+    function playTone(freq) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.value = 0.05;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>
