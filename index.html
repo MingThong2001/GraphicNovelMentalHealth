@@ -65,7 +65,7 @@
   }
 
   .animate-breath {
-    animation: breathCycle 8s ease-in-out infinite;
+    animation: breathCycle 10s ease-in-out infinite; /* 4s in, 2s hold, 4s out */
   }
 
   /* Custom scrollbar for side panel */
@@ -1520,9 +1520,10 @@
 
         if (timerEl) timerEl.textContent = `${mins}:${secs}`;
         if (promptEl) {
-          const mod = timeLeft % 8;
-          if (mod > 4) promptEl.textContent = "Breathe in...";
-          else if (mod === 4) promptEl.textContent = "Hold...";
+          // Same 10s cycle as the circle animation: 0-4s in, 4-6s hold, 6-10s out
+          const phase = (90 - timeLeft) % 10;
+          if (phase < 4) promptEl.textContent = "Breathe in...";
+          else if (phase < 6) promptEl.textContent = "Hold...";
           else promptEl.textContent = "Breathe out...";
         }
 
