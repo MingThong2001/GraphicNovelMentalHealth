@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Between Stops — An Interactive Graphic Novel</title>
+<title>Between Stops — Gamified Graphic Novel Check-In</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -11,13 +11,14 @@
     font-family: 'Inter', sans-serif;
     background-color: #314A6F;
     color: #ffffff;
+    user-select: none;
   }
 
   /* Dynamic Canvas Container Panel */
   .panel-frame {
     position: relative;
-    border: 3px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 6px 6px 0px rgba(0, 0, 0, 0.35);
   }
 
   /* Background Scene Container with Cover and Smooth Transitions */
@@ -46,6 +47,27 @@
     z-index: 2;
   }
 
+  /* Custom pulse animation for game badges */
+  @keyframes badgeGlow {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.06); opacity: 1; }
+  }
+
+  .badge-pulse {
+    animation: badgeGlow 2s infinite ease-in-out;
+  }
+
+  /* Breathing Circle Animation */
+  @keyframes breathCycle {
+    0%, 100% { transform: scale(0.85); opacity: 0.6; }
+    40% { transform: scale(1.25); opacity: 1; }
+    60% { transform: scale(1.25); opacity: 1; }
+  }
+
+  .animate-breath {
+    animation: breathCycle 8s ease-in-out infinite;
+  }
+
   /* Custom scrollbar for side panel */
   ::-webkit-scrollbar {
     width: 6px;
@@ -61,17 +83,31 @@
 </head>
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
 
-  <!-- TOP APP BAR / BRANDING -->
-  <header class="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
+  <!-- TOP APP BAR / BRANDING & GAMIFIED METRICS -->
+  <header class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-white text-[#314A6F] font-black text-xl flex items-center justify-center -rotate-3 shadow-md">
         ↗
       </div>
       <div>
-        <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A SOAR Story</span>
+        <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A Gamified Story Check-In</span>
         <h1 class="text-lg font-bold text-white tracking-tight leading-none">BETWEEN STOPS</h1>
       </div>
     </div>
+
+    <!-- GAMIFIED HUD SCOREBOARD -->
+    <div class="flex items-center gap-3 bg-[#1e304b] border border-white/20 px-4 py-2 rounded-xl shadow-md">
+      <div class="flex items-center gap-2 pr-3 border-r border-white/20">
+        <span class="text-xs font-bold text-white/80">✦ INSIGHT XP:</span>
+        <span id="scoreVal" class="text-sm font-black text-white">0</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-white/80">STREAK:</span>
+        <span id="streakVal" class="text-xs font-black bg-white text-[#314A6F] px-2 py-0.5 rounded-md">0x</span>
+      </div>
+    </div>
+
+    <!-- ACTION CONTROLS -->
     <div class="flex items-center gap-2">
       <button id="soundBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/30 bg-[#314A6F]/80 text-white hover:bg-white hover:text-[#314A6F] transition">
         ♫ Sound off
@@ -88,7 +124,7 @@
     <!-- LEFT / MAIN STAGE & CHOICE CONTROLS (8 COLS) -->
     <section class="lg:col-span-8 flex flex-col gap-5">
 
-      <!-- GRAPHIC NOVEL CANVASTAGE -->
+      <!-- GRAPHIC NOVEL CANVASTAGE WITH GAME OVERLAYS -->
       <div class="panel-frame rounded-2xl bg-[#1e304b] overflow-hidden relative">
         
         <!-- Environment Image Background Layer -->
@@ -97,13 +133,26 @@
         <!-- Atmospheric Dark Gradient Overlay for Readability -->
         <div class="scene-mood-overlay"></div>
 
-        <!-- Canvas Element -->
-        <canvas id="comicCanvas" class="w-full h-[320px] sm:h-[400px] lg:h-[420px] block cursor-pointer"></canvas>
+        <!-- Dynamic Emotional Energy Gauge HUD Overlay (Top Canvas) -->
+        <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-3 z-[15] pointer-events-none">
+          <div class="bg-[#1e304b]/90 border border-white/30 px-3 py-1.5 rounded-xl backdrop-blur-md flex items-center gap-2 text-[11px] font-bold">
+            <span class="text-white/70">EMOTIONAL CAPACITY:</span>
+            <div class="w-24 h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="capacityBar" class="h-full bg-white transition-all duration-500" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div class="bg-[#1e304b]/90 border border-white/30 px-3 py-1.5 rounded-xl backdrop-blur-md text-[10px] font-bold text-white/90">
+            <span id="thoughtBubbleCount">💬 0 Floating Thoughts Active</span>
+          </div>
+        </div>
 
-        <!-- Vignette Caption Box -->
-        <div class="absolute top-4 left-4 right-4 sm:right-auto max-w-md bg-[#1e304b]/95 border border-white/30 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl z-[10]">
+        <!-- Canvas Element -->
+        <canvas id="comicCanvas" class="w-full h-[340px] sm:h-[400px] lg:h-[420px] block cursor-pointer"></canvas>
+
+        <!-- Dynamic Vignette Caption Box -->
+        <div class="relative z-[10] mx-4 mb-4 bg-[#1e304b]/95 border border-white/30 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl">
           <div class="flex items-center justify-between gap-2 mb-1.5">
-            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white text-[#314A6F] font-bold border border-white">
+            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white text-[#314A6F] border border-white">
               SCENE 01 · MRT CARRIAGE
             </span>
             <span id="variantBadge" class="text-[10px] font-bold text-white/80 uppercase tracking-wider">
@@ -115,23 +164,16 @@
           </p>
         </div>
 
-        <!-- Visual Bleed Overlay (Fades in when holding choices) -->
-        <div id="bleedOverlay" class="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 bg-gradient-to-t from-white/20 to-transparent z-[4]"></div>
-        
-        <!-- Interactive Hint Badge -->
-        <div id="holdHint" class="absolute bottom-3 right-3 text-[10px] font-bold text-white bg-[#1e304b]/90 px-3 py-1.5 rounded-lg border border-white/30 pointer-events-none backdrop-blur-md z-[10] shadow-md">
-          💡 Click or Hold Choice to Reflect
-        </div>
       </div>
 
-      <!-- STORY QUESTION & INTERACTIVE CHOICES PANEL -->
-      <div id="storyPanel" class="bg-[#1e304b] border border-white/20 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4">
+      <!-- STORY QUESTION & INTERACTIVE GAMIFIED CHOICES PANEL -->
+      <div id="storyPanel" class="bg-[#1e304b] border border-white/20 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4 relative overflow-hidden">
         
         <!-- Progress Bar & Question Counter -->
         <div class="flex items-center justify-between text-xs font-semibold text-white/70">
           <span id="chapterLabel" class="text-white uppercase tracking-wider font-bold">Stop 1 of 5</span>
-          <div class="flex-1 mx-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
-            <div id="progressBar" class="h-full bg-white transition-all duration-300" style="width: 10%;"></div>
+          <div class="flex-1 mx-4 h-2 bg-white/20 rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div id="progressBar" class="h-full bg-white transition-all duration-300 rounded-full" style="width: 10%;"></div>
           </div>
           <span id="qCountLabel" class="text-white">01 / 10</span>
         </div>
@@ -141,47 +183,69 @@
           Tired out for no reason?
         </h2>
 
-        <!-- Choices Container -->
+        <!-- Interactive Hold-to-Select Choice Buttons -->
         <div id="choicesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-3 my-1">
           <!-- Dynamically populated choices -->
         </div>
 
-        <!-- Narrative Reflection Feedback Box -->
+        <!-- Reflective Feedback & Quest Insight Box -->
         <div id="replyBox" class="hidden bg-white/10 border border-white/30 p-4 rounded-xl text-white text-xs sm:text-sm leading-relaxed transition-all">
-          <strong class="block text-[10px] uppercase tracking-widest text-white font-extrabold mb-1">
-            What the story notices
-          </strong>
+          <div class="flex items-center justify-between mb-1">
+            <strong class="block text-[10px] uppercase tracking-widest text-white font-extrabold">
+              What the story notices
+            </strong>
+            <span id="xpBonusTag" class="text-[10px] font-black bg-white text-[#314A6F] px-2 py-0.5 rounded">+50 ✦ INSIGHT</span>
+          </div>
           <span id="replyText">...</span>
         </div>
 
         <!-- Footer Navigation Row -->
         <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
           <span id="microcopy" class="text-xs text-white/70 font-medium">
-            Choose the answer that feels closest today.
+            Press & Hold or Tap an option to reflect and select.
           </span>
-          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg">
-            Choose an answer →
+          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg flex items-center gap-2">
+            <span>Choose an answer</span>
+            <span>→</span>
           </button>
         </div>
       </div>
 
-      <!-- OUTCOME / ENDING SCREEN (HIDDEN UNTIL FINISH) -->
-      <div id="endScreen" class="hidden bg-[#1e304b] border border-white/30 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl">
+      <!-- OUTCOME / GAMIFIED ENDING SCREEN -->
+      <div id="endScreen" class="hidden bg-[#1e304b] border border-white/30 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl badge-pulse">
           ✦
         </div>
-        <span class="text-xs font-extrabold text-white/80 tracking-widest uppercase">The Next Stop</span>
+        <span class="text-xs font-extrabold text-white/80 tracking-widest uppercase">Journey Completed</span>
         <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-white">
           You don't have to carry it alone.
         </h2>
+
+        <!-- End Game Stats Card -->
+        <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-white/10 p-3 rounded-xl border border-white/20">
+          <div class="text-center">
+            <span class="text-[10px] text-white/70 block uppercase font-bold">Total XP</span>
+            <span id="finalXP" class="text-base font-black text-white">0</span>
+          </div>
+          <div class="text-center border-x border-white/20">
+            <span class="text-[10px] text-white/70 block uppercase font-bold">Thoughts Unlocked</span>
+            <span id="finalThoughts" class="text-base font-black text-white">0</span>
+          </div>
+          <div class="text-center">
+            <span class="text-[10px] text-white/70 block uppercase font-bold">Badges Earned</span>
+            <span id="finalBadges" class="text-base font-black text-white">0</span>
+          </div>
+        </div>
+
         <p id="endText" class="text-sm text-white/90 max-w-lg leading-relaxed">
           Wei Jie sits with his headphones in...
         </p>
-        <blockquote id="endLine" class="text-sm font-semibold italic text-white bg-[#314A6F]/80 p-4 rounded-xl border border-white/30 max-w-md my-2">
+        <blockquote id="endLine" class="text-sm font-semibold italic text-white bg-[#314A6F]/80 p-4 rounded-xl border border-white/30 max-w-md my-1">
           "This sandwich is too big for me. Want half? No pressure."
         </blockquote>
+        
         <div class="flex items-center gap-3 mt-2">
-          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] hover:bg-white/90 transition">
+          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] hover:bg-white/90 transition shadow-lg">
             Replay the story ↺
           </button>
         </div>
@@ -191,6 +255,17 @@
 
     <!-- RIGHT / SIDEBAR DASHBOARD & METERS (4 COLS) -->
     <aside class="lg:col-span-4 flex flex-col gap-4">
+
+      <!-- UNLOCKED BADGES / ACHIEVEMENTS TRAY -->
+      <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Reflection Badges</h3>
+          <span id="badgeCountLabel" class="text-[10px] font-extrabold bg-white text-[#314A6F] px-2 py-0.5 rounded">0 / 6</span>
+        </div>
+        <div id="badgesGrid" class="grid grid-cols-2 gap-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
 
       <!-- ROUTE PROGRESS MAP CARD -->
       <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
@@ -243,11 +318,11 @@
         </p>
       </div>
 
-      <!-- SUPPORT CARD -->
+      <!-- BREATHER CARD -->
       <div class="bg-[#1e304b]/90 border border-white/30 p-4 rounded-2xl shadow-lg">
         <h3 class="text-xs font-bold text-white mb-1">A Gentle Reminder</h3>
         <p class="text-xs text-white/80 leading-relaxed mb-3">
-          This story is a check-in, not a test. Take your time or pause whenever needed.
+          This check-in is a space to pause. Take your time or pause whenever needed.
         </p>
         <button id="pauseBtn" class="w-full py-2 rounded-xl text-xs font-bold border border-white/40 text-white hover:bg-white hover:text-[#314A6F] transition">
           Take a breather
@@ -260,11 +335,11 @@
 
   <!-- MODAL DIALOG -->
   <div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+    <div id="modalCard" class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 shadow-2xl relative">
       <h3 id="modalTitle" class="text-lg font-bold text-white mb-2">Take your time</h3>
-      <p id="modalText" class="text-xs sm:text-sm text-white/80 leading-relaxed mb-5">
+      <div id="modalBody" class="text-xs sm:text-sm text-white/80 leading-relaxed mb-5">
         There is no timer and no wrong choice. Choose what feels closest to you today.
-      </p>
+      </div>
       <button id="closeModal" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition">
         Back to story
       </button>
@@ -313,6 +388,7 @@
         {
           sceneIdx: 0,
           text: "Tired out for no reason?",
+          thoughts: [{ type: "body", text: "My legs feel like wet sand. The strap is the only thing holding me up." }, { type: "mind", text: "It's not even evening yet. Why am I already worn out?" }, { type: "unsaid", text: "If I say I'm tired, they'll just tell me to sleep earlier." }],
           answers: [
             { text: "I'm fine, just didn't sleep much.", reply: "Sleep explains some tiredness, not all of it. Worth noticing which kind this is." },
             { text: "I don't even do anything, and I'm already dead by 3 pm; it's so weird.", reply: "So weird is you spotting a pattern. Don't talk yourself out of spotting it." },
@@ -322,6 +398,7 @@
         {
           sceneIdx: 0,
           text: "How often did you feel nervous?",
+          thoughts: [{ type: "body", text: "My fingers are white around this strap. When did I start gripping so hard?" }, { type: "mind", text: "New school, new faces. What if I say the wrong thing?" }, { type: "unsaid", text: "I keep my face blank so nobody asks. It's not as fine as it looks." }],
           answers: [
             { text: "Nah, I'm good.", reply: "Look at your grip on that strap. You don't have to agree with it yet." },
             { text: "Not nervous nervous. Just... new school, new everything.", reply: "Big change, big load. 'Just' is shrinking something that isn't small." },
@@ -331,6 +408,7 @@
         {
           sceneIdx: 1,
           text: "How often did you feel so nervous that nothing could calm you down?",
+          thoughts: [{ type: "body", text: "My heart is racing and I'm just standing at my locker." }, { type: "mind", text: "I've read the same line on this worksheet four times." }, { type: "unsaid", text: "If I tell someone, they'll think I'm making a big deal out of nothing." }],
           answers: [
             { text: "It passes after a bit; it's not a big deal.", reply: "If it passes, good. If it keeps coming back, that matters more than how fast it leaves." },
             { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on the worksheet.", reply: "Once it takes your focus, it's no longer background noise. That's useful to know." },
@@ -340,6 +418,7 @@
         {
           sceneIdx: 1,
           text: "How often did you feel hopeless?",
+          thoughts: [{ type: "body", text: "My feet stopped moving before I decided to stop." }, { type: "mind", text: "What's the point of all this when I feel like this?" }, { type: "unsaid", text: "I don't need it fixed. I just want someone to notice." }],
           answers: [
             { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
             { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "Blanking like that is worth remembering. It's a clue, not a flaw." },
@@ -349,6 +428,7 @@
         {
           sceneIdx: 2,
           text: "How often did you feel restless or fidgety?",
+          thoughts: [{ type: "body", text: "My leg keeps bouncing. It won't stop, even when I tell it to." }, { type: "mind", text: "Stretching. I'm just stretching. Nobody will ask." }, { type: "unsaid", text: "Sitting still means thinking, and I'd rather not think right now." }],
           answers: [
             { text: "I'm just a fidgety person, always have been.", reply: "Maybe. People also tap when something's pressing on them. Both can be true." },
             { text: "My leg just does its own thing now. I don't even notice till someone points it out.", reply: "Your body is talking even when you aren't. Worth listening to what it says." },
@@ -358,6 +438,7 @@
         {
           sceneIdx: 2,
           text: "How often did you feel so restless you could not sit still?",
+          thoughts: [{ type: "body", text: "Five laps already. My legs want to keep going, but I don't know where to." }, { type: "mind", text: "If I keep moving, the heavy feeling can't catch up." }, { type: "unsaid", text: "I'm walking in circles and I'm not sure what I'm walking away from." }],
           answers: [
             { text: "Sometimes I just need to walk, that's all.", reply: "Walking helps plenty of people. It's still fair to ask what you're walking away from." },
             { text: "I walked around the void deck like five times yesterday. For no reason.", reply: "Five laps is a reason you haven't named yet. You don't have to name it today." },
@@ -367,6 +448,7 @@
         {
           sceneIdx: 3,
           text: "How often did you feel depressed?",
+          thoughts: [{ type: "body", text: "My chest feels like a grey blanket. Everything's turned down low." }, { type: "mind", text: "Everyone has bad days. I shouldn't make this a big deal." }, { type: "unsaid", text: "I can't remember the last time something felt properly good." }],
           answers: [
             { text: "I don't really get depressed; that's not me.", reply: "You know yourself. Just leave room for 'not me' to mean 'not lately'." },
             { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yes, grey is a thing. You described it accurately. You don't need a bigger word." },
@@ -376,6 +458,7 @@
         {
           sceneIdx: 3,
           text: "How often did you feel that everything was an effort?",
+          thoughts: [{ type: "body", text: "One shoe on. My arms feel too heavy to reach for the other." }, { type: "mind", text: "It's just shoes. Why is this so hard?" }, { type: "unsaid", text: "If I say how hard this is, it'll sound ridiculous." }],
           answers: [
             { text: "Just normal school tiredness, nothing weird.", reply: "Normal tiredness usually lifts with rest. Notice if this doesn't." },
             { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. Small things getting heavy is one of the clearest ways to describe this." },
@@ -385,6 +468,7 @@
         {
           sceneIdx: 4,
           text: "How often did you feel so sad that nothing could cheer you up?",
+          thoughts: [{ type: "body", text: "My favourite snack is right there, but I feel no pull toward it." }, { type: "mind", text: "Mum went out of her way for this. I should be happier." }, { type: "unsaid", text: "I wish I could feel the way I used to." }],
           answers: [
             { text: "I still like the things I used to like, don't worry.", reply: "'Don't worry' sounds like it's meant for someone else. You don't have to perform it here." },
             { text: "My mum got my favourite snack and I just. Didn't want it. That's never happened before.", reply: "That moment stuck with you for a reason. Your mum probably noticed it too." },
@@ -394,6 +478,7 @@
         {
           sceneIdx: 4,
           text: "How often did you feel worthless?",
+          thoughts: [{ type: "body", text: "My shoulders are curled in, like I'm trying to take up less space." }, { type: "mind", text: "I did well, and it still feels like I didn't do enough." }, { type: "unsaid", text: "What if people only like me when I do well?" }],
           answers: [
             { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Overthinking is real. So is the feeling underneath it. Both can be there." },
             { text: "I got a good score and I still feel like I'm not enough somehow. Make it make sense.", reply: "It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at." },
@@ -403,10 +488,33 @@
       ]
     };
 
-    // --- STATE MANAGEMENT ---
+    // --- GAME BADGES DEFINITION ---
+    const gameBadges = [
+      { id: 'first_step', title: 'First Step', desc: 'Started the check-in journey', icon: '👟', unlocked: false },
+      { id: 'look_inward', title: 'Little Look Inward', desc: 'Self-Awareness: Took at least 3 minutes to reflect on feelings', icon: '🔍', unlocked: false },
+      { id: 'honest_observer', title: 'Honest Observer', desc: 'Listened to 3 inner thought echoes', icon: '💬', unlocked: false },
+      { id: 'pause_button', title: 'Pause Button', desc: 'Taking a Breather: Took time to pause during check-in', icon: '🧘', unlocked: false },
+      { id: 'deep_reflection', title: 'Deep Reflection', desc: 'Completed half of the story stops', icon: '✦', unlocked: false },
+      { id: 'self_aware', title: 'Self-Awareness', desc: 'Completed the full story journey', icon: '🕊️', unlocked: false }
+    ];
+
+    // --- GAMIFIED STATE MANAGEMENT ---
     let currentQIdx = 0;
     let userAnswers = new Array(10).fill(null);
     let soundOn = false;
+    let insightXP = 0;
+    let streakCount = 0;
+    let totalThoughtsPopped = 0;
+    let activeFloatingBubbles = [];
+    let thoughtsHeard = Array.from({ length: 10 }, () => []);
+    let activeThoughtId = null;
+    let thoughtTimer = null;
+    let particles = [];
+    let emotionalCapacity = 100;
+    
+    // Timer for "Little Look Inward" badge (3 minutes = 180,000 ms)
+    let questionStartTime = Date.now();
+    let breatherTimerInterval = null;
 
     // --- DOM ELEMENT REFERENCES ---
     const comicCanvas = document.getElementById('comicCanvas');
@@ -431,9 +539,7 @@
       const config = spriteSheets[key];
       const img = new Image();
       img.src = config.src;
-      img.onload = () => {
-        config.loaded = true;
-      };
+      img.onload = () => { config.loaded = true; };
       loadedSprites[key] = img;
     });
 
@@ -448,14 +554,17 @@
     // --- INITIALIZATION ---
     window.addEventListener('load', () => {
       setupCanvasResolution();
+      renderBadges();
       renderRouteMap();
       renderQuestion();
       setupEventListeners();
       startAnimationLoop();
+      unlockBadge('first_step');
     });
 
     function startAnimationLoop() {
       function loop() {
+        updateGameObjects();
         drawComicPanel();
         animFrameId = requestAnimationFrame(loop);
       }
@@ -466,6 +575,7 @@
 
     window.addEventListener('resize', () => {
       setupCanvasResolution();
+      spawnFloatingThoughts();
       drawComicPanel();
     });
 
@@ -476,6 +586,184 @@
       comicCanvas.width = rect.width * dpr;
       comicCanvas.height = rect.height * dpr;
       if (ctx) ctx.scale(dpr, dpr);
+    }
+
+    // --- FLOATING THOUGHT BUBBLES MECHANIC ---
+    const THOUGHT_TYPES = {
+      body:   { icon: '💓', label: 'Body',   caption: 'Inner voice · What his body feels' },
+      mind:   { icon: '💭', label: 'Mind',   caption: 'Inner voice · What runs through his mind' },
+      unsaid: { icon: '🤫', label: 'Unsaid', caption: 'Inner voice · What he won\'t say aloud' }
+    };
+
+    const THOUGHT_ANCHORS = {
+      body:   { x: 0.30, y: 0.50 },
+      mind:   { x: 0.64, y: 0.36 },
+      unsaid: { x: 0.72, y: 0.58 }
+    };
+
+    function restoreCaption() {
+      clearTimeout(thoughtTimer);
+      activeThoughtId = null;
+      const q = storyData.questions[currentQIdx];
+      const selectedAns = userAnswers[currentQIdx];
+      const variantIdx = selectedAns !== null ? selectedAns : 0;
+      const desc = document.getElementById('sceneDescription');
+      desc.textContent = storyData.sceneVariants[q.sceneIdx][variantIdx];
+      desc.classList.remove('italic');
+      document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
+    }
+
+    function updateThoughtCounter() {
+      const el = document.getElementById('thoughtBubbleCount');
+      if (userAnswers[currentQIdx] !== null) {
+        el.textContent = '💭 Thoughts locked in';
+        return;
+      }
+      const heard = activeFloatingBubbles.filter(b => b.heard).length;
+      el.textContent = `💭 ${heard} / ${activeFloatingBubbles.length} thoughts heard`;
+    }
+
+    function showThought(b) {
+      activeThoughtId = b.id;
+      const desc = document.getElementById('sceneDescription');
+      desc.textContent = `\u201C${b.text}\u201D`;
+      desc.classList.add('italic');
+      document.getElementById('variantBadge').textContent = THOUGHT_TYPES[b.type].caption;
+      clearTimeout(thoughtTimer);
+      thoughtTimer = setTimeout(restoreCaption, 8000);
+    }
+
+    function spawnFloatingThoughts() {
+      if (!comicCanvas) return;
+      const rect = comicCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      restoreCaption();
+
+      if (userAnswers[currentQIdx] !== null) {
+        activeFloatingBubbles = [];
+        updateThoughtCounter();
+        return;
+      }
+
+      const q = storyData.questions[currentQIdx];
+      activeFloatingBubbles = (q.thoughts || []).map((t, i) => {
+        const anchor = THOUGHT_ANCHORS[t.type] || { x: 0.5, y: 0.4 };
+        return {
+          id: i,
+          type: t.type,
+          text: t.text,
+          x: w * anchor.x,
+          y: h * anchor.y,
+          baseY: h * anchor.y,
+          r: 30,
+          floatOffset: Math.random() * Math.PI * 2,
+          heard: thoughtsHeard[currentQIdx].includes(i)
+        };
+      });
+
+      updateThoughtCounter();
+    }
+
+    // --- CANVAS INTERACTION & PARTICLE SYSTEMS ---
+    if (comicCanvas) {
+      comicCanvas.addEventListener('click', (e) => {
+        const rect = comicCanvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        activeFloatingBubbles.forEach(b => {
+          const dx = clickX - b.x;
+          const dy = clickY - b.y;
+          if (Math.sqrt(dx * dx + dy * dy) < b.r + 10) {
+            showThought(b);
+            if (soundOn) playTone(800);
+
+            if (!b.heard) {
+              b.heard = true;
+              thoughtsHeard[currentQIdx].push(b.id);
+              totalThoughtsPopped++;
+              gainXP(25);
+              spawnParticles(b.x, b.y);
+              if (totalThoughtsPopped >= 3) {
+                unlockBadge('honest_observer');
+              }
+              updateThoughtCounter();
+            }
+          }
+        });
+      });
+    }
+
+    function spawnParticles(x, y) {
+      for (let i = 0; i < 12; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1.0,
+          decay: 0.03 + Math.random() * 0.02
+        });
+      }
+    }
+
+    function updateGameObjects() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      const time = Date.now() * 0.002;
+      activeFloatingBubbles.forEach(b => {
+        b.y = b.baseY + Math.sin(time + b.floatOffset) * 6;
+      });
+    }
+
+    function gainXP(amount) {
+      insightXP += amount;
+      document.getElementById('scoreVal').textContent = insightXP;
+    }
+
+    function unlockBadge(badgeId) {
+      const b = gameBadges.find(x => x.id === badgeId);
+      if (b && !b.unlocked) {
+        b.unlocked = true;
+        renderBadges();
+      }
+    }
+
+    function renderBadges() {
+      const grid = document.getElementById('badgesGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      let unlockedCount = 0;
+      gameBadges.forEach(b => {
+        if (b.unlocked) unlockedCount++;
+        const card = document.createElement('div');
+        card.className = `p-2.5 rounded-xl border flex items-center gap-2 transition-all ${
+          b.unlocked 
+            ? 'bg-white text-[#314A6F] border-white font-semibold shadow-md' 
+            : 'bg-[#1e304b]/40 border-white/10 text-white/40'
+        }`;
+        card.innerHTML = `
+          <span class="text-base">${b.icon}</span>
+          <div class="min-w-0 flex-1">
+            <h4 class="text-[11px] font-bold leading-tight">${b.title}</h4>
+            <span class="text-[9px] block opacity-80 leading-none truncate">${b.desc}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      document.getElementById('badgeCountLabel').textContent = `${unlockedCount} / ${gameBadges.length}`;
     }
 
     // --- SCENE & VISUAL SETTER ---
@@ -499,43 +787,41 @@
 
     // --- RENDER QUESTION & UI ---
     function renderQuestion() {
+      questionStartTime = Date.now(); // Start timer for "Little Look Inward" badge
+
       const q = storyData.questions[currentQIdx];
       const currentScene = storyData.scenes[q.sceneIdx];
       const selectedAns = userAnswers[currentQIdx];
 
-      // Update Environmental Image Background
       setSceneVisual(currentScene);
+      spawnFloatingThoughts();
 
-      // Update Scene Description Variant based on last answer
       const variantIdx = selectedAns !== null ? selectedAns : 0;
       const sceneDesc = storyData.sceneVariants[q.sceneIdx][variantIdx];
       document.getElementById('sceneDescription').textContent = sceneDesc;
       document.getElementById('sceneTag').textContent = currentScene.location;
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
 
-      // Progress Tracker
       document.getElementById('chapterLabel').textContent = `Stop ${q.sceneIdx + 1} of 5`;
       document.getElementById('qCountLabel').textContent = `${String(currentQIdx + 1).padStart(2, '0')} / 10`;
       document.getElementById('progressBar').style.width = `${((currentQIdx + 1) / 10) * 100}%`;
 
-      // Header Question
       document.getElementById('questionText').textContent = q.text;
 
-      // Render Choice Buttons
       const choicesContainer = document.getElementById('choicesContainer');
       choicesContainer.innerHTML = '';
 
       q.answers.forEach((ans, i) => {
         const btn = document.createElement('button');
         const isSelected = selectedAns === i;
-        btn.className = `p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full ${
+        btn.className = `group relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full overflow-hidden ${
           isSelected
-            ? 'bg-white text-[#314A6F] border-white shadow-lg font-semibold'
+            ? 'bg-white text-[#314A6F] border-white shadow-lg font-semibold scale-[1.02]'
             : 'bg-[#314A6F]/70 border-white/20 text-white hover:border-white/50 hover:bg-[#314A6F]'
         }`;
 
         btn.innerHTML = `
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between mb-2 pointer-events-none">
             <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-[#314A6F] text-white' : 'bg-white/20 text-white'} text-xs font-black flex items-center justify-center">
               ${String.fromCharCode(65 + i)}
             </span>
@@ -543,14 +829,13 @@
               ${['A little', 'Sometimes', 'Often'][i]}
             </span>
           </div>
-          <p class="text-xs font-medium leading-snug">${ans.text}</p>
+          <p class="text-xs font-medium leading-snug pointer-events-none">${ans.text}</p>
         `;
 
         btn.addEventListener('click', () => selectChoice(i));
         choicesContainer.appendChild(btn);
       });
 
-      // Reflection Box
       const replyBox = document.getElementById('replyBox');
       const nextBtn = document.getElementById('nextBtn');
 
@@ -558,11 +843,11 @@
         replyBox.classList.remove('hidden');
         document.getElementById('replyText').textContent = q.answers[selectedAns].reply;
         nextBtn.disabled = false;
-        nextBtn.textContent = currentQIdx === 9 ? 'See Ending →' : 'Continue →';
+        nextBtn.querySelector('span').textContent = currentQIdx === 9 ? 'See Journey Outcome' : 'Continue Journey';
       } else {
         replyBox.classList.add('hidden');
         nextBtn.disabled = true;
-        nextBtn.textContent = 'Choose an answer →';
+        nextBtn.querySelector('span').textContent = 'Choose an answer';
       }
 
       updateMetersAndRoute();
@@ -570,8 +855,27 @@
     }
 
     function selectChoice(ansIdx) {
+      // Check if user took 3+ minutes (180,000 ms) to reflect and answer
+      const elapsed = Date.now() - questionStartTime;
+      if (elapsed >= 180000) {
+        unlockBadge('look_inward');
+      }
+
+      if (userAnswers[currentQIdx] === null) {
+        streakCount++;
+        gainXP(50);
+        emotionalCapacity = Math.max(20, emotionalCapacity - (ansIdx * 10));
+        document.getElementById('capacityBar').style.width = `${emotionalCapacity}%`;
+      }
       userAnswers[currentQIdx] = ansIdx;
-      if (soundOn) playTone(500 + ansIdx * 100);
+      document.getElementById('streakVal').textContent = `${streakCount}x`;
+      
+      if (soundOn) playTone(500 + ansIdx * 120);
+
+      if (currentQIdx >= 4) {
+        unlockBadge('deep_reflection');
+      }
+
       renderQuestion();
     }
 
@@ -581,6 +885,7 @@
         currentQIdx++;
         renderQuestion();
       } else {
+        unlockBadge('self_aware');
         showEnding();
       }
     }
@@ -598,6 +903,46 @@
       const currentAns = userAnswers[currentQIdx];
 
       drawCharacter(ctx, sceneIdx, currentAns, w, h);
+
+      activeFloatingBubbles.forEach(b => {
+        const type = THOUGHT_TYPES[b.type];
+        ctx.save();
+        ctx.globalAlpha = b.heard ? 0.6 : 1;
+
+        if (b.id === activeThoughtId) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r + 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        ctx.shadowColor = b.heard ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.55)';
+        ctx.shadowBlur = b.heard ? 8 : 16;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '16px Inter, sans-serif';
+        ctx.fillText(type.icon, b.x, b.y - 6);
+        ctx.fillStyle = '#314A6F';
+        ctx.font = 'bold 9px Inter, sans-serif';
+        ctx.fillText(b.heard ? type.label + ' ✓' : type.label, b.x, b.y + 15);
+        ctx.restore();
+      });
+
+      particles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.life})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3 * p.life, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
     }
 
     function drawCharacter(c, sceneIdx, ansState, w, h) {
@@ -618,7 +963,13 @@
       c.save();
       c.translate(cx, cy);
 
-      // Determine active sprite sheet key
+      c.save();
+      c.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      c.beginPath();
+      c.arc(0, -30, 80 * finalScale, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+
       const spriteKey = currentQIdx % 8;
       const config = spriteSheets[spriteKey];
       const spriteImg = loadedSprites[spriteKey];
@@ -647,7 +998,6 @@
           targetHeight
         );
       } else if (characterLoaded) {
-        // Draw single character image fallback
         const aspect = characterImg.width / characterImg.height || 1;
         const targetHeight = h * 0.55 * finalScale;
         const targetWidth = targetHeight * aspect;
@@ -660,7 +1010,6 @@
           targetHeight
         );
       } else {
-        // Procedural vector character fallback reflecting scene states
         const r = 35 * finalScale;
         c.fillStyle = '#ffffff';
         c.beginPath();
@@ -707,7 +1056,7 @@
         const item = document.createElement('div');
         item.className = `flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
           isCurrent
-            ? 'bg-white text-[#314A6F] border-white'
+            ? 'bg-white text-[#314A6F] border-white font-semibold'
             : isDone
             ? 'bg-[#314A6F]/60 border-white/20 text-white'
             : 'bg-[#1e304b]/40 border-white/10 text-white/50'
@@ -758,6 +1107,10 @@
       document.getElementById('endText').textContent = ending.text;
       document.getElementById('endLine').textContent = ending.line;
 
+      document.getElementById('finalXP').textContent = insightXP;
+      document.getElementById('finalThoughts').textContent = totalThoughtsPopped;
+      document.getElementById('finalBadges').textContent = `${gameBadges.filter(b=>b.unlocked).length} / ${gameBadges.length}`;
+
       document.getElementById('storyPanel').classList.add('hidden');
       document.getElementById('endScreen').classList.remove('hidden');
     }
@@ -765,9 +1118,160 @@
     function restartStory() {
       currentQIdx = 0;
       userAnswers = new Array(10).fill(null);
+      insightXP = 0;
+      streakCount = 0;
+      totalThoughtsPopped = 0;
+      thoughtsHeard = Array.from({ length: 10 }, () => []);
+      emotionalCapacity = 100;
+
+      document.getElementById('scoreVal').textContent = '0';
+      document.getElementById('streakVal').textContent = '0x';
+      document.getElementById('capacityBar').style.width = '100%';
+
+      gameBadges.forEach(b => { if (b.id !== 'first_step') b.unlocked = false; });
+      renderBadges();
+
       document.getElementById('endScreen').classList.add('hidden');
       document.getElementById('storyPanel').classList.remove('hidden');
       renderQuestion();
+    }
+
+    // --- BREATHER & MODAL SYSTEM ---
+    function openBreatherModal() {
+      clearInterval(breatherTimerInterval);
+      const modal = document.getElementById('modal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      modalTitle.textContent = "Take a Breather";
+      modalBody.innerHTML = `
+        <p class="text-xs sm:text-sm text-white/80 leading-relaxed mb-4">
+          Choose a breather activity to pause and reset your mind.
+        </p>
+        <div class="flex flex-col gap-3">
+          <button id="breatheOption1" class="p-3.5 rounded-xl border border-white/20 bg-white/10 text-left hover:bg-white/20 transition flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-white">1. Take a few slow breaths</span>
+              <span class="text-[10px] text-white/70">Animated breathing circle · 90s Timer</span>
+            </div>
+            <span class="text-lg">🌬️</span>
+          </button>
+          
+          <button id="breatheOption2" class="p-3.5 rounded-xl border border-white/20 bg-white/10 text-left hover:bg-white/20 transition flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-white">2. Listen to your favourite song</span>
+              <span class="text-[10px] text-white/70">Play your music · 3-5 min</span>
+            </div>
+            <span class="text-lg">🎵</span>
+          </button>
+
+          <button id="breatheOption3" class="p-3.5 rounded-xl border border-white/20 bg-white/10 text-left hover:bg-white/20 transition flex items-center justify-between">
+            <div>
+              <span class="block text-xs font-bold text-white">3. Step outside for a while</span>
+              <span class="text-[10px] text-white/70">Find a quiet spot · Short walk</span>
+            </div>
+            <span class="text-lg">🚶‍♂️</span>
+          </button>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      document.getElementById('breatheOption1').addEventListener('click', startBreathingExercise);
+      document.getElementById('breatheOption2').addEventListener('click', startMusicExercise);
+      document.getElementById('breatheOption3').addEventListener('click', startOutdoorExercise);
+    }
+
+    function startBreathingExercise() {
+      unlockBadge('pause_button');
+      let timeLeft = 90; // 90 second countdown
+
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      modalTitle.textContent = "Take a few slow breaths";
+      modalBody.innerHTML = `
+        <div class="flex flex-col items-center py-4 text-center">
+          <div class="w-28 h-28 rounded-full border-4 border-white flex items-center justify-center animate-breath shadow-xl mb-4 bg-white/10">
+            <span id="breathPrompt" class="text-xs font-black uppercase text-white">Breathe in...</span>
+          </div>
+          <span id="breathTimer" class="text-2xl font-black text-white tracking-widest mb-1">01:30</span>
+          <p class="text-xs text-white/70">Follow the circle. Relax your shoulders and unclench your jaw.</p>
+        </div>
+      `;
+
+      breatherTimerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const secs = String(timeLeft % 60).padStart(2, '0');
+        const timerEl = document.getElementById('breathTimer');
+        const promptEl = document.getElementById('breathPrompt');
+
+        if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+        
+        if (promptEl) {
+          const mod = timeLeft % 8;
+          if (mod > 4) promptEl.textContent = "Breathe in...";
+          else if (mod === 4) promptEl.textContent = "Hold...";
+          else promptEl.textContent = "Breathe out...";
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(breatherTimerInterval);
+          if (promptEl) promptEl.textContent = "Complete ✓";
+        }
+      }, 1000);
+    }
+
+    function startMusicExercise() {
+      unlockBadge('pause_button');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      modalTitle.textContent = "Listen to your favourite song";
+      modalBody.innerHTML = `
+        <div class="flex flex-col items-center py-4 text-center gap-3">
+          <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] flex items-center justify-center text-3xl font-black shadow-lg">
+            🎵
+          </div>
+          <p class="text-xs sm:text-sm text-white/90 leading-relaxed">
+            Open your preferred music app and play a song that comforts or energizes you. Take 3–5 minutes for yourself.
+          </p>
+          <button id="doneMusicBtn" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition shadow-md mt-2">
+            I'm done listening 🎵
+          </button>
+        </div>
+      `;
+
+      document.getElementById('doneMusicBtn').addEventListener('click', () => {
+        document.getElementById('modal').classList.add('hidden');
+      });
+    }
+
+    function startOutdoorExercise() {
+      unlockBadge('pause_button');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+
+      modalTitle.textContent = "Step outside for a while";
+      modalBody.innerHTML = `
+        <div class="flex flex-col items-center py-4 text-center gap-3">
+          <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] flex items-center justify-center text-3xl font-black shadow-lg">
+            🍃
+          </div>
+          <p class="text-xs sm:text-sm text-white/90 leading-relaxed">
+            Find a quiet spot, feel the breeze, or take a short 5–10 minute walk. Return whenever you feel ready.
+          </p>
+          <button id="doneWalkBtn" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition shadow-md mt-2">
+            I'm back 🚶‍♂️
+          </button>
+        </div>
+      `;
+
+      document.getElementById('doneWalkBtn').addEventListener('click', () => {
+        document.getElementById('modal').classList.add('hidden');
+      });
     }
 
     // --- EVENT LISTENERS & AUDIO SYNTH ---
@@ -778,19 +1282,21 @@
       const modal = document.getElementById('modal');
       document.getElementById('helpBtn').addEventListener('click', () => {
         document.getElementById('modalTitle').textContent = "How to play?";
-        document.getElementById('modalText').textContent = "Read each scene stop and reflect on the question. Choose the statement that feels closest to your experience today. There are no right or wrong answers.";
+        document.getElementById('modalBody').innerHTML = `
+          <p class="text-xs sm:text-sm text-white/80 leading-relaxed">
+            1. Tap floating thought bubbles on screen to earn Insight XP and hear Wei Jie's inner monologue.<br>
+            2. Choose or hold the answer that feels closest to your experience today.<br>
+            3. Track your Emotional Energy & unlock Badges as you progress through all 5 stops.
+          </p>
+        `;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       });
 
-      document.getElementById('pauseBtn').addEventListener('click', () => {
-        document.getElementById('modalTitle').textContent = "Take a breather";
-        document.getElementById('modalText').textContent = "Unclench your jaw, relax your shoulders, and take one deep breath. Your place in the story will be saved.";
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      });
+      document.getElementById('pauseBtn').addEventListener('click', openBreatherModal);
 
       document.getElementById('closeModal').addEventListener('click', () => {
+        clearInterval(breatherTimerInterval);
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       });
