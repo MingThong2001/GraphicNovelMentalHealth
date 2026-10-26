@@ -535,20 +535,20 @@
       6: { src: 'character_depressed.png', rows: 2, cols: 3, totalFrames: 6, fps: 6 },
       7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       8: { src: 'character_scroll phone.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
-      9: { src: 'mother_sandwich.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
+      9: { src: 'mother_sandwich2.png', rows: 3, cols: 4, totalFrames: 12, fps: 4 },
       10: { src: 'boy_sandwich_ohone.png', rows: 2, cols: 3, totalFrames: 6, fps: 8 },
       // Snack interlude (plays between Q3 and the branch scenes) - adjust rows/cols/totalFrames to match your sheets
       11: { src: 'boy_snack.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
-      12: { src: 'character_tired1.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      12: { src: 'character_tired1.png', rows: 2, cols: 3, totalFrames: 6, fps: 2 },
       // Branch scene sprites, one per path (A / B / C)
       13: { src: 'branch_a.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       14: { src: 'branch_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       15: { src: 'branch_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       // Snack interlude sprites for path B and path C
       16: { src: 'boy_snack_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
-      17: { src: 'character_tired1_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      17: { src: 'character_tired1_b.png', rows: 2, cols: 3, totalFrames: 6, fps: 2 },
       18: { src: 'boy_snack_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
-      19: { src: 'character_tired1_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 }
+      19: { src: 'character_tired1_c.png', rows: 2, cols: 3, totalFrames: 6, fps: 2 },
     };
 
     const loadedSprites = {};
@@ -1173,14 +1173,16 @@
       });
     }
 
-    function drawSprite(c, spriteKey, offsetX, targetH, stateScale) {
+    function drawSprite(c, spriteKey, offsetX, targetH, stateScale, frameOverride, flipX) {
       const config = spriteSheets[spriteKey];
       const spriteImg = loadedSprites[spriteKey];
 
       if (config && config.loaded && spriteImg) {
         // Slow down sprite 8 (boy on phone) so it animates gently without bobbing too much
         const fps = (spriteKey === 8) ? config.fps * 0.35 : config.fps;
-        const frameIndex = Math.floor(Date.now() / (1000 / fps)) % config.totalFrames;
+        const frameIndex = frameOverride !== undefined
+          ? Math.min(frameOverride, config.totalFrames - 1)
+          : Math.floor(Date.now() / (1000 / fps)) % config.totalFrames;
         const row = Math.floor(frameIndex / config.cols);
         const col = frameIndex % config.cols;
 
@@ -1193,6 +1195,7 @@
 
         c.save();
         c.translate(offsetX, 0);
+        if (flipX) c.scale(-1, 1);
         c.drawImage(
           spriteImg,
           col * frameWidth,
@@ -1266,12 +1269,21 @@
         c.restore();
       } else if (!isShowingBranchScene && currentQIdx === 8) {
         // Pair is centred on the middle of the three thought bubbles; mum walks in from the right toward the boy
-        const mumT = mumWalkStart ? Math.min(1, (Date.now() - mumWalkStart) / 2500) : 1;
-        const mumEased = 1 - Math.pow(1 - mumT, 3);
-        const mumX = (w * 0.42) + ((w * 0.09) - (w * 0.42)) * mumEased;
+        // Mum plays once (all frames), disappears, waits 5s, then plays again. Sprite is mirrored so she faces the boy.
+        if (!mumWalkStart) mumWalkStart = Date.now();
+        const mumCfg = spriteSheets[9];
+        const mumPlayMs = (mumCfg.totalFrames / mumCfg.fps) * 1000;
+        const mumWaitMs = 5000;
+        const mumElapsed = (Date.now() - mumWalkStart) % (mumPlayMs + mumWaitMs);
         c.save();
         drawSprite(c, 8, -w * 0.09, h * 0.52, stateScale);
-        drawSprite(c, 9, mumX, h * 0.52, stateScale);
+        if (mumElapsed < mumPlayMs) {
+          const mumT = Math.min(1, mumElapsed / 2500);
+          const mumEased = 1 - Math.pow(1 - mumT, 3);
+          const mumX = (w * 0.42) + ((w * 0.09) - (w * 0.42)) * mumEased;
+          const mumFrame = Math.floor(mumElapsed / (1000 / mumCfg.fps));
+          drawSprite(c, 9, mumX, h * 0.52, stateScale, mumFrame, true);
+        }
         c.restore();
       } else if (!isShowingBranchScene && currentQIdx === 9) {
         drawSprite(c, 10, 0, h * 0.55, stateScale);
