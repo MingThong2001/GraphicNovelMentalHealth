@@ -261,7 +261,7 @@
       <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-bold text-white uppercase tracking-wider">Reflection Badges</h3>
-          <span id="badgeCountLabel" class="text-[10px] font-extrabold bg-white text-[#314A6F] px-2 py-0.5 rounded">0 / 6</span>
+          <span id="badgeCountLabel" class="text-[10px] font-extrabold bg-white text-[#314A6F] px-2 py-0.5 rounded">0 / 7</span>
         </div>
         <div id="badgesGrid" class="grid grid-cols-2 gap-2">
           <!-- Populated dynamically -->
@@ -336,12 +336,12 @@
 
   <!-- MODAL DIALOG -->
   <div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div id="modalCard" class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 shadow-2xl relative">
-      <h3 id="modalTitle" class="text-lg font-bold text-white mb-2">Take your time</h3>
-      <div id="modalBody" class="text-xs sm:text-sm text-white/80 leading-relaxed mb-5">
+    <div id="modalCard" class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative my-6">
+      <h3 id="modalTitle" class="text-lg sm:text-xl font-bold text-white mb-3">Take your time</h3>
+      <div id="modalBody" class="text-xs sm:text-sm text-white/80 leading-relaxed my-4 space-y-3">
         There is no timer and no wrong choice. Choose what feels closest to you today.
       </div>
-      <button id="closeModal" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition">
+      <button id="closeModal" class="w-full py-3 mt-2 rounded-xl bg-white text-[#314A6F] font-bold text-xs sm:text-sm hover:bg-white/90 transition shadow-md">
         Back to story
       </button>
     </div>
@@ -519,7 +519,8 @@
       { id: 'honest_observer', title: 'Honest Observer', desc: 'Listened to 3 inner thought echoes', icon: '💬', unlocked: false },
       { id: 'pause_button', title: 'Pause Button', desc: 'Taking a Breather: Took time to pause during check-in', icon: '🧘', unlocked: false },
       { id: 'deep_reflection', title: 'Deep Reflection', desc: 'Completed half of the story stops', icon: '✦', unlocked: false },
-      { id: 'self_aware', title: 'Self-Awareness', desc: 'Completed the full story journey', icon: '🕊️', unlocked: false }
+      { id: 'self_aware', title: 'Self-Awareness', desc: 'Completed the full story journey', icon: '🕊️', unlocked: false },
+      { id: 'streak_master', title: 'Streak Master', desc: 'Maintained a response streak across multiple questions', icon: '🔥', unlocked: false }
     ];
 
     // --- GAMIFIED STATE MANAGEMENT ---
@@ -1111,6 +1112,10 @@
       userAnswers[currentQIdx] = ansIdx;
       document.getElementById('streakVal').textContent = `${streakCount}x`;
 
+      if (streakCount >= 3) {
+        unlockBadge('streak_master');
+      }
+
       if (currentQIdx >= 4) {
         unlockBadge('deep_reflection');
       }
@@ -1666,11 +1671,31 @@
         playButtonClick();
         document.getElementById('modalTitle').textContent = "How to play?";
         document.getElementById('modalBody').innerHTML = `
-          <p class="text-xs sm:text-sm text-white/80 leading-relaxed">
-            1. Tap floating thought bubbles on screen to earn Insight XP and hear Wei Jie's inner monologue.<br>
-            2. Choose or hold the answer that feels closest to your experience today.<br>
-            3. Track your Emotional Energy & unlock Badges as you progress through all 5 stops.
-          </p>
+          <div class="flex flex-col gap-3.5">
+            <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">💬</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-white mb-0.5">1. Tap Floating Thoughts</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Tap floating thought bubbles on screen to earn Insight XP and hear Wei Jie's inner monologue.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">🎯</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-white mb-0.5">2. Choose Your Experience</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Choose or hold the answer that feels closest to your experience today.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">✦</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-white mb-0.5">3. Track & Unlock Badges</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Track your Emotional Energy & unlock Badges as you progress through all 5 stops.</p>
+              </div>
+            </div>
+          </div>
         `;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
