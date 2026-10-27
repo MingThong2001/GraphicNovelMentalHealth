@@ -201,9 +201,10 @@
 
         <!-- Footer Navigation Row -->
         <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
-          <span id="microcopy" class="text-xs text-white/70 font-medium">
-            Tap an option to reflect and select.
-          </span>
+          <button id="prevBtn" disabled class="px-4 py-2.5 rounded-full text-xs font-bold border border-white/30 bg-[#314A6F]/80 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white hover:text-[#314A6F] transition-all flex items-center gap-1.5">
+            <span>←</span>
+            <span>Previous</span>
+          </button>
           <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg flex items-center gap-2">
             <span>Choose an answer</span>
             <span>→</span>
@@ -888,6 +889,9 @@
       document.getElementById('choicesContainer').innerHTML = '';
       document.getElementById('replyBox').classList.add('hidden');
 
+      const prevBtn = document.getElementById('prevBtn');
+      prevBtn.disabled = false;
+
       const nextBtn = document.getElementById('nextBtn');
       nextBtn.disabled = false;
       nextBtn.querySelector('span').textContent = 'Continue';
@@ -960,6 +964,9 @@
 
       const replyBox = document.getElementById('replyBox');
       replyBox.classList.add('hidden');
+
+      const prevBtn = document.getElementById('prevBtn');
+      prevBtn.disabled = false;
 
       const nextBtn = document.getElementById('nextBtn');
       nextBtn.disabled = true;
@@ -1068,7 +1075,10 @@
       });
 
       const replyBox = document.getElementById('replyBox');
+      const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
+
+      prevBtn.disabled = currentQIdx === 0;
 
       if (selectedAns !== null) {
         replyBox.classList.remove('hidden');
@@ -1106,6 +1116,31 @@
       }
 
       renderQuestion();
+    }
+
+    function prevQuestion() {
+      playButtonClick();
+
+      if (isShowingBranchScene) {
+        renderSnackScene();
+        return;
+      }
+
+      if (isShowingSnackScene) {
+        currentQIdx = 2; // Return to Q3
+        renderQuestion();
+        return;
+      }
+
+      if (currentQIdx === 3) {
+        renderBranchScene(userAnswers[2] !== null ? userAnswers[2] : 0);
+        return;
+      }
+
+      if (currentQIdx > 0) {
+        currentQIdx--;
+        renderQuestion();
+      }
     }
 
     function nextQuestion() {
@@ -1622,6 +1657,7 @@
     }
 
     function setupEventListeners() {
+      document.getElementById('prevBtn').addEventListener('click', prevQuestion);
       document.getElementById('nextBtn').addEventListener('click', nextQuestion);
       document.getElementById('restartBtn').addEventListener('click', restartStory);
 
