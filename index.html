@@ -357,42 +357,15 @@
         { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
         { id: 4, title: "Boys Room", location: "SCENE 05 · BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
       ],
-     sceneVariants: [
-        // Index 0: MRT Carriage (Questions 1 & 2)
-        [
-          "The carriage is packed. He stands, yawning and rubbing his eyes, looking half-asleep.",
-          "A seat opens beside him. He glances at it, yawns, and rubs his eyes but remains standing.",
-          "He's standing with his backpack on, yawning and rubbing his eyes as his head droops with exhaustion."
-        ],
-        // Index 1: School Corridor (Questions 3 & 4)
-        [
-          "Between lessons, Wei Jie sits on the corridor bench, shrugging casually and letting out a small sigh, as if brushing it off.",
-          "Wei Jie sits on the bench, looking distracted and tense. He pauses, staring into space for a moment before letting out a nervous sigh.",
-          "Wei Jie sits quietly on the bench, his shoulders slumped and his gaze lowered, looking weighed down by his feelings."
-        ],
-        // Index 2: Void Deck (Questions 5 & 6)
-        [
-          "Evening settles over the void deck. Wei Jie sits on the bench, tapping his shoes against it as he chats casually with himself, brushing it off as a habit.",
-          "The void deck is quiet, and the lights flick on. Wei Jie keeps tapping his shoes against the bench, barely noticing until he looks down.",
-          "The void deck grows darker. Wei Jie tries to keep his feet still, but his shoes keep tapping against the bench as he struggles to sit still."
-        ],
-        // Index 3: Home Doorway (Questions 7 & 8)
-        [
-          "Wei Jie paces casually from left to right, as if he's simply stretching his legs before heading off.",
-          "Wei Jie paces back and forth across the void deck, barely pausing before turning around and walking the other way.",
-          "Wei Jie continues pacing from left to right, turning around almost immediately each time, unable to settle in one spot."
-        ],
-        // Index 4: Boys Room (Questions 9 & 10)
-        [
-          "Wei Jie scrolls through his phone, yawning as the snack sits untouched beside him.",
-          "Wei Jie yawns while looking at his phone, barely noticing Mum's footsteps fading away.",
-          "Wei Jie continues scrolling on his phone, pausing to yawn before looking back at the screen."
-        ]
-      ],
       questions: [
         {
           sceneIdx: 0,
           text: " How often did you feel tired out for no reason?",
+          descriptions: [
+            "The carriage is packed. He stands, yawning and rubbing his eyes, looking half-asleep.",
+            "A seat opens beside him. He glances at it, yawns, and rubs his eyes but remains standing.",
+            "He's standing with his backpack on, yawning and rubbing his eyes as his head droops with exhaustion."
+          ],
           thoughts: [{ type: "body", text: "My legs feel like wet sand. The strap is the only thing holding me up." }, { type: "mind", text: "It's not even evening yet. Why am I already worn out?" }, { type: "unsaid", text: "If I say I'm tired, they'll just tell me to sleep earlier." }],
           answers: [
             { text: "I'm fine, just didn't sleep much.", reply: "Sleep explains some tiredness, not all of it. Worth noticing which kind this is." },
@@ -403,6 +376,11 @@
         {
           sceneIdx: 0,
           text: "How often did you feel nervous?",
+          descriptions: [
+            "He grips his bag strap, maintaining a calm, neutral stance as the crowd shifts around him.",
+            "He shifts his weight nervously, keeping his eyes fixed on the door.",
+            "He grips the strap tightly, knuckles white, trying to stay steady amidst the morning rush."
+          ],
           thoughts: [{ type: "body", text: "My fingers are white around this strap. When did I start gripping so hard?" }, { type: "mind", text: "New school, new faces. What if I say the wrong thing?" }, { type: "unsaid", text: "I keep my face blank so nobody asks. It's not as fine as it looks." }],
           answers: [
             { text: "Nah, I'm good.", reply: "Maybe you’re feeling more tense than you realise. It’s okay to take a moment." },
@@ -413,7 +391,12 @@
         {
           sceneIdx: 1,
           text: "How often did you feel so nervous that nothing could calm you down?",
-          thoughts: [{ type: "body", text: "My heart is racing and I'm just standing at my locker." }, { type: "mind", text: "I've read the same line on this worksheet four times." }, { type: "unsaid", text: "If I tell someone, they'll think I'm making a big deal out of nothing." }],
+          descriptions: [
+            "Wei Jie stands alone in the school corridor, holding his backpack and taking a steady breath before shrugging as if nothing is wrong.",
+            "Wei Jie stands in the empty school corridor, gripping his backpack tightly as he repeatedly breathes in and out, struggling to focus.",
+            "Wei Jie stands alone in the school corridor, clutching his backpack with tense shoulders as he struggles to steady his breathing."
+          ],
+          thoughts: [{ type: "body", text: "My heart is racing and I'm just standing outside of my class..." }, { type: "mind", text: "I've read the same line on this worksheet four times." }, { type: "unsaid", text: "If I tell someone, they'll think I'm making a big deal out of nothing." }],
           answers: [
             { text: "It passes after a bit. It's not a big deal.", reply: "If it goes away, that's okay. If it keeps coming back, it's worth paying attention to." },
             { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on my work.", reply: "Once it takes your focus, it's no longer background noise. That's useful thing to know." },
@@ -423,6 +406,11 @@
         {
           sceneIdx: 1,
           text: "How often did you feel hopeless?",
+          descriptions: [
+            "Wei Jie sits on the bench, glancing up occasionally as students walk past.",
+            "Wei Jie leans forward on his knees, staring blankly at the floor of the corridor.",
+            "Wei Jie sits completely still on the bench, looking overwhelmed and lost in thought."
+          ],
           thoughts: [{ type: "body", text: "My feet stopped moving before I decided to stop." }, { type: "mind", text: "What's the point of all this when I feel like this?" }, { type: "unsaid", text: "I don't need it fixed. I just want someone to notice." }],
           answers: [
             { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
@@ -433,7 +421,12 @@
         {
           sceneIdx: 2,
           text: "How often did you feel restless or fidgety?",
-          thoughts: [{ type: "body", text: "My leg keeps bouncing. It won't stop, even when I tell it to." }, { type: "mind", text: "Stretching. I'm just stretching. Nobody will ask." }, { type: "unsaid", text: "Sitting still means thinking, and I'd rather not think right now." }],
+          descriptions: [
+            "Evening settles over the void deck. Wei Jie sits on the bench, tapping his shoes against it casually.",
+            "The void deck is quiet, and the lights flick on. Wei Jie keeps tapping his shoes against the bench, barely noticing until he looks down.",
+            "The void deck grows darker. Wei Jie tries to keep his feet still, but his shoes keep tapping against the bench as he struggles to sit still."
+          ],
+          thoughts: [{ type: "body", text: "My leg keeps bouncing. It won't stop, even when I tell it to." }, { type: "mind", text: "Stretching. I'm just stretching. Nobody will ask." }, { type: "unsaid", text: "I don't know what to do with how I'm feeling right now." }],
           answers: [
             { text: "I'm just a fidgety person, always have been.", reply: "Maybe. People also tap when something's pressing on them. Both can be true." },
             { text: "My leg just does its own thing now. I don't even notice till someone points it out.", reply: "Your body is talking even when you aren't. Worth listening to what it says." },
@@ -443,6 +436,11 @@
         {
           sceneIdx: 2,
           text: "How often did you feel so restless you could not sit still?",
+          descriptions: [
+            "Wei Jie walks nervously along the void deck, repeatedly glancing around as if something is bothering him.",
+            "Wei Jie paces back and forth across the void deck, turning around quickly each time.",
+            "Wei Jie paces rapidly back and forth along the void deck, unable to settle in one place."
+          ],
           thoughts: [{ type: "body", text: "Five laps already. My legs want to keep going, but I don't know where to." }, { type: "mind", text: "If I keep moving, the heavy feeling can't catch up." }, { type: "unsaid", text: "I'm walking in circles and I'm not sure what I'm walking away from." }],
           answers: [
             { text: "Sometimes I just need to walk, that's all.", reply: "Taking a walk can help clear your head. If something's bothering you, you can take your time figuring it out." },
@@ -453,6 +451,11 @@
         {
           sceneIdx: 3,
           text: "How often did you feel depressed?",
+          descriptions: [
+            "Wei Jie sits beside his shoe rack, holding a result slip and shrugging as if everything is fine.",
+            "Wei Jie sits beside his shoe rack, holding the result slip in his hands as he stares down at it with a distant expression.",
+            "Wei Jie sits beside his shoe rack, holding the result slip loosely as he stares blankly ahead, his shoulders slumped."
+          ],
           thoughts: [{ type: "body", text: "One shoe on. The results slip is right there face-down." }, { type: "mind", text: "I don't really get depressed; that's not me." }, { type: "unsaid", text: "I keep telling myself I'm fine so I don't have to explain it." }],
           answers: [
             { text: "I don't really get depressed; that's not me.", reply: "You know yourself best. It's okay if things feel different from how they used to.." },
@@ -463,6 +466,11 @@
         {
           sceneIdx: 3,
           text: "How often did you feel that everything was an effort?",
+          descriptions: [
+          "Wei Jie sits beside his shoe rack, tying his shoelaces with a neutral expression.",
+          "Wei Jie slowly ties his shoelaces, looking down with a sad, distracted expression.",
+          "Wei Jie struggles to tie his shoelaces, his shoulders slumped and his expression dejected."
+          ],
           thoughts: [{ type: "body", text: "My hand is stalled on the shoelaces." }, { type: "mind", text: "Tying my shoes feels like a whole mountain now." }, { type: "unsaid", text: "I just want to sit here on the floor until tomorrow." }],
           answers: [
             { text: "Just normal school tiredness, nothing weird", reply: "Rest can help, but if you're still feeling tired, it's worth paying attention to." },
@@ -473,6 +481,11 @@
         {
           sceneIdx: 4,
           text: "How often did you feel so sad that nothing could cheer you up?",
+          descriptions: [
+            "Wei Jie scrolls through his phone with a subdued expression as his mum walks over and places a sandwich beside him.",
+            "Wei Jie continues looking sadly at his phone as his mum gently places a sandwich beside him. He ignores it and doesn't reach for it.",
+            "Wei Jie stares sadly at his phone, barely reacting as his mum places a sandwich beside him before walking away."
+          ],
           thoughts: [{ type: "body", text: "The snack is right there. I haven't moved to open it." }, { type: "mind", text: "Mum set it down so gently. I wish I wanted it." }, { type: "unsaid", text: "I don't want to break her heart by telling her it didn't help." }],
           answers: [
             { text: "I still like the things I used to like, don't worry.", reply: "Don't worry about having it all together. It is okay not to be okay" },
@@ -483,6 +496,11 @@
         {
           sceneIdx: 4,
           text: "How often did you feel worthless?",
+          descriptions: [
+           "Wei Jie scrolls through his phone, letting out a quiet sigh as the untouched sandwich sits beside him.",
+            "Wei Jie pauses scrolling and sighs, staring at his phone screen as it dims, the sandwich still untouched beside him.",
+            "Wei Jie lowers his phone slightly and lets out another sigh, looking down with a dejected expression as the sandwich remains beside him."
+          ],
           thoughts: [{ type: "body", text: "My phone screen went dark and showed my own face." }, { type: "mind", text: "I got a good score and I still feel empty." }, { type: "unsaid", text: "I don't know how to make any of this make sense." }],
           answers: [
             { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Even if you feel like you're overthinking, your feelings still matter. You don't have to dismiss them." },
@@ -642,7 +660,7 @@
       const q = storyData.questions[currentQIdx];
       const selectedAns = userAnswers[currentQIdx];
       const desc = document.getElementById('sceneDescription');
-      desc.textContent = storyData.sceneVariants[q.sceneIdx][selectedAns !== null ? selectedAns : 0];
+      desc.textContent = q.descriptions[selectedAns !== null ? selectedAns : 0];
       desc.classList.remove('italic');
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
     }
@@ -1012,7 +1030,7 @@
       spawnFloatingThoughts();
 
       const variantIdx = selectedAns !== null ? selectedAns : 0;
-      document.getElementById('sceneDescription').textContent = storyData.sceneVariants[q.sceneIdx][variantIdx];
+      document.getElementById('sceneDescription').textContent = q.descriptions[variantIdx];
       document.getElementById('sceneTag').textContent = currentScene.location;
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
 
