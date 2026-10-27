@@ -180,7 +180,7 @@
 
         <!-- Current Question Header -->
         <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
-          Tired out for no reason?
+          for no reason?Tired out 
         </h2>
 
         <!-- Interactive Choice Buttons -->
@@ -357,42 +357,47 @@
         { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
         { id: 4, title: "Boys Room", location: "SCENE 05 · BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
       ],
-      sceneVariants: [
+     sceneVariants: [
+        // Index 0: MRT Carriage (Questions 1 & 2)
         [
-          "The carriage is packed. He stands, face blank, gripping the strap.",
-          "A seat opens beside him. He doesn't take it. Strap still in hand.",
-          "He's sitting, bag pulled into his lap, strap wound around his fist."
+          "The carriage is packed. He stands, yawning and rubbing his eyes, looking half-asleep.",
+          "A seat opens beside him. He glances at it, yawns, and rubs his eyes but remains standing.",
+          "He's standing with his backpack on, yawning and rubbing his eyes as his head droops with exhaustion."
         ],
+        // Index 1: School Corridor (Questions 3 & 4)
         [
-          "Between lessons. Classmates stream past. He opens his locker as if nothing happened.",
-          "The corridor has emptied. Worksheet half-done in his hand, he stares into the locker.",
-          "He's the last one out. He reaches the locker slowly and doesn't open it."
+          "Between lessons, Wei Jie sits on the corridor bench, shrugging casually and letting out a small sigh, as if brushing it off.",
+          "Wei Jie sits on the bench, looking distracted and tense. He pauses, staring into space for a moment before letting out a nervous sigh.",
+          "Wei Jie sits quietly on the bench, his shoulders slumped and his gaze lowered, looking weighed down by his feelings."
         ],
+        // Index 2: Void Deck (Questions 5 & 6)
         [
-          "Evening. Uncles play chess nearby. He gets up, 'just stretching.'",
-          "The void deck is empty, and the lights flick on. The bench is still shaking from his leg.",
-          "It's dark. A neighbour waves. He doesn't wave back, because he's already pacing."
+          "Evening settles over the void deck. Wei Jie sits on the bench, tapping his shoes against it as he chats casually with himself, brushing it off as a habit.",
+          "The void deck is quiet, and the lights flick on. Wei Jie keeps tapping his shoes against the bench, barely noticing until he looks down.",
+          "The void deck grows darker. Wei Jie tries to keep his feet still, but his shoes keep tapping against the bench as he struggles to sit still."
         ],
+        // Index 3: Home Doorway (Questions 7 & 8)
         [
-          "He pockets the slip and sits to tie his shoes like it's any other day.",
-          "The slip lies face-down. He's on the floor with one shoe on, looking at the other.",
-          "He crumples the slip in his fist. One shoe is half-laced, and he's stalling."
+          "Wei Jie paces casually from left to right, as if he's simply stretching his legs before heading off.",
+          "Wei Jie paces back and forth across the void deck, barely pausing before turning around and walking the other way.",
+          "Wei Jie continues pacing from left to right, turning around almost immediately each time, unable to settle in one spot."
         ],
+        // Index 4: Boys Room (Questions 9 & 10)
         [
-          "The snack sits unopened. He scrolls like nothing's wrong.",
-          "The snack is untouched, and mum's footsteps fade. His phone goes dark in his hand.",
-          "The snack is pushed away. The dark screen shows his own face."
+          "Wei Jie scrolls through his phone, yawning as the snack sits untouched beside him.",
+          "Wei Jie yawns while looking at his phone, barely noticing Mum's footsteps fading away.",
+          "Wei Jie continues scrolling on his phone, pausing to yawn before looking back at the screen."
         ]
       ],
       questions: [
         {
           sceneIdx: 0,
-          text: "Tired out for no reason?",
+          text: " How often did you feel tired out for no reason?",
           thoughts: [{ type: "body", text: "My legs feel like wet sand. The strap is the only thing holding me up." }, { type: "mind", text: "It's not even evening yet. Why am I already worn out?" }, { type: "unsaid", text: "If I say I'm tired, they'll just tell me to sleep earlier." }],
           answers: [
             { text: "I'm fine, just didn't sleep much.", reply: "Sleep explains some tiredness, not all of it. Worth noticing which kind this is." },
-            { text: "I don't even do anything, and I'm already dead by 3 pm; it's so weird.", reply: "So weird is you spotting a pattern. Don't talk yourself out of spotting it." },
-            { text: "Every day. I don't know why I'm always this tired.", reply: "Every day is not a small thing. You don't need a reason to take it seriously." }
+            { text: "I don't even do anything, and I'm already dead by 3 pm.", reply: "So weird is you spotting a pattern. Don't talk yourself out of spotting it." },
+            { text: "Every day. I don't know why I'm always this tired.", reply: "Some days are just harder than others. That’s okay."}
           ]
         },
         {
@@ -400,9 +405,9 @@
           text: "How often did you feel nervous?",
           thoughts: [{ type: "body", text: "My fingers are white around this strap. When did I start gripping so hard?" }, { type: "mind", text: "New school, new faces. What if I say the wrong thing?" }, { type: "unsaid", text: "I keep my face blank so nobody asks. It's not as fine as it looks." }],
           answers: [
-            { text: "Nah, I'm good.", reply: "Look at your grip on that strap. You don't have to agree with it yet." },
-            { text: "Not nervous nervous. Just... new school, new everything.", reply: "Big change, big load. 'Just' is shrinking something that isn't small." },
-            { text: "Honestly kind of a lot. I don't really talk about it, though.", reply: "Saying it here counts. Not talking about it is common; doesn't mean you don't need to." }
+            { text: "Nah, I'm good.", reply: "Maybe you’re feeling more tense than you realise. It’s okay to take a moment." },
+            { text: "Not nervous nervous. Just... new school, new everything.", reply: "That's a big change to deal with. It makes sense that it feels like a lot." },
+            { text: "Honestly kind of a lot. I don't really talk about it, though.", reply: "It's not always easy to talk about. But you don't have to keep it to yourself." }
           ]
         },
         {
@@ -410,8 +415,8 @@
           text: "How often did you feel so nervous that nothing could calm you down?",
           thoughts: [{ type: "body", text: "My heart is racing and I'm just standing at my locker." }, { type: "mind", text: "I've read the same line on this worksheet four times." }, { type: "unsaid", text: "If I tell someone, they'll think I'm making a big deal out of nothing." }],
           answers: [
-            { text: "It passes after a bit; it's not a big deal.", reply: "If it passes, good. If it keeps coming back, that matters more than how fast it leaves." },
-            { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on the worksheet.", reply: "Once it takes your focus, it's no longer background noise. That's useful to know." },
+            { text: "It passes after a bit. It's not a big deal.", reply: "If it goes away, that's okay. If it keeps coming back, it's worth paying attention to." },
+            { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on my work.", reply: "Once it takes your focus, it's no longer background noise. That's useful thing to know." },
             { text: "Some days nothing helps. I just sit there stuck.", reply: "Stuck is a real place to be. Nothing working today doesn't mean nothing ever will." }
           ]
         },
@@ -421,8 +426,8 @@
           thoughts: [{ type: "body", text: "My feet stopped moving before I decided to stop." }, { type: "mind", text: "What's the point of all this when I feel like this?" }, { type: "unsaid", text: "I don't need it fixed. I just want someone to notice." }],
           answers: [
             { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
-            { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "Blanking like that is worth remembering. It's a clue, not a flaw." },
-            { text: "More than I want to admit, if I'honest.", reply: "You admitted it anyway. That took more than it looked like." }
+            { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "Going blank like that can mean something. It doesn't mean there's something wrong with you." },
+            { text: "More than I want to admit, if I'honest.", reply: "It's okay to admit that you're struggling. You don't have to have it all figured out." }
           ]
         },
         {
@@ -432,7 +437,7 @@
           answers: [
             { text: "I'm just a fidgety person, always have been.", reply: "Maybe. People also tap when something's pressing on them. Both can be true." },
             { text: "My leg just does its own thing now. I don't even notice till someone points it out.", reply: "Your body is talking even when you aren't. Worth listening to what it says." },
-            { text: "All the time. I can't sit still even when I try really hard to.", reply: "Trying harder isn't the fix. Being worn out from fighting it makes sense." }
+            { text: "All the time. I can't sit still even when I try really hard to.", reply: "You don't have to keep pushing yourself. It's okay to take a break" }
           ]
         },
         {
@@ -440,9 +445,9 @@
           text: "How often did you feel so restless you could not sit still?",
           thoughts: [{ type: "body", text: "Five laps already. My legs want to keep going, but I don't know where to." }, { type: "mind", text: "If I keep moving, the heavy feeling can't catch up." }, { type: "unsaid", text: "I'm walking in circles and I'm not sure what I'm walking away from." }],
           answers: [
-            { text: "Sometimes I just need to walk, that's all.", reply: "Walking helps plenty of people. It's still fair to ask what you're walking away from." },
-            { text: "I walked around the void deck like five times yesterday. For no reason.", reply: "Five laps is a reason you haven't named yet. You don't have to name it today." },
-            { text: "A lot more than I used to. It's getting kind of annoying, actually.", reply: "'More than I used to' is the important half. Change is worth tracking." }
+            { text: "Sometimes I just need to walk, that's all.", reply: "Taking a walk can help clear your head. If something's bothering you, you can take your time figuring it out." },
+            { text: "I walked around the void deck like five times yesterday. For no reason.", reply: "Maybe there's more on your mind than you realise. You don't have to figure it all out right now." },
+            { text: "A lot more than I used to. It's getting kind of annoying, actually.", reply: "'Noticing that things have changed is important. You can take it one step at a time." }
           ]
         },
         {
@@ -450,9 +455,9 @@
           text: "How often did you feel depressed?",
           thoughts: [{ type: "body", text: "One shoe on. The results slip is right there face-down." }, { type: "mind", text: "I don't really get depressed; that's not me." }, { type: "unsaid", text: "I keep telling myself I'm fine so I don't have to explain it." }],
           answers: [
-            { text: "I don't really get depressed; that's not me.", reply: "You know yourself. Just leave room for 'not me' to mean 'not lately'." },
-            { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yes, grey is a thing. You described it accurately. You don't need a bigger word." },
-            { text: "More than none of the time, let's just say that.", reply: "That's a careful answer, and we'll take it as exactly as you meant it." }
+            { text: "I don't really get depressed; that's not me.", reply: "You know yourself best. It's okay if things feel different from how they used to.." },
+            { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yeah, that’s a thing. You don’t have to know exactly how you feel for it to matter." },
+            { text: "More than none of the time, let's just say that.", reply: "Thanks for being honest. Even if it’s hard to put into words, it’s okay to start here." }
           ]
         },
         {
@@ -460,9 +465,9 @@
           text: "How often did you feel that everything was an effort?",
           thoughts: [{ type: "body", text: "My hand is stalled on the shoelaces." }, { type: "mind", text: "Tying my shoes feels like a whole mountain now." }, { type: "unsaid", text: "I just want to sit here on the floor until tomorrow." }],
           answers: [
-            { text: "Just normal school tiredness, nothing weird", reply: "Normal tiredness usually lifts with rest. Notice if this doesn't." },
+            { text: "Just normal school tiredness, nothing weird", reply: "Rest can help, but if you're still feeling tired, it's worth paying attention to." },
             { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. Small things getting heavy is one of the clearest ways to describe this" },
-            { text: "Everything. Literally everything feels like climbing a hill lately.", reply: "A hill with no rest stop. No wonder you're wiped." }
+            { text: "Everything. Literally everything feels like climbing a hill lately.", reply: "You’ve been dealing with a lot. You deserve a chance to rest, too." }
           ]
         },
         {
@@ -470,9 +475,9 @@
           text: "How often did you feel so sad that nothing could cheer you up?",
           thoughts: [{ type: "body", text: "The snack is right there. I haven't moved to open it." }, { type: "mind", text: "Mum set it down so gently. I wish I wanted it." }, { type: "unsaid", text: "I don't want to break her heart by telling her it didn't help." }],
           answers: [
-            { text: "I still like the things I used to like, don't worry.", reply: "'Don't worry' sounds like it's meant for someone else. You don't have to perform it here." },
+            { text: "I still like the things I used to like, don't worry.", reply: "Don't worry about having it all together. It is okay not to be okay" },
             { text: "My mum got my favourite snack and I just. Didn't want it. That's never happened before.", reply: "That moment stuck with you for a reason. Your mum probably noticed it too." },
-            { text: "Honestly, nothing's been working lately. Not even the stuff I usually like.", reply: "Nothing working is exhausting in its own way. You said it plainly. Keep that." }
+            { text: "Honestly, nothing's been working lately. Not even the stuff I usually like.", reply: "It's hard when nothing seems to help. You don't have to figure it all out on your own." }
           ]
         },
         {
@@ -480,9 +485,9 @@
           text: "How often did you feel worthless?",
           thoughts: [{ type: "body", text: "My phone screen went dark and showed my own face." }, { type: "mind", text: "I got a good score and I still feel empty." }, { type: "unsaid", text: "I don't know how to make any of this make sense." }],
           answers: [
-            { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Overthinking is real. So is the feeling underneath it. Both can be there." },
+            { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Even if you feel like you're overthinking, your feelings still matter. You don't have to dismiss them." },
             { text: "I got a good score and I still feel like I'm not enough somehow. Make it make sense.", reply: "It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at." },
-            { text: "More than I'd like to say. I don't know how to explain it properly.", reply: "You said it, and that was the hard part. You don't have to explain it properly." }
+            { text: "More than I'd like to say. I don't know how to explain it properly.", reply: "It's okay if you can't explain it all. You’ve already taken a step by saying how you feel." }
           ]
         }
       ]
@@ -541,7 +546,7 @@
       11: { src: 'boy_snack.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       12: { src: 'character_tired1.png', rows: 2, cols: 3, totalFrames: 6, fps: 2 },
       // Branch scene sprites, one per path (A / B / C)
-      13: { src: 'branch_a.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      13: { src: 'branch_a.png', rows: 2, cols: 3, totalFrames: 6, fps: 6 },
       14: { src: 'branch_b.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       15: { src: 'branch_c.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
       // Snack interlude sprites for path B and path C
@@ -860,7 +865,7 @@
 
       document.getElementById('chapterLabel').textContent = "Scene 2A · Story Interlude";
       document.getElementById('qCountLabel').textContent = "INTERLUDE";
-      document.getElementById('questionText').textContent = "Someone is offering you a snack.";
+      document.getElementById('questionText').textContent = "A classmate is offering you a snack.";
 
       document.getElementById('choicesContainer').innerHTML = '';
       document.getElementById('replyBox').classList.add('hidden');
@@ -879,46 +884,46 @@
       branchAnswerSelected = null;
 
       const branches = [
-        {
-          tag: "BRANCH A · BRUSHES IT OFF",
-          title: "Have you ever brushed something off because you thought it wasn't serious enough to matter?",
-          earlier: "“It passes after a bit; it's not a big deal.”",
-          happens: "Wei Jie remembers telling himself that his nervousness wasn't a big deal. He accepts the sandwich and changes the subject.",
-          thought: "“It's probably nothing. I'll be fine.”",
-          options: [
-            "Yeah, I tend to do that.",
-            "Sometimes, I guess.",
-            "Not really.",
-            "I'd rather not say."
-          ]
-        },
-        {
-          tag: "BRANCH B · STARTS ACKNOWLEDGING",
-          title: "Have you noticed something affecting you more than you initially admitted?",
-          earlier: "“Maybe sometimes it's a lot. I can't even focus on the worksheet.”",
-          happens: "Wei Jie remembers staring at his unfinished worksheet. He pauses before accepting the sandwich.",
-          thought: "“Maybe it has been affecting me more than I thought.”",
-          options: [
-            "Yeah, more than I realised.",
-            "Maybe, I'm still figuring it out.",
-            "Not that I can think of.",
-            "I'd rather not say."
-          ]
-        },
-        {
-          tag: "BRANCH C · ACKNOWLEDGES STRUGGLE",
-          title: "If you've been feeling stuck, is there someone you might feel comfortable talking to?",
-          earlier: "“Some days nothing helps. I just sit there stuck.”",
-          happens: "Wei Jie remembers being stuck at the locker. He looks at his classmate and considers saying something, even if he doesn't know how to explain it.",
-          thought: "“I don't really know what's wrong. But maybe I don't have to figure it out alone.”",
-          options: [
-            "Yeah, there's someone I trust.",
-            "Maybe, but I'm not sure who.",
-            "I can't think of anyone right now.",
-            "I'd rather not say."
-          ]
-        }
-      ];
+  {
+    tag: "BRANCH A · BRUSHES IT OFF",
+    title: "Have you ever brushed off how you felt because you thought it wasn't a big deal?",
+    earlier: "“It passes after a bit. It's not a big deal.”",
+    happens: "Wei Jie remembers shrugging off his nervousness in the classroom corridor, acting as though nothing was wrong.",
+    thought: "“It's probably nothing. No point making a big deal out of it.”",
+    options: [
+      "Yeah, I tend to do that.",
+      "Sometimes, I guess.",
+      "Not really.",
+      "I'd rather not say."
+    ]
+  },
+  {
+    tag: "BRANCH B · STARTS ACKNOWLEDGING",
+    title: "Have you ever been caught off guard by someone showing you kindness when you weren't feeling okay?",
+    earlier: "“Maybe sometimes it's a lot. I can't even focus my work.”",
+    happens: "Wei Jie remembers being surprised when his classmate offered him a snack. He pauses, unsure what to say or how to respond.",
+    thought: "“I don't know what to say. I didn't expect them to notice.”",
+    options: [
+      "Yeah, I never know how to react.",
+      "Sometimes, but I appreciate it.",
+      "I'm usually okay with it.",
+      "I'd rather not say."
+    ]
+  },
+  {
+    tag: "BRANCH C · ACKNOWLEDGES STRUGGLE",
+    title: "Have you ever wanted to tell someone how you feel but struggled to find the words?",
+    earlier: "“Some days nothing helps. I just sit there stuck.”",
+    happens: "Wei Jie remembers standing in the classroom corridor, wanting to say something to his classmate but struggling to get the words out. He hesitates, lets out a nervous sigh, and tries again.",
+    thought: "“I don't know how to explain it. Maybe I can start with that.”",
+    options: [
+      "Yeah, I find that hard sometimes.",
+      "Maybe, I'm not sure how to explain it.",
+      "Not really.",
+      "I'd rather not say."
+    ]
+  }
+];
 
       currentBranchData = branches[ansIdx] || branches[0];
 
