@@ -299,6 +299,94 @@
   #mapList > div.bg-white h4{color:var(--ind)!important}
   #mapList > div.bg-white span{color:var(--ink)!important}
   #mapList > div{gap:.6rem!important}
+
+  /* ---- buttons: clear primary vs secondary ---- */
+  /* secondary (Previous): quiet outline, no fill, no shadow */
+  #prevBtn{background:transparent!important;border:2px solid var(--lav)!important;color:var(--mute)!important;box-shadow:none!important;font-weight:600!important}
+  #prevBtn:hover:not(:disabled){background:var(--ind2)!important;color:var(--ink)!important;border-color:var(--ind)!important}
+  #prevBtn:disabled{opacity:.4}
+  /* primary (Next): solid, bolder, wider */
+  #nextBtn{font-weight:800!important;min-width:11rem;justify-content:center}
+
+  /* ---- modal action buttons: distinct from "Back to story" ---- */
+  #doneWalkBtn,#doneMusicBtn{background:linear-gradient(135deg,#D3D8FB,#E4D9F7)!important;color:#2C3190!important;border:0!important;box-shadow:0 5px 0 #A9A3E3!important;font-weight:800!important;cursor:pointer;transition:.15s}
+  #doneWalkBtn:hover,#doneMusicBtn:hover{filter:brightness(1.03);transform:translateY(-1px)}
+  #doneWalkBtn:active,#doneMusicBtn:active{transform:translateY(4px);box-shadow:0 1px 0 #A9A3E3!important}
+
+  /* ---- Insight XP + Streak: cute chips ---- */
+  #hud{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;gap:.6rem!important}
+  #hud > div{display:flex;align-items:center;gap:.5rem;padding:.3rem .5rem .3rem .9rem!important;border-radius:999px;border:2px solid transparent!important}
+  #hud > div:first-child{background:#FFF3C4;border-color:#FFC83D!important}
+  #hud > div:last-child{background:#E8EAFF;border-color:#C7CCF4!important}
+  #hud > div > span:first-child{color:var(--ink)!important;font-size:.9rem!important;font-weight:800;letter-spacing:0}
+  #scoreVal{display:inline-flex;align-items:center;justify-content:center;min-width:2.2rem;height:1.7rem;padding:0 .6rem;border-radius:999px;background:#fff;color:var(--ink)!important;font-size:.95rem!important;box-shadow:0 2px 6px rgba(79,91,213,.18)}
+  #streakVal{border-radius:999px!important}
+  .hud-ico{display:inline-block;animation:hudBob 2.4s ease-in-out infinite}
+  #hud > div:last-child .hud-ico{animation-delay:.6s}
+  @keyframes hudBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-8deg)}}
+  @media (prefers-reduced-motion:reduce){.hud-ico{animation:none}}
+
+  /* ---- breather icons: no circles, just richer 3D-style emoji ---- */
+  #breatheOption1 > span:last-child,
+  #breatheOption2 > span:last-child,
+  #breatheOption3 > span:last-child,
+  #modalBody .w-16.h-16{
+    background:transparent!important;border:0!important;box-shadow:none!important;
+    display:flex;align-items:center;justify-content:center;flex:none;line-height:1;
+    filter:
+      drop-shadow(0 4px 4px rgba(56,65,168,.4)) saturate(1.4) contrast(1.05);
+  }
+  #breatheOption1 > span:last-child,
+  #breatheOption2 > span:last-child,
+  #breatheOption3 > span:last-child{width:46px;height:46px;font-size:1.7rem!important;margin-left:.75rem}
+  #modalBody .w-16.h-16{font-size:3rem!important}
+
+  /* ---- reflection badge icons: same richer 3D-style emoji, no circle ---- */
+  #badgesGrid > div > span:first-child{
+    background:transparent!important;width:44px!important;height:44px!important;
+    font-size:1.8rem!important;line-height:1;
+    filter:
+      drop-shadow(0 4px 4px rgba(56,65,168,.4)) saturate(1.4) contrast(1.05);
+  }
+  /* locked badges: muted so unlocked ones stand out */
+  #badgesGrid > div:not(.bg-white) > span:first-child{
+    filter:grayscale(.85) drop-shadow(0 0 0 transparent) drop-shadow(0 2px 2px rgba(107,111,158,.35));
+    opacity:.6;
+  }
+
+  /* remove "Stop 1 of 5" label */
+  #chapterLabel{display:none!important}
+
+  /* streak value: text centred in its rectangle */
+  #streakVal{display:inline-flex;align-items:center;justify-content:center;min-width:2.4rem;height:1.7rem;padding:0 .5rem!important;line-height:1;box-shadow:none!important;text-align:center}
+
+  /* ---- badges popup: fit all badges, clean count pill, header spacing ---- */
+  #badgeCountLabel{box-shadow:none!important;padding:.3rem .9rem!important}
+  #badgePop{max-height:calc(100dvh - 7.5rem)!important;padding:1.25rem!important}
+  #badgePop > div:first-child{gap:.75rem;margin-bottom:.9rem!important}
+  #badgesGrid{gap:.6rem!important}
+  #badgesGrid > div{padding:.65rem .6rem!important;gap:.25rem!important}
+  #badgesGrid > div > span:first-child{width:34px;height:34px}
+
+  /* badges popup: header alignment, inner scroll, clickable close button */
+  #badgePop.open{display:flex!important;flex-direction:column;overflow:hidden!important}
+  #badgePop > div:first-child{flex:none;display:flex;align-items:center;justify-content:flex-start!important;gap:.75rem}
+  #badgePop > div:first-child h3{margin:0!important;line-height:1}
+  #badgeCountLabel{margin:0!important;line-height:1.2}
+  #badgeClose{margin-left:auto;width:40px!important;height:40px!important;flex:none;background:#fff!important;border:2px solid var(--lav)!important;color:var(--ink)!important;font-size:1rem;cursor:pointer;box-shadow:0 3px 0 var(--lav);transition:.15s}
+  #badgeClose:hover{background:var(--ind)!important;border-color:var(--ind)!important;color:#fff!important;box-shadow:0 3px 0 #3841a8}
+  #badgeClose:active{transform:translateY(2px);box-shadow:none}
+  #badgesGrid{flex:1 1 auto;min-height:0;overflow-y:auto;padding:0 .4rem .25rem 0;scrollbar-width:thin;scrollbar-color:var(--lav) transparent}
+
+  /* ---- emotional capacity bar: soft green / orange / red by level ---- */
+  #capacityBar{--cap:#8EDDBB;background:repeating-linear-gradient(90deg,var(--cap) 0 17px,transparent 17px 22px)!important}
+  #capacityBar[data-level="mid"]{--cap:#FFC892}
+  #capacityBar[data-level="low"]{--cap:#F5A3A3}
+
+  /* ---- slightly dark overlay on the scene images (all scenes) ---- */
+  .scene-mood-overlay,
+  .panel-frame[data-scene="4"] .scene-mood-overlay{background:linear-gradient(180deg,rgba(20,22,70,.16) 0%,rgba(20,22,70,.32) 100%)!important}
+  .panel-frame[data-scene="4"] #sceneBgLayer{filter:blur(1.5px)}
 </style>
 </head>
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
@@ -316,13 +404,13 @@
     </div>
 
     <!-- GAMIFIED HUD SCOREBOARD -->
-    <div class="flex items-center gap-3 bg-[#1e304b] border border-white/20 px-4 py-2 rounded-xl shadow-md">
+    <div id="hud" class="flex items-center gap-3 bg-[#1e304b] border border-white/20 px-4 py-2 rounded-xl shadow-md">
       <div class="flex items-center gap-2 pr-3 border-r border-white/20">
-        <span class="text-xs font-bold text-white/80">✦ INSIGHT XP:</span>
+        <span class="text-xs font-bold text-white/80"><span class="hud-ico">⭐</span> Insight XP</span>
         <span id="scoreVal" class="text-sm font-black text-white">0</span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-white/80">STREAK:</span>
+        <span class="text-xs font-bold text-white/80"><span class="hud-ico">🔥</span> Streak</span>
         <span id="streakVal" class="text-xs font-black bg-white text-[#314A6F] px-2 py-0.5 rounded-md">0x</span>
       </div>
     </div>
@@ -1025,6 +1113,45 @@
       if (b && !b.unlocked) {
         b.unlocked = true;
         renderBadges();
+        if (badgeId !== 'first_step') {
+          const m = document.getElementById('medalBtn');
+          if (m) {
+            const r = m.getBoundingClientRect();
+            particleBurst(r.left + r.width / 2, r.top + r.height / 2, 44, 220);
+          }
+        }
+      }
+    }
+
+    // small celebratory particle burst (DOM-based, auto-removes itself)
+    function particleBurst(x, y, count = 40, spread = 200) {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const colors = ['#FFC83D', '#2CC8A0', '#4F5BD5', '#F5A3A3', '#FF9F43', '#8EDDBB'];
+      // expanding ring flash so the burst is easy to notice
+      const ring = document.createElement('div');
+      ring.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:30px;height:30px;border-radius:50%;border:4px solid #FFC83D;pointer-events:none;z-index:70;`;
+      document.body.appendChild(ring);
+      ring.animate([
+        { transform: 'translate(-50%,-50%) scale(.4)', opacity: 1 },
+        { transform: 'translate(-50%,-50%) scale(5)', opacity: 0 }
+      ], { duration: 700, easing: 'ease-out' }).onfinish = () => ring.remove();
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        const size = 9 + Math.random() * 9;
+        p.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:${size}px;height:${size * (Math.random() < 0.5 ? 1 : 0.55)}px;border-radius:${Math.random() < 0.4 ? '50%' : '3px'};background:${colors[i % colors.length]};box-shadow:0 0 6px rgba(0,0,0,.18);pointer-events:none;z-index:70;`;
+        document.body.appendChild(p);
+        const ang = Math.random() * Math.PI * 2;
+        const dist = spread * (0.55 + Math.random() * 0.7);
+        const dx = Math.cos(ang) * dist;
+        const dy = Math.sin(ang) * dist - spread * 0.35; // bias upward
+        const rot = (Math.random() - 0.5) * 900;
+        const anim = p.animate([
+          { transform: 'translate(-50%,-50%) rotate(0deg) scale(.6)', opacity: 1, offset: 0 },
+          { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${rot / 2}deg) scale(1.1)`, opacity: 1, offset: 0.45 },
+          { transform: `translate(calc(-50% + ${dx * 1.1}px), calc(-50% + ${dy + 140}px)) rotate(${rot}deg) scale(.7)`, opacity: 0, offset: 1 }
+        ], { duration: 1300 + Math.random() * 700, easing: 'cubic-bezier(.2,.7,.3,1)' });
+        anim.onfinish = () => p.remove();
       }
     }
 
@@ -1441,8 +1568,19 @@
         ctx.shadowBlur = 0;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = '16px "Baloo 2", sans-serif';
+        ctx.font = '18px "Baloo 2", sans-serif';
+        // richer, 3D-style emoji: soft drop shadow
+        ctx.save();
+        if ('filter' in ctx) {
+          const d = window.devicePixelRatio || 1;
+          ctx.filter = `drop-shadow(0 ${2 * d}px ${2 * d}px rgba(56,65,168,.45)) saturate(1.4)`;
+        } else {
+          ctx.shadowColor = 'rgba(56, 65, 168, 0.55)';
+          ctx.shadowBlur = 4;
+          ctx.shadowOffsetY = 2;
+        }
         ctx.fillText(type.icon, b.x, b.y - 6);
+        ctx.restore();
         ctx.fillStyle = '#314A6F';
         ctx.font = 'bold 9px "Baloo 2", sans-serif';
         ctx.fillText(b.heard ? type.label + ' ✓' : type.label, b.x, b.y + 15);
@@ -1717,6 +1855,12 @@
 
       document.getElementById('storyPanel').classList.add('hidden');
       document.getElementById('endScreen').classList.remove('hidden');
+      setTimeout(() => {
+        const er = document.getElementById('endScreen').getBoundingClientRect();
+        const cx = er.left + er.width / 2;
+        const cy = Math.min(Math.max(er.top + 70, 90), window.innerHeight - 120);
+        particleBurst(cx, cy, 90, 340);
+      }, 120);
     }
 
     function restartStory() {
@@ -1763,7 +1907,7 @@
               <span class="block text-xs font-bold text-white">1. Take a few slow breaths</span>
               <span class="text-[10px] text-white/70">Animated breathing circle · 90s Timer</span>
             </div>
-            <span class="text-lg">🌬️</span>
+            <span class="text-lg">☁️</span>
           </button>
           
           <button id="breatheOption2" class="p-3.5 rounded-xl border border-white/20 bg-white/10 text-left hover:bg-white/20 transition flex items-center justify-between">
@@ -1779,7 +1923,7 @@
               <span class="block text-xs font-bold text-white">3. Step outside for a while</span>
               <span class="text-[10px] text-white/70">Find a quiet spot · Short walk</span>
             </div>
-            <span class="text-lg">🚶‍♂️</span>
+            <span class="text-lg">🌿</span>
           </button>
         </div>
       `;
@@ -1873,7 +2017,7 @@
             Find a quiet spot, feel the breeze, or take a short 5–10 minute walk. Return whenever you feel ready.
           </p>
           <button id="doneWalkBtn" class="w-full py-2.5 rounded-xl bg-white text-[#314A6F] font-bold text-xs hover:bg-white/90 transition shadow-md mt-2">
-            I'm back 🚶‍♂️
+            I'm back 🌿
           </button>
         </div>
       `;
@@ -1958,6 +2102,14 @@
     const sync = () => { cnt.textContent = lbl.textContent.replace(/\s/g, ''); };
     new MutationObserver(sync).observe(lbl, { childList: true, characterData: true, subtree: true });
     sync();
+    // colour the emotional-capacity bar by its level
+    const cap = document.getElementById('capacityBar');
+    const setLevel = () => {
+      const v = parseFloat(cap.style.width) || 0;
+      cap.dataset.level = v >= 70 ? 'high' : (v >= 40 ? 'mid' : 'low');
+    };
+    new MutationObserver(setLevel).observe(cap, { attributes: true, attributeFilter: ['style'] });
+    setLevel();
   })();
 </script>
 </body>
