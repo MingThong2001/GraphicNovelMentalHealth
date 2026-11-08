@@ -441,13 +441,51 @@
     #modalCard{padding:1.25rem!important;max-height:90dvh;overflow-y:auto}
     #modalTitle{font-size:1.2rem!important}
   }
+  /* ---- segmented progress bar (10 segments, one per question) ---- */
+  #storyPanel > div:first-child > div:has(> #progressBar){position:relative}
+  #storyPanel > div:first-child > div:has(> #progressBar)::after{content:'';position:absolute;inset:2px;pointer-events:none;background:linear-gradient(90deg,#fff 0,#fff 2px,transparent 2px,transparent calc(100% - 2px),#fff calc(100% - 2px),#fff 100%) 0 0/10% 100% repeat-x}
+  #progressBar{border-radius:0!important;box-shadow:none!important}
+  /* hide "0 / 5 Scenes" and the "Standard State / Variant" label */
+  #routeStatus,#variantBadge{display:none!important}
   @media (max-width:380px){
     #mapList h4{font-size:.6rem!important}
     #questionText{font-size:1.25rem!important}
   }
+
+  /* ---- loading screen ---- */
+  #loader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;background:var(--bg);padding:1.5rem;text-align:center;transition:opacity .5s ease,visibility .5s ease}
+  #loader.done{opacity:0;visibility:hidden;pointer-events:none}
+  #loader .ld-logo{width:64px;height:64px;border-radius:20px;background:var(--ind);color:#fff;font-size:2rem;font-weight:800;display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);box-shadow:0 6px 0 #3841a8;animation:ldBob 1.6s ease-in-out infinite}
+  #loader .ld-title{font-size:1.75rem;font-weight:800;line-height:1;color:var(--ink)}
+  #loader .ld-soar{font-size:1rem;font-weight:800;color:var(--ind);margin-top:-.8rem;letter-spacing:.02em}
+  #loader .ld-soar + .ld-sub{margin-top:-1rem}
+  #loader .ld-sub{font-size:.95rem;font-weight:600;color:var(--mute);margin-top:-.8rem}
+  #loader .ld-bar{display:flex;gap:6px;width:min(260px,70vw)}
+  #loader .ld-bar i{flex:1;height:12px;border-radius:4px;background:var(--ind2);animation:ldSeg 1.5s ease-in-out infinite}
+  #loader .ld-bar i:nth-child(1){animation-delay:0s}
+  #loader .ld-bar i:nth-child(2){animation-delay:.15s}
+  #loader .ld-bar i:nth-child(3){animation-delay:.3s}
+  #loader .ld-bar i:nth-child(4){animation-delay:.45s}
+  #loader .ld-bar i:nth-child(5){animation-delay:.6s}
+  @keyframes ldBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+  @keyframes ldSeg{0%,100%{background:var(--ind2)}40%,60%{background:var(--ind)}}
+  @media (prefers-reduced-motion:reduce){#loader .ld-logo,#loader .ld-bar i{animation:none}}
+  /* ---- ambient fairy-light / dust particles (one reused canvas) ---- */
+  #ambientFx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 </style>
 </head>
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
+
+  <canvas id="ambientFx" aria-hidden="true"></canvas>
+
+  <!-- LOADING SCREEN -->
+  <div id="loader" role="status" aria-live="polite">
+    <div class="ld-logo">↗</div>
+    <div class="ld-title">BETWEEN STOPS</div>
+    <div class="ld-soar">SOAR Mental Health Check In</div>
+    <div class="ld-sub">Getting your journey ready…</div>
+    <div class="ld-bar"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
 
   <!-- TOP APP BAR / BRANDING & GAMIFIED METRICS -->
   <header class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
@@ -600,7 +638,7 @@
           <div class="flex-1 mx-4 h-2 bg-white/20 rounded-full overflow-hidden p-0.5 border border-white/10">
             <div id="progressBar" class="h-full bg-white transition-all duration-300 rounded-full" style="width: 10%;"></div>
           </div>
-          <span id="qCountLabel" class="text-white">01 / 10</span>
+          <span id="qCountLabel" class="text-white">Question: 1/10</span>
         </div>
 
         <!-- Current Question Header -->
@@ -1113,7 +1151,7 @@
           const dy = clickY - b.y;
           if (Math.sqrt(dx * dx + dy * dy) < b.r + 10) {
             showThought(b);
-            playButtonClick();
+            playSfx('bubblePop.mp3');
 
             if (!b.heard) {
               b.heard = true;
@@ -1171,6 +1209,7 @@
       if (b && !b.unlocked) {
         b.unlocked = true;
         renderBadges();
+        playSfx('Achievement.mp3');
         if (badgeId !== 'first_step') {
           const m = document.getElementById('medalBtn');
           if (m) {
@@ -1451,7 +1490,7 @@
       document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
 
       document.getElementById('chapterLabel').textContent = `Stop ${q.sceneIdx + 1} of 5`;
-      document.getElementById('qCountLabel').textContent = `${String(currentQIdx + 1).padStart(2, '0')} / 10`;
+      document.getElementById('qCountLabel').textContent = `Question: ${currentQIdx + 1}/10`;
       document.getElementById('progressBar').style.width = `${((currentQIdx + 1) / 10) * 100}%`;
       document.getElementById('questionText').textContent = q.text;
 
@@ -1913,6 +1952,7 @@
 
       document.getElementById('storyPanel').classList.add('hidden');
       document.getElementById('endScreen').classList.remove('hidden');
+      playSfx('Achievement.mp3');
       setTimeout(() => {
         const er = document.getElementById('endScreen').getBoundingClientRect();
         const cx = er.left + er.width / 2;
@@ -2143,6 +2183,14 @@
       });
     }
 
+    function playSfx(file) {
+      if (!soundOn) return;
+      try {
+        const audio = new Audio(file);
+        audio.play().catch(e => {});
+      } catch (e) {}
+    }
+
     function playButtonClick() {
       if (!soundOn) return;
       try {
@@ -2168,6 +2216,117 @@
     };
     new MutationObserver(setLevel).observe(cap, { attributes: true, attributeFilter: ['style'] });
     setLevel();
+  })();
+</script>
+<script>
+  (function () {
+    const loader = document.getElementById('loader');
+    const start = Date.now();
+    let hidden = false;
+    const hide = () => {
+      if (hidden) return;
+      hidden = true;
+      const wait = Math.max(0, 1500 - (Date.now() - start));
+      setTimeout(() => {
+        loader.classList.add('done');
+        setTimeout(() => loader.remove(), 600);
+      }, wait);
+    };
+    if (document.readyState === 'complete') hide();
+    else window.addEventListener('load', hide);
+    setTimeout(hide, 6000); // safety: never get stuck
+  })();
+</script>
+<script>
+  /* Floating clouds: soft, translucent clouds slowly drifting across the background.
+     - one canvas sitting BEHIND the page (all cards are solid, so clouds never cover questions or content)
+     - 3 cloud sprites are drawn once, then a small fixed pool of clouds is recycled as they drift off-screen
+     - paused when the tab is hidden; a single still frame when the device prefers reduced motion */
+  (function () {
+    const cv = document.getElementById('ambientFx');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const COUNT = window.innerWidth < 640 ? 5 : 8;
+
+    // draw one soft cloud: lavender / periwinkle underside + white body, built from blurry puffs
+    function makeCloud(seed) {
+      const w = 520, h = 220;
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const g = c.getContext('2d');
+      const puff = (x, y, r, rgb, a) => {
+        const grd = g.createRadialGradient(x, y, 0, x, y, r);
+        grd.addColorStop(0, `rgba(${rgb},${a})`);
+        grd.addColorStop(0.55, `rgba(${rgb},${a * 0.55})`);
+        grd.addColorStop(1, `rgba(${rgb},0)`);
+        g.fillStyle = grd;
+        g.fillRect(x - r, y - r, r * 2, r * 2);
+      };
+      const n = 6 + seed;                        // puffs along the base
+      const tint = ['201,182,255', '179,198,255', '201,182,255'][seed % 3];  // Lavender Glow / Periwinkle
+      for (let i = 0; i < n; i++) {              // underside
+        const x = 90 + (i / (n - 1)) * (w - 180);
+        puff(x, 135 + Math.sin(i * 1.7 + seed) * 8, 62 + (i % 3) * 8, tint, 0.55);
+      }
+      for (let i = 0; i < n; i++) {              // white body, a little higher
+        const x = 90 + (i / (n - 1)) * (w - 180);
+        puff(x, 112 + Math.cos(i * 1.3 + seed) * 10, 58 + (i % 3) * 8, '255,255,255', 0.85);
+      }
+      for (let i = 0; i < 3; i++) {              // top bumps
+        const x = 150 + i * ((w - 300) / 2) + (seed - 1) * 18;
+        puff(x, 78 + (i % 2) * 8, 54 + (i === 1 ? 14 : 0), '255,255,255', 0.9);
+      }
+      return c;
+    }
+    const sprites = [makeCloud(0), makeCloud(1), makeCloud(2)];
+
+    let W = 0, H = 0, raf = 0;
+    function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+
+    // (re)place a cloud just off the left edge (or anywhere on first run)
+    function reset(p, anywhere) {
+      p.sprite = sprites[(Math.random() * sprites.length) | 0];
+      p.scale = 0.55 + Math.random() * 0.75;
+      p.w = 520 * p.scale; p.h = 220 * p.scale;
+      p.x = anywhere ? Math.random() * (W + p.w) - p.w : -p.w - Math.random() * 120;
+      p.y = Math.random() * (H - p.h * 0.6) - p.h * 0.2;
+      p.vx = 0.08 + Math.random() * 0.2;         // very slow drift
+      p.phase = Math.random() * Math.PI * 2;
+      p.bob = 4 + Math.random() * 8;
+      p.alpha = 0.4 + Math.random() * 0.35;      // translucent
+    }
+
+    resize();
+    const pool = Array.from({ length: COUNT }, () => { const p = {}; reset(p, true); return p; });
+    window.addEventListener('resize', resize);
+
+    function draw(t, dt) {
+      ctx.clearRect(0, 0, W, H);
+      const time = t * 0.0003;
+      for (let i = 0; i < pool.length; i++) {
+        const p = pool[i];
+        if (dt) p.x += p.vx * dt;
+        if (p.x > W + 20) reset(p, false);
+        ctx.globalAlpha = p.alpha;
+        ctx.drawImage(p.sprite, p.x, p.y + Math.sin(time + p.phase) * p.bob, p.w, p.h);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    if (reduce) { draw(0, 0); window.addEventListener('resize', () => draw(0, 0)); return; }
+
+    let last = 0;
+    function frame(t) {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min((t - last) / 16.67 || 1, 3);
+      last = t;
+      draw(t, dt);
+    }
+    function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    function stop() { cancelAnimationFrame(raf); raf = 0; }
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    start();
   })();
 </script>
 </body>
