@@ -1360,6 +1360,12 @@
     earlier: "“It passes after a bit. It's not a big deal.”",
     happens: "Wei Jie remembers shrugging off his nervousness in the classroom corridor, acting as though nothing was wrong.",
     thought: "“It's probably nothing. No point making a big deal out of it.”",
+    notices: [
+      "Brushing feelings off is something a lot of people do. Noticing that you do it is a real first step.",
+      "Sometimes is an honest answer. Small moments of shrugging things off can add up, so it's worth noticing when it happens.",
+      "That's okay. Taking your feelings seriously is a strength worth holding on to.",
+      "That's completely okay. You don't have to share anything you're not ready to, and the choice is yours."
+    ],
     options: [
       "Yeah, I tend to do that.",
       "Sometimes, I guess.",
@@ -1373,6 +1379,12 @@
     earlier: "“Maybe sometimes it's a lot. I can't even focus my work.”",
     happens: "Wei Jie remembers being surprised when his classmate offered him a snack. He pauses, unsure what to say or how to respond.",
     thought: "“I don't know what to say. I didn't expect them to notice.”",
+    notices: [
+      "It can feel strange when someone is kind while you're struggling. Not knowing how to react doesn't mean you're ungrateful.",
+      "Being able to appreciate kindness, even when it catches you off guard, shows you're letting a little in.",
+      "That's good to hear. Being comfortable with kindness can make it easier to lean on people when you need to.",
+      "That's completely okay. You don't have to share anything you're not ready to, and the choice is yours."
+    ],
     options: [
       "Yeah, I never know how to react.",
       "Sometimes, but I appreciate it.",
@@ -1386,6 +1398,12 @@
     earlier: "“Some days nothing helps. I just sit there stuck.”",
     happens: "Wei Jie remembers standing in the classroom corridor, wanting to say something to his classmate but struggling to get the words out. He hesitates, lets out a nervous sigh, and tries again.",
     thought: "“I don't know how to explain it. Maybe I can start with that.”",
+    notices: [
+      "Finding the words is hard, and you're not alone in that. Starting with \"I don't know how to explain it can be a start.",
+      "Not being sure how to explain it is okay. Feelings don't always come with words, and you can begin with something small.",
+      "That's okay. If words come easily to you, that can be a strong tool for reaching out when you need to.",
+      "That's completely okay. You don't have to share anything you're not ready to, and the choice is yours."
+    ],
     options: [
       "Yeah, I find that hard sometimes.",
       "Maybe, I'm not sure how to explain it.",
@@ -1462,7 +1480,7 @@
 
       const replyBox = document.getElementById('replyBox');
       replyBox.classList.remove('hidden');
-      document.getElementById('replyText').textContent = `Wei Jie: ${currentBranchData.thought}`;
+      document.getElementById('replyText').textContent = (currentBranchData.notices && currentBranchData.notices[optIdx]) || `Wei Jie: ${currentBranchData.thought}`;
 
       const nextBtn = document.getElementById('nextBtn');
       nextBtn.disabled = false;
