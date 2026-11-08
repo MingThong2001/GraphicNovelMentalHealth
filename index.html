@@ -447,6 +447,12 @@
   #progressBar{border-radius:0!important;box-shadow:none!important}
   /* hide "0 / 5 Scenes" and the "Standard State / Variant" label */
   #routeStatus,#variantBadge{display:none!important}
+  /* laptops / desktops: use the full screen width, and keep the scene at one 3:2 shape that scales to fit */
+  @media (min-width:1024px){
+    body{max-width:1536px!important}
+    .panel-frame{container-type:inline-size}
+    #comicCanvas{width:auto!important;max-width:100%;aspect-ratio:3/2;align-self:center;max-height:calc(100cqw / 1.5)}
+  }
   @media (max-width:380px){
     #mapList h4{font-size:.6rem!important}
     #questionText{font-size:1.25rem!important}
