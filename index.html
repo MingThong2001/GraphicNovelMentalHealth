@@ -447,6 +447,51 @@
   #progressBar{border-radius:0!important;box-shadow:none!important}
   /* hide "0 / 5 Scenes" and the "Standard State / Variant" label */
   #routeStatus,#variantBadge{display:none!important}
+  /* ---- "Your Route" redesign: small, calm adventure map (kid friendly, not distracting) ---- */
+  div:has(> #mapList){background:linear-gradient(135deg,#FFFFFF 0%,#F7F4FF 100%)!important;border:2px dashed #E3DCFF!important;border-radius:24px!important}
+  div:has(> #mapList) > div:first-child h3{font-size:.95rem!important;color:var(--ink)!important}
+  div:has(> #mapList) > div:first-child h3::before{content:'🗺️';display:inline-block;margin-right:.4rem;font-size:1rem;vertical-align:-.05em}
+  @media (min-width:641px){
+    div:has(> #mapList){padding:.8rem 1.5rem .85rem!important}
+    div:has(> #mapList) > div:first-child{margin-bottom:.5rem!important}
+  }
+  #mapList{--rs:38px}
+  #mapList::before{top:calc(var(--rs) / 2 - 2px)!important;left:10%!important;right:10%!important;height:4px!important;border-radius:2px;background:repeating-linear-gradient(90deg,#D6CEFA 0 10px,transparent 10px 18px)!important}
+  #mapList span{display:none!important}
+  /* stop "stickers": a soft pastel colour for each stop */
+  #mapList > div{gap:.3rem!important}
+  #mapList > div > div:first-child{width:var(--rs)!important;height:var(--rs)!important;font-size:1.05rem!important;line-height:1;border:3px solid #fff!important;box-shadow:0 2px 6px rgba(79,91,213,.15)!important}
+  #mapList > div:nth-child(1) > div:first-child{background:#CFF3E4!important}
+  #mapList > div:nth-child(2) > div:first-child{background:#FFEDB3!important}
+  #mapList > div:nth-child(3) > div:first-child{background:#FFD6EF!important}
+  #mapList > div:nth-child(4) > div:first-child{background:#D3E4FF!important}
+  #mapList > div:nth-child(5) > div:first-child{background:#E3D8FF!important}
+  /* stop names: plain, quiet text */
+  #mapList h4{display:block;padding:0;border-radius:0;background:transparent;border:0;color:var(--ink)!important;font-size:.9rem!important;font-weight:700!important}
+  /* upcoming stops: softer */
+  #mapList > [class*="text-white/50"] > div:first-child{opacity:.6}
+  #mapList > [class*="text-white/50"] h4{opacity:.6;color:var(--mute)!important}
+  /* finished stops: small green tick */
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child{border-color:#fff!important}
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child::after{content:'✓';position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:#2CC8A0;border:2px solid #fff;color:#fff;font-size:.875rem;font-weight:800;line-height:14px;text-align:center}
+  /* current stop: calm ring, no animation */
+  #mapList > div.bg-white > div:first-child{border-color:var(--ind)!important;box-shadow:0 0 0 4px rgba(79,91,213,.15)!important;animation:routePulse 2.2s ease-out infinite}
+  @keyframes routePulse{0%{box-shadow:0 0 0 0 rgba(79,91,213,.45);transform:scale(1)}50%{transform:scale(1.07)}100%{box-shadow:0 0 0 14px rgba(79,91,213,0);transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){#mapList > div.bg-white > div:first-child{animation:none}}
+  #mapList > div.bg-white h4{color:var(--ind)!important;font-weight:800!important}
+  /* phones */
+  @media (max-width:640px){
+    #mapList{--rs:32px}
+    #mapList > div > div:first-child{font-size:1rem!important;border-width:2px!important}
+    #mapList h4{font-size:.875rem!important}
+    #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child::after{width:16px;height:16px;line-height:12px;right:-4px;bottom:-4px}
+    div:has(> #mapList) > div:first-child h3{font-size:.95rem!important}
+  }
+  /* short laptop screens */
+  @media (min-width:1024px) and (max-height:820px){
+    #mapList{--rs:34px}
+    #mapList > div > div:first-child{font-size:1rem!important}
+  }
   @media (max-width:380px){
     #mapList h4{font-size:.6rem!important}
     #questionText{font-size:1.25rem!important}
