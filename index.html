@@ -100,7 +100,7 @@
   #badgesGrid > :last-child:nth-child(odd){grid-column:span 2}
 
   /* ending + modal */
-  #endScreen .badge-pulse{background:var(--yel)!important;color:#5a4000!important;border-radius:24px!important}
+  #endScreen .badge-pulse{background:linear-gradient(135deg,#8065A8,#8E78C2)!important}
   #endLine{background:#FFF6D6!important;border:2px solid #FFE08A!important;border-radius:20px!important}
   #modal{background:rgba(27,29,77,.5)!important}
   [class*="bg-white/5"],[class*="bg-white/10"]{background:var(--soft)!important}
@@ -455,7 +455,7 @@
   /* ---- loading screen ---- */
   #loader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;background:var(--bg);padding:1.5rem;text-align:center;transition:opacity .5s ease,visibility .5s ease}
   #loader.done{opacity:0;visibility:hidden;pointer-events:none}
-  #loader .ld-logo{width:64px;height:64px;border-radius:20px;background:var(--ind);color:#fff;font-size:2rem;font-weight:800;display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);box-shadow:0 6px 0 #3841a8;animation:ldBob 1.6s ease-in-out infinite}
+  #loader .ld-logo{width:64px;height:64px;border-radius:20px;background:var(--ind);color:#fff;font-size:2rem;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #3841a8;animation:ldBob 1.6s ease-in-out infinite}
   #loader .ld-title{font-size:1.75rem;font-weight:800;line-height:1;color:var(--ink)}
   #loader .ld-soar{font-size:1rem;font-weight:800;color:var(--ind);margin-top:-.8rem;letter-spacing:.02em}
   #loader .ld-soar + .ld-sub{margin-top:-1rem}
@@ -467,7 +467,7 @@
   #loader .ld-bar i:nth-child(3){animation-delay:.3s}
   #loader .ld-bar i:nth-child(4){animation-delay:.45s}
   #loader .ld-bar i:nth-child(5){animation-delay:.6s}
-  @keyframes ldBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+  @keyframes ldBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   @keyframes ldSeg{0%,100%{background:var(--ind2)}40%,60%{background:var(--ind)}}
   @media (prefers-reduced-motion:reduce){#loader .ld-logo,#loader .ld-bar i{animation:none}}
   /* ---- ambient fairy-light / dust particles (one reused canvas) ---- */
@@ -480,18 +480,18 @@
 
   <!-- LOADING SCREEN -->
   <div id="loader" role="status" aria-live="polite">
-    <div class="ld-logo">↗</div>
+    <div class="ld-logo"><svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 20C5 20 3 14 3 8c6 0 8 4 8 12z"/><path d="M13 20c0-8 2-13 9-14 0 7-3 14-9 14z"/><rect x="11.2" y="14" width="1.6" height="8" rx=".8"/></svg></div>
     <div class="ld-title">BETWEEN STOPS</div>
     <div class="ld-soar">SOAR Mental Health Check In</div>
-    <div class="ld-sub">Getting your journey ready…</div>
+    <div class="ld-sub">You're here, and that's a good place to start. ✨</div>
     <div class="ld-bar"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
 
   <!-- TOP APP BAR / BRANDING & GAMIFIED METRICS -->
   <header class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-white text-[#314A6F] font-black text-xl flex items-center justify-center -rotate-3 shadow-md">
-        ↗
+      <div class="w-10 h-10 rounded-xl bg-white text-[#314A6F] font-black text-xl flex items-center justify-center shadow-md">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 20C5 20 3 14 3 8c6 0 8 4 8 12z"/><path d="M13 20c0-8 2-13 9-14 0 7-3 14-9 14z"/><rect x="11.2" y="14" width="1.6" height="8" rx=".8"/></svg>
       </div>
       <div>
         <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A Gamified Story Check-In</span>
@@ -567,7 +567,7 @@
         <div class="relative z-[10] mx-4 mb-4 bg-[#1e304b]/95 border border-white/30 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl">
           <div class="flex items-center justify-between gap-2 mb-1.5">
             <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white text-[#314A6F] border border-white">
-              SCENE 01 · MRT CARRIAGE
+              TRAIN RIDE
             </span>
             <span id="variantBadge" class="text-[10px] font-bold text-white/80 uppercase tracking-wider">
               Standard State
@@ -678,7 +678,7 @@
       <!-- OUTCOME / GAMIFIED ENDING SCREEN -->
       <div id="endScreen" class="hidden bg-[#1e304b] border border-white/30 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-5">
         <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl badge-pulse">
-          ✦
+          🌟
         </div>
         <span class="text-xs font-extrabold text-white/80 tracking-widest uppercase">Journey Completed</span>
         <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-white">
@@ -749,11 +749,11 @@
     // --- STORY DATA ---
     const storyData = {
       scenes: [
-        { id: 0, title: "MRT Carriage", location: "SCENE 01 · MRT CARRIAGE", icon: "🚇", bgImage: "MRT.jpg" },
-        { id: 1, title: "School Corridor", location: "SCENE 02 · SCHOOL CORRIDOR", icon: "🏫", bgImage: "School Corridor.jpg" },
-        { id: 2, title: "Void Deck", location: "SCENE 03 · VOID DECK", icon: "🏢", bgImage: "HDB Void Deck.jpg" },
-        { id: 3, title: "Home Doorway", location: "SCENE 04 · HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
-        { id: 4, title: "Boys Room", location: "SCENE 05 · BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
+        { id: 0, title: "Train Ride", location: "TRAIN RIDE", icon: "🚇", bgImage: "MRT.jpg" },
+        { id: 1, title: "School Corridor", location: "SCHOOL CORRIDOR", icon: "🏫", bgImage: "School Corridor.jpg" },
+        { id: 2, title: "Void Deck", location: "VOID DECK", icon: "🏢", bgImage: "HDB Void Deck.jpg" },
+        { id: 3, title: "Home Doorway", location: "HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
+        { id: 4, title: "Boys Room", location: "BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
       ],
       questions: [
         {
@@ -1325,7 +1325,7 @@
       setSceneVisual({ id: 1, bgImage: "School Corridor.jpg" });
       spawnFloatingThoughts();
 
-      document.getElementById('sceneTag').textContent = "SCENE 02A · SNACK INTERLUDE";
+      document.getElementById('sceneTag').textContent = "SNACK INTERLUDE";
       document.getElementById('variantBadge').textContent = "Interlude";
       document.getElementById('sceneDescription').textContent = SNACK_SCENE_TEXT;
       document.getElementById('sceneDescription').classList.remove('italic');
@@ -1400,7 +1400,7 @@
       setSceneVisual({ id: 1, bgImage: "School Corridor.jpg" });
       spawnFloatingThoughts();
 
-      document.getElementById('sceneTag').textContent = "SCENE 02B · REFLECTION BRANCH";
+      document.getElementById('sceneTag').textContent = "REFLECTION BRANCH";
       document.getElementById('variantBadge').textContent = currentBranchData.tag;
       document.getElementById('sceneDescription').textContent = currentBranchData.happens;
 
