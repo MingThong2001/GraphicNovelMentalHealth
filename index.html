@@ -387,6 +387,64 @@
   .scene-mood-overlay,
   .panel-frame[data-scene="4"] .scene-mood-overlay{background:linear-gradient(180deg,rgba(20,22,70,.16) 0%,rgba(20,22,70,.32) 100%)!important}
   .panel-frame[data-scene="4"] #sceneBgLayer{filter:blur(1.5px)}
+
+  /* ---- mobile friendly (phones / small screens only; desktop untouched) ---- */
+  html,body{max-width:100%;overflow-x:hidden}
+  @media (max-width:640px){
+    html{scrollbar-gutter:auto}
+    body{padding-bottom:6.5rem!important}
+
+    /* header */
+    header{gap:.6rem!important}
+    header > div:first-child{flex:1 1 100%}
+    #hud{flex:1 1 auto;flex-wrap:wrap;gap:.4rem!important}
+    #hud > div{padding:.2rem .4rem .2rem .7rem!important}
+    header > div:last-child{flex:1 1 auto;justify-content:flex-end}
+    header button{padding:.5rem .9rem!important;font-size:.8rem!important;min-height:40px}
+
+    /* route strip */
+    div:has(> #mapList){padding:1rem .6rem!important}
+    #mapList > div > div:first-child{width:32px!important;height:32px!important;font-size:.85rem}
+    #mapList::before{top:14px;left:8%;right:8%}
+    #mapList h4{font-size:.68rem!important;word-break:break-word}
+    #mapList span{font-size:.62rem!important}
+
+    /* scene overlays: stack so nothing overflows */
+    div[class*="z-[15]"]{flex-direction:column;align-items:flex-start;gap:.4rem!important;top:.6rem!important;left:.6rem!important;right:.6rem!important}
+    div[class*="z-[15]"] > div{padding:.4rem .7rem!important;font-size:.7rem!important;max-width:100%}
+    div[class*="z-[15]"] [class*="w-24"]{width:4.5rem}
+    #comicCanvas{height:320px!important}
+    [class*="bg-[#1e304b]/95"]{margin:0 .6rem .6rem!important;padding:1rem!important}
+    #sceneDescription{font-size:.95rem!important}
+
+    /* question panel */
+    #storyPanel{padding:1.1rem!important}
+    #questionText{font-size:1.4rem!important}
+    #choicesContainer > button{min-height:56px;padding:.8rem .9rem!important;column-gap:.75rem;grid-template-columns:36px 1fr}
+    #choicesContainer > button > div > span:first-child{width:36px!important;height:36px!important}
+    #choicesContainer p{font-size:.95rem!important}
+    #replyBox{padding:1rem!important}
+    div:has(> #nextBtn){gap:.5rem}
+    #nextBtn{min-width:0;flex:1 1 auto;padding:.8rem 1rem!important}
+    #prevBtn{padding:.75rem 1rem!important}
+    #nextBtn,#prevBtn{min-height:48px}
+
+    /* floating buttons: keep clear of phone home bar */
+    #pauseBtn{left:.75rem;bottom:calc(.75rem + env(safe-area-inset-bottom,0px));padding:.65rem 1.1rem!important;font-size:.85rem!important}
+    #medalBtn{right:.75rem;bottom:calc(.75rem + env(safe-area-inset-bottom,0px))}
+    #badgePop{left:4vw;right:4vw;width:auto;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px))}
+    #badgePop{padding:1rem!important}
+
+    /* ending + modal */
+    #endScreen{padding:1.5rem 1rem!important}
+    #endTitle{font-size:1.5rem!important}
+    #modalCard{padding:1.25rem!important;max-height:90dvh;overflow-y:auto}
+    #modalTitle{font-size:1.2rem!important}
+  }
+  @media (max-width:380px){
+    #mapList h4{font-size:.6rem!important}
+    #questionText{font-size:1.25rem!important}
+  }
 </style>
 </head>
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
