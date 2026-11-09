@@ -609,14 +609,14 @@
   </div>
 
   <!-- NEED HELP NOW? (button is visible on every screen) -->
-  <button type="button" id="helpNowBtn" aria-haspopup="dialog">💛 Need help now?</button>
+  <button type="button" id="helpNowBtn" aria-haspopup="dialog">💛 Get Support?</button>
   <div id="helpNow" role="dialog" aria-modal="true" aria-labelledby="helpNowTitle">
     <div class="hn-card">
-      <h2 id="helpNowTitle">Need help now?</h2>
-      <p class="hn-lead">You don't have to deal with this alone. These people are ready to listen, and it's free.</p>
+      <h2 id="helpNowTitle">Need someone to talk to?</h2>
+      <p class="hn-lead">Whatever's been on your mind, you don't have to keep it all to yourself. Someone is here to listen."</p>
       <ul id="helpNowList"></ul>
       <p class="hn-emerg">In danger or an emergency? Call <a href="tel:995">995</a> (ambulance) or <a href="tel:999">999</a> (police) right away.</p>
-      <p class="hn-adult">You can also tell a trusted adult, like a parent, teacher or school counsellor.</p>
+      <p class="hn-adult">If you're comfortable, consider sharing how you feel with a parent, teacher or school counsellor.</p>
       <button type="button" class="hn-close" id="helpNowClose">Close</button>
     </div>
   </div>
@@ -630,18 +630,6 @@
       <div>
         <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A Gamified Story Check-In</span>
         <h1 class="text-lg font-bold text-white tracking-tight leading-none">BETWEEN STOPS</h1>
-      </div>
-    </div>
-
-    <!-- GAMIFIED HUD SCOREBOARD -->
-    <div id="hud" class="flex items-center gap-3 bg-[#1e304b] border border-white/20 px-4 py-2 rounded-xl shadow-md">
-      <div class="flex items-center gap-2 pr-3 border-r border-white/20">
-        <span class="text-xs font-bold text-white/80"><span class="hud-ico">⭐</span> Insight XP</span>
-        <span id="scoreVal" class="text-sm font-black text-white">0</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-white/80"><span class="hud-ico">🔥</span> Streak</span>
-        <span id="streakVal" class="text-xs font-black bg-white text-[#314A6F] px-2 py-0.5 rounded-md">0x</span>
       </div>
     </div>
 
@@ -683,12 +671,6 @@
 
         <!-- Dynamic Emotional Energy Gauge HUD Overlay (Top Canvas) -->
         <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-3 z-[15] pointer-events-none">
-          <div class="bg-[#1e304b]/90 border border-white/30 px-3 py-1.5 rounded-xl backdrop-blur-md flex items-center gap-2 text-[11px] font-bold">
-            <span class="text-white/70">EMOTIONAL CAPACITY:</span>
-            <div class="w-24 h-2 bg-white/20 rounded-full overflow-hidden">
-              <div id="capacityBar" class="h-full bg-white transition-all duration-500" style="width: 100%;"></div>
-            </div>
-          </div>
           <div class="bg-[#1e304b]/90 border border-white/30 px-3 py-1.5 rounded-xl backdrop-blur-md text-[10px] font-bold text-white/90">
             <span id="thoughtBubbleCount">💬 0 Floating Thoughts Active</span>
           </div>
@@ -791,7 +773,7 @@
             <strong class="block text-[10px] uppercase tracking-widest text-white font-extrabold">
               What the story notices
             </strong>
-            <span id="xpBonusTag" class="text-[10px] font-black bg-white text-[#314A6F] px-2 py-0.5 rounded">+50 ✦ INSIGHT</span>
+            <span id="xpBonusTag" class="text-[10px] font-black bg-white text-[#314A6F] px-2 py-0.5 rounded">✦ NOTICED</span>
           </div>
           <span id="replyText">...</span>
         </div>
@@ -819,21 +801,7 @@
           You don't have to carry it alone.
         </h2>
 
-        <!-- End Game Stats Card -->
-        <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-white/10 p-3 rounded-xl border border-white/20">
-          <div class="text-center">
-            <span class="text-[10px] text-white/70 block uppercase font-bold">Total XP</span>
-            <span id="finalXP" class="text-base font-black text-white">0</span>
-          </div>
-          <div class="text-center border-x border-white/20">
-            <span class="text-[10px] text-white/70 block uppercase font-bold">Thoughts Unlocked</span>
-            <span id="finalThoughts" class="text-base font-black text-white">0</span>
-          </div>
-          <div class="text-center">
-            <span class="text-[10px] text-white/70 block uppercase font-bold">Badges Earned</span>
-            <span id="finalBadges" class="text-base font-black text-white">0</span>
-          </div>
-        </div>
+        <p class="text-xs text-white/70 max-w-md leading-relaxed">This isn't a score or a result. Thank you for taking the time to check in.</p>
 
         <p id="endText" class="text-sm text-white/90 max-w-lg leading-relaxed">
           Wei Jie sits with his headphones in...
@@ -1046,12 +1014,12 @@
     // --- GAME BADGES DEFINITION ---
     const gameBadges = [
       { id: 'first_step', title: 'First Step', desc: 'Started the check-in journey', icon: '👟', unlocked: false },
-      { id: 'look_inward', title: 'Little Look Inward', desc: 'Self-Awareness: Took at least 3 minutes to reflect on feelings', icon: '🔍', unlocked: false },
+      { id: 'look_inward', title: 'Little Look Inward', desc: 'Self-Awareness: Listened to a thought before answering', icon: '🔍', unlocked: false },
       { id: 'honest_observer', title: 'Honest Observer', desc: 'Listened to 3 inner thought echoes', icon: '💬', unlocked: false },
       { id: 'pause_button', title: 'Pause Button', desc: 'Taking a Breather: Took time to pause during check-in', icon: '🧘', unlocked: false },
       { id: 'deep_reflection', title: 'Deep Reflection', desc: 'Completed half of the story stops', icon: '✦', unlocked: false },
       { id: 'self_aware', title: 'Self-Awareness', desc: 'Completed the full story journey', icon: '🕊️', unlocked: false },
-      { id: 'streak_master', title: 'Streak Master', desc: 'Maintained a response streak across multiple questions', icon: '🔥', unlocked: false }
+      { id: 'curious_tapper', title: 'Curious Listener', desc: 'Tapped a thought bubble to hear an inner voice', icon: '👂', unlocked: false }
     ];
 
     // --- GAMIFIED STATE MANAGEMENT ---
@@ -1291,8 +1259,8 @@
               b.heard = true;
               thoughtsHeard[currentQIdx].push(b.id);
               totalThoughtsPopped++;
-              gainXP(25);
-              spawnParticles(b.x, b.y);
+              unlockBadge('curious_tapper');
+                      spawnParticles(b.x, b.y);
               if (totalThoughtsPopped >= 3) {
                 unlockBadge('honest_observer');
               }
@@ -1335,9 +1303,7 @@
 
     function gainXP(amount) {
       insightXP += amount;
-      document.getElementById('scoreVal').textContent = insightXP;
     }
-
     function unlockBadge(badgeId) {
       const b = gameBadges.find(x => x.id === badgeId);
       if (b && !b.unlocked) {
@@ -1698,22 +1664,11 @@
     function selectChoice(ansIdx) {
       if (isShowingBranchScene || isShowingSnackScene) return;
       playButtonClick();
-      if (Date.now() - questionStartTime >= 180000) {
+      if (thoughtsHeard[currentQIdx].length > 0) {
         unlockBadge('look_inward');
       }
 
-      if (userAnswers[currentQIdx] === null) {
-        streakCount++;
-        gainXP(50);
-        emotionalCapacity = Math.max(20, emotionalCapacity - (ansIdx * 10));
-        document.getElementById('capacityBar').style.width = `${emotionalCapacity}%`;
-      }
       userAnswers[currentQIdx] = ansIdx;
-      document.getElementById('streakVal').textContent = `${streakCount}x`;
-
-      if (streakCount >= 3) {
-        unlockBadge('streak_master');
-      }
 
       if (currentQIdx >= 4) {
         unlockBadge('deep_reflection');
@@ -2098,10 +2053,6 @@
       document.getElementById('endText').textContent = ending.text;
       document.getElementById('endLine').textContent = ending.line;
 
-      document.getElementById('finalXP').textContent = insightXP;
-      document.getElementById('finalThoughts').textContent = totalThoughtsPopped;
-      document.getElementById('finalBadges').textContent = `${gameBadges.filter(b=>b.unlocked).length} / ${gameBadges.length}`;
-
       document.getElementById('storyPanel').classList.add('hidden');
       document.getElementById('endScreen').classList.remove('hidden');
       playSfx('Achievement.mp3');
@@ -2127,9 +2078,6 @@
       currentBranchData = null;
       branchAnswerSelected = null;
 
-      document.getElementById('scoreVal').textContent = '0';
-      document.getElementById('streakVal').textContent = '0x';
-      document.getElementById('capacityBar').style.width = '100%';
 
       gameBadges.forEach(b => { if (b.id !== 'first_step') b.unlocked = false; });
       renderBadges();
@@ -2155,7 +2103,7 @@
           <button id="breatheOption1" class="p-3.5 rounded-xl border border-white/20 bg-white/10 text-left hover:bg-white/20 transition flex items-center justify-between">
             <div>
               <span class="block text-xs font-bold text-white">1. Take a few slow breaths</span>
-              <span class="text-[10px] text-white/70">Animated breathing circle · 90s Timer</span>
+              <span class="text-[10px] text-white/70">Animated breathing circle · Take as long as you like</span>
             </div>
             <span class="text-lg">☁️</span>
           </button>
@@ -2188,7 +2136,6 @@
 
     function startBreathingExercise() {
       unlockBadge('pause_button');
-      let timeLeft = 90;
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
 
@@ -2198,30 +2145,21 @@
           <div class="w-28 h-28 rounded-full border-4 border-white flex items-center justify-center animate-breath shadow-xl mb-4 bg-white/10">
             <span id="breathPrompt" class="text-xs font-black uppercase text-white">Breathe in...</span>
           </div>
-          <span id="breathTimer" class="text-2xl font-black text-white tracking-widest mb-1">01:30</span>
+          <span class="text-sm font-bold text-white mb-1">Take as long as you like</span>
           <p class="text-xs text-white/70">Follow the circle. Relax your shoulders and unclench your jaw.</p>
         </div>
       `;
 
+      let tick = 0;
       breatherTimerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const secs = String(timeLeft % 60).padStart(2, '0');
-        const timerEl = document.getElementById('breathTimer');
+        tick++;
         const promptEl = document.getElementById('breathPrompt');
-
-        if (timerEl) timerEl.textContent = `${mins}:${secs}`;
         if (promptEl) {
           // Same 10s cycle as the circle animation: 0-4s in, 4-6s hold, 6-10s out
-          const phase = (90 - timeLeft) % 10;
+          const phase = tick % 10;
           if (phase < 4) promptEl.textContent = "Breathe in...";
           else if (phase < 6) promptEl.textContent = "Hold...";
           else promptEl.textContent = "Breathe out...";
-        }
-
-        if (timeLeft <= 0) {
-          clearInterval(breatherTimerInterval);
-          if (promptEl) promptEl.textContent = "Complete ✓";
         }
       }, 1000);
     }
@@ -2293,7 +2231,7 @@
               <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">💬</div>
               <div class="flex-1 min-w-0">
                 <h4 class="text-xs font-bold text-white mb-0.5">1. Tap Floating Thoughts</h4>
-                <p class="text-[11px] text-white/70 leading-relaxed">Tap floating thought bubbles on screen to earn Insight XP and hear Wei Jie's inner monologue.</p>
+                <p class="text-[11px] text-white/70 leading-relaxed">Tap floating thought bubbles on screen to hear Wei Jie's inner monologue.</p>
               </div>
             </div>
 
@@ -2308,8 +2246,8 @@
             <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
               <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">✦</div>
               <div class="flex-1 min-w-0">
-                <h4 class="text-xs font-bold text-white mb-0.5">3. Track & Unlock Badges</h4>
-                <p class="text-[11px] text-white/70 leading-relaxed">Track your Emotional Energy & unlock Badges as you progress through all 5 stops.</p>
+                <h4 class="text-xs font-bold text-white mb-0.5">3. Unlock Badges</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Unlock Badges as you move through all 5 stops.</p>
               </div>
             </div>
           </div>
@@ -2366,8 +2304,7 @@
       const v = parseFloat(cap.style.width) || 0;
       cap.dataset.level = v >= 70 ? 'high' : (v >= 40 ? 'mid' : 'low');
     };
-    new MutationObserver(setLevel).observe(cap, { attributes: true, attributeFilter: ['style'] });
-    setLevel();
+    if (cap) { new MutationObserver(setLevel).observe(cap, { attributes: true, attributeFilter: ['style'] }); setLevel(); }
   })();
 </script>
 <script>
@@ -2512,11 +2449,11 @@
   /* "Need help now?": contact list lives in one place so it is easy to swap for the SOAR-approved list. */
   (function () {
     const CONTACTS = [
-      { name: 'national mindline 1771', note: 'Talk to a counsellor, any time. Open 24 hours.',
+      { name: 'National Mindline 1771', note: 'You\'re not alone. We\'re here 24/7.',
         links: [{ label: 'Call 1771', href: 'tel:1771' }, { label: 'WhatsApp 6669 1771', href: 'https://wa.me/6566691771', alt: true }] },
-      { name: 'Samaritans of Singapore (SOS)', note: 'Someone to listen if you feel really down or unsafe. Open 24 hours.',
+      { name: 'Samaritans of Singapore (SOS)', note: 'Whatever you\'re going through, we\'re here to listen. Available 24/7.',
         links: [{ label: 'Call 1767', href: 'tel:1767' }, { label: 'WhatsApp 9151 1767', href: 'https://wa.me/6591511767', alt: true }] },
-      { name: 'Tinkle Friend', note: 'For kids 13 and under. Weekdays.',
+      { name: 'Tinkle Friend', note: 'For children aged 13 and below (Weekdays only)',
         links: [{ label: 'Call 1800 274 4788', href: 'tel:18002744788' }] }
     ];
     const dlg = document.getElementById('helpNow');
