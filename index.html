@@ -557,9 +557,9 @@
   #helpNow .hn-actions{display:flex;flex-wrap:wrap;gap:.5rem}
   #helpNow .hn-actions a{display:inline-flex;align-items:center;font-weight:800;font-size:.875rem;line-height:1;padding:.6rem 1rem;border-radius:999px;text-decoration:none;background:var(--ind);color:#fff}
   #helpNow .hn-actions a.hn-alt{background:#fff;color:var(--ind);border:2px solid var(--lav);padding:calc(.6rem - 2px) calc(1rem - 2px)}
-  #helpNow .hn-emerg{background:#FFF6D6;border:2px solid #FFE08A;border-radius:18px;padding:.7rem .9rem;font-size:.9rem;font-weight:700;line-height:1.4;color:var(--ink);margin:0 0 .6rem}
+  #helpNow .hn-emerg{background:#FFF6D6;border:2px solid #FFE08A;border-radius:18px;padding:.7rem .9rem;font-size:.9rem;font-weight:700;line-height:1.4;color:var(--ink);margin:0 0 1rem}
   #helpNow .hn-emerg a{color:var(--ink);text-decoration:underline}
-  #helpNow .hn-adult{font-size:.85rem;font-weight:600;line-height:1.4;color:var(--mute);margin:0 0 1rem}
+  #helpNow .hn-adult{display:flex;align-items:center;gap:.7rem;background:#E3F8F1;border:2px solid var(--mint);border-radius:18px;padding:.7rem .9rem;font-size:.9rem;font-weight:700;line-height:1.4;color:var(--ink);margin:0 0 1rem}#helpNow .hn-adult strong{font-weight:900}#helpNow .hn-adult-ico{font-size:1.25rem;line-height:1;flex:none}
   #helpNow .hn-close{display:block;width:100%;font-weight:800;font-size:1rem;padding:.75rem 1.5rem;border-radius:999px;border:2px solid var(--lav);background:#fff;color:var(--ink);cursor:pointer;transition:.15s}
   #helpNow .hn-close:hover{background:var(--ind2)}
   @media (max-width:640px){#helpNowBtn{font-size:.75rem;padding:.6rem .85rem;border-width:2px}#helpNow .hn-card{padding:1.2rem 1rem 1.1rem}}
@@ -577,8 +577,8 @@
   #helpNow .hn-actions{gap:.6rem}
   #helpNow .hn-actions a{font-size:.9rem;padding:.7rem 1.2rem}
   #helpNow .hn-actions a.hn-alt{padding:calc(.7rem - 2px) calc(1.2rem - 2px)}
-  #helpNow .hn-emerg{padding:1rem 1.4rem;font-size:.9rem;margin:0 0 .75rem}
-    #helpNow .hn-adult{font-size:.85rem;line-height:1.5;margin:0 0 1.5rem}
+  #helpNow .hn-emerg{padding:1rem 1.4rem;font-size:.9rem;margin:0 0 1.5rem}
+    #helpNow .hn-adult{padding:1rem 1.4rem;margin:0 0 1.5rem}
   @media (max-width:640px){#helpNow .hn-card{padding:1.5rem 1.1rem 1.25rem}#helpNow li,#helpNow .hn-emerg{padding:1rem 1.1rem}}
 </style>
 </head>
@@ -603,14 +603,14 @@
       <p class="cs-lead">Just a quick note about your privacy.</p>
 
       <ul class="cs-points">
-        <li><span class="cs-ico" aria-hidden="true">🤍</span><div><strong>Nothing is collected</strong><span class="cs-t">We don't ask for your name or record your answers.</span></div></li>
-        <li><span class="cs-ico" aria-hidden="true">🔒</span><div><strong>No one sees your answers</strong><span class="cs-t">They stay on your screen and aren't sent anywhere.</span></div></li>
-        <li><span class="cs-ico" aria-hidden="true">🍃</span><div><strong>Nothing is saved</strong><span class="cs-t">When you close the page, they're gone.</span></div></li>
+        <li><span class="cs-ico" aria-hidden="true">🤍</span><div><strong>Your identity stays private.</strong><span class="cs-t">We will not ask for your name or any identifying details.</span></div></li>
+        <li><span class="cs-ico" aria-hidden="true">🔒</span><div><strong>No one sees your answers</strong><span class="cs-t">Your answers won't be shared or stored with others.</span></div></li>
+        <li><span class="cs-ico" aria-hidden="true">🍃</span><div><strong>Nothing is saved</strong><span class="cs-t">Your responses aren't saved and will be cleared when you leave the page.</span></div></li>
       </ul>
 
       <div class="cs-full">
         <h3>Data protection</h3>
-        <p>This activity does not collect, save or share any of your information. It isn't a test, so there are no right or wrong answers, and you can take a break whenever you like. If something feels heavy, it can help to talk to someone you trust.</p>
+        <p>This is a space for you to check in with yourself. There are no right or wrong answers, so take your time and answer as honestly as you feel comfortable. You can pause or take a break whenever you need to. If anything feels overwhelming, consider reaching out to someone you trust.</p>
       </div>
 
       <label class="cs-check" for="consentCheck">
@@ -619,7 +619,7 @@
       </label>
 
       <button type="button" id="consentBtn" class="cs-btn" disabled>Start</button>
-      <p class="cs-hint" id="consentHint">Tick the box when you're ready.</p>
+      <p class="cs-hint" id="consentHint">Tick the box whenever you're ready.</p>
     </div>
   </div>
 
@@ -629,9 +629,9 @@
     <div class="hn-card">
       <h2 id="helpNowTitle">Need someone to talk to?</h2>
       <p class="hn-lead">Whatever's been on your mind, you don't have to keep it all to yourself. Someone is here to listen."</p>
+      <p class="hn-adult"><span class="hn-adult-ico" aria-hidden="true">💛</span><span>If you're comfortable, consider sharing how you feel with <strong>a parent, teacher or school counsellor</strong>.</span></p>
       <ul id="helpNowList"></ul>
       <p class="hn-emerg">In danger or an emergency? Call <a href="tel:995">995</a> (ambulance) or <a href="tel:999">999</a> (police) right away.</p>
-      <p class="hn-adult">If you're comfortable, consider sharing how you feel with a parent, teacher or school counsellor.</p>
       <button type="button" class="hn-close" id="helpNowClose">Close</button>
     </div>
   </div>
