@@ -580,7 +580,14 @@
   #helpNow .hn-emerg{padding:1rem 1.4rem;font-size:.9rem;margin:0 0 1.5rem}
     #helpNow .hn-adult{padding:1rem 1.4rem;margin:0 0 1.5rem}
   @media (max-width:640px){#helpNow .hn-card{padding:1.5rem 1.1rem 1.25rem}#helpNow li,#helpNow .hn-emerg{padding:1rem 1.1rem}}
-  #helpNow .hn-card{scrollbar-width:none}#helpNow .hn-card::-webkit-scrollbar{display:none}
+  /* scrollbar blends into the card: no track strip, a slim rounded thumb floating inside the card edge and clear of the rounded corners; the gutter is reserved on both sides so the content stays centred */
+  #helpNow .hn-card{--sb:14px;scrollbar-gutter:stable both-edges;padding-inline:calc(2.25rem - var(--sb))}
+  @media (max-width:640px){#helpNow .hn-card{padding-inline:calc(1.1rem - var(--sb))}}
+  #helpNow .hn-card::-webkit-scrollbar{display:block;width:var(--sb)}
+  #helpNow .hn-card::-webkit-scrollbar-track{background:transparent;margin:24px 0}
+  #helpNow .hn-card::-webkit-scrollbar-thumb{background:#C3C8F4;border:4px solid transparent;background-clip:padding-box;border-radius:999px}
+  #helpNow .hn-card::-webkit-scrollbar-thumb:hover{background:#8E95E8;background-clip:padding-box}
+  @supports not selector(::-webkit-scrollbar){#helpNow .hn-card{--sb:8px;scrollbar-width:thin;scrollbar-color:#C3C8F4 transparent}}
 </style>
 
 <style id="scene-wide">
