@@ -582,6 +582,21 @@
   @media (max-width:640px){#helpNow .hn-card{padding:1.5rem 1.1rem 1.25rem}#helpNow li,#helpNow .hn-emerg{padding:1rem 1.1rem}}
   #helpNow .hn-card{scrollbar-width:none}#helpNow .hn-card::-webkit-scrollbar{display:none}
 </style>
+
+<style id="scene-wide">
+  /* ---- WIDE 16:9 SCENE (additive): scene keeps its full column width and a true 16:9 shape, never a flat strip ---- */
+  @media (min-width:641px){
+    #comicCanvas{flex:none!important;width:100%;height:auto!important;min-height:0!important;aspect-ratio:16/9}
+    .panel-frame{flex:none!important}
+  }
+  /* desktop: stop squeezing everything into the viewport height; the page scrolls only if the screen is too short */
+  @media (min-width:1024px){
+    html,body{height:auto!important}
+    body{min-height:100dvh!important;overflow-y:auto!important}
+    .lg\:grid-cols-12{flex:none!important;grid-template-rows:auto!important}
+    .lg\:col-span-7,.lg\:col-span-5{height:auto!important}
+  }
+</style>
 </head>
 <body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
 
