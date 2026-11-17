@@ -1,0 +1,1565 @@
+<!doctype html>
+<!--
+VERSION 2 - VISUAL ASSETS
+V1 plus (dark blue palette: navy #1e304b / steel blue #314A6F / white text): scene background images, animated character sprites on canvas, tappable thought bubbles, route strip, story signals, themed UI, how-to-play.
+Removed: Get Support button, reflection badges and medal.
+Not yet in: snack interlude, branch scene, breather menu, loader, consent, sound, clouds.
+Asset files (scene .jpg, sprite .png, .mp3) must sit in the same folder as this file, same names as the final index.html.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Between Stops — Version 2 · Visual assets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+  :root{--bg:#EEF0FD;--ink:#1B1D4D;--mute:#6B6F9E;--ind:#4F5BD5;--ind2:#E3E6FB;--lav:#C7CCF4;--yel:#FFC83D;--mint:#2CC8A0;--soft:#F1F2FE}
+  body{font-family:'Baloo 2',sans-serif!important;background-color:var(--bg)!important;color:var(--ink)!important;user-select:none;padding-bottom:6rem!important}
+  button{font-family:inherit}
+
+  /* text colours (old dark theme used white text) */
+  .text-white{color:var(--ink)!important}
+  [class*="text-white/"]{color:var(--mute)!important}
+  [class*="text-[#314A6F]"]{color:var(--ind)!important}
+
+  /* cards */
+  [class~="bg-[#1e304b]"],[class*="bg-[#1e304b]/9"]{background:#fff!important;border-color:transparent!important;border-radius:28px!important;box-shadow:0 8px 24px rgba(79,91,213,.10)!important}
+  [class*="bg-[#1e304b]/40"]{background:var(--soft)!important;border-color:var(--ind2)!important}
+  header{border-color:transparent!important;border-bottom:0!important}
+  header div[class~="bg-[#1e304b]"]{border-radius:999px!important}
+  header button{background:#fff!important;border:2px solid var(--ind2)!important;border-radius:999px!important;color:var(--ink)!important;font-weight:700;box-shadow:0 4px 12px rgba(79,91,213,.10);transition:.15s}
+  header button:hover{background:var(--ind2)!important;transform:translateY(-2px)}
+
+  /* strong accent fills (old white pills/buttons -> indigo) */
+  .bg-white{background:var(--ind)!important;color:#fff!important;border-color:var(--ind)!important}
+  [class~="bg-[#314A6F]"]{background:var(--ind)!important;color:#fff!important}
+  h1{font-weight:800!important;letter-spacing:0!important}
+
+  /* scene */
+  .panel-frame{background:var(--lav)!important;border:0!important;border-radius:32px!important;box-shadow:0 8px 24px rgba(79,91,213,.15)!important}
+  .scene-mood-overlay{background:linear-gradient(180deg,rgba(150,160,240,.08) 0%,rgba(120,130,230,.28) 100%)!important}
+  div[class*="z-[15]"] > div{border-radius:999px!important;background:#fff!important;box-shadow:0 3px 10px rgba(79,91,213,.15)!important}
+  div[class*="z-[15]"] [class*="bg-white/20"]{background:var(--ind2)!important}
+  #capacityBar{background:repeating-linear-gradient(90deg,var(--mint) 0 17px,transparent 17px 22px)!important}
+  [class*="bg-[#1e304b]/95"]{border-radius:24px!important}
+  #sceneTag{background:var(--ind)!important;color:#fff!important;border-radius:999px!important;font-weight:800}
+  #sceneDescription{font-weight:600}
+
+  /* question panel */
+  #questionText{font-weight:800!important;font-size:1.75rem!important;line-height:1.15!important}
+  #progressBar{background:var(--ind)!important}
+  .rounded-full[class*="bg-white/20"]{background:var(--ind2)!important;border-color:transparent!important}
+  #choicesContainer > button{background:var(--soft)!important;border:2px solid var(--ind2)!important;border-radius:20px!important;color:var(--ink)!important;transition:.15s}
+  #choicesContainer > button:hover{border-color:var(--ind)!important;background:#fff!important;transform:translateY(-2px)}
+  #choicesContainer > button.bg-white{background:#E8EAFF!important;border-color:var(--ind)!important;box-shadow:0 4px 0 var(--ind)!important}
+  #choicesContainer [class*="bg-white/20"]{background:var(--ind2)!important;color:var(--ind)!important;border-radius:12px!important}
+  #choicesContainer [class~="bg-[#314A6F]"]{background:var(--ind)!important;color:#fff!important;border-radius:12px!important}
+  #choicesContainer [class*="text-white/70"],#choicesContainer [class*="text-[#314A6F]/80"]{color:var(--ind)!important;font-weight:800}
+  #choicesContainer p{font-size:.9rem!important;font-weight:600!important}
+  #replyBox{background:#FFF6D6!important;border:2px solid #FFE08A!important;border-radius:20px!important}
+  #xpBonusTag{background:var(--yel)!important;color:#5a4000!important;border-radius:999px!important}
+  #prevBtn{background:#fff!important;border:2px solid var(--ind2)!important;color:var(--ink)!important}
+  #prevBtn:hover:not(:disabled){background:var(--ind2)!important}
+  #nextBtn{background:var(--ind)!important;color:#fff!important;border-radius:999px!important;box-shadow:0 5px 0 #3841a8!important;font-weight:800}
+  #nextBtn:disabled{background:#D9DCF3!important;color:#8B8FBF!important;box-shadow:none!important;opacity:1!important}
+
+  /* sidebar */
+  #routeStatus{background:var(--ind2)!important;color:var(--ind)!important;border-color:transparent!important;border-radius:999px!important;font-weight:800}
+  #aMeter{background:var(--ind)!important}
+  #bMeter{background:var(--yel)!important}
+  #cMeter{background:var(--mint)!important}
+
+
+  /* ---- layout (matches the reference screenshot) ---- */
+  #mapList{flex-direction:row!important;gap:0!important;position:relative}
+  #mapList::before{content:'';position:absolute;left:10%;right:10%;top:18px;height:4px;border-radius:4px;background:#DDE0F8}
+  #mapList > div{flex:1;flex-direction:column!important;gap:.4rem!important;padding:0!important;text-align:center;align-items:center;background:transparent!important;border:0!important;color:var(--ink)!important;min-width:0}
+  #mapList > [class*="text-white/50"]{color:var(--mute)!important}
+  #mapList > div > div:first-child{width:40px!important;height:40px!important;border-radius:50%!important;background:#fff!important;border:3px solid var(--lav);position:relative;z-index:1;color:var(--ink)!important}
+  #mapList > div.bg-white > div:first-child{background:var(--ind)!important;border-color:#C9CEF5!important;box-shadow:0 0 0 4px rgba(79,91,213,.2)}
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child{background:var(--ind2)!important;border-color:var(--ind)!important}
+  #mapList > div > div:last-child{flex:none;width:100%}
+  #mapList .truncate{white-space:normal;overflow:visible}
+  #storyPanel > div:first-child{flex-wrap:wrap}
+  #storyPanel > div:first-child > #qCountLabel{order:-1}
+  #storyPanel > div:first-child > div{flex-basis:100%;margin:.5rem 0 0!important;order:2}
+  #choicesContainer{grid-template-columns:1fr!important}
+  #choicesContainer > button{display:grid!important;grid-template-columns:40px 1fr;column-gap:.9rem;align-items:center;padding:.9rem 1rem!important;height:auto!important}
+  #choicesContainer > button > div{display:contents}
+  #choicesContainer > button > div > span:first-child{grid-column:1;grid-row:1/3;width:40px!important;height:40px!important;font-size:1rem!important}
+  #choicesContainer > button > div > span:last-child{grid-column:2;grid-row:1;margin:0}
+  #choicesContainer > button > p{grid-column:2;grid-row:2;margin:0}
+
+  /* ending + modal */
+  #endScreen .badge-pulse{background:linear-gradient(135deg,#8065A8,#8E78C2)!important}
+  #endLine{background:#FFF6D6!important;border:2px solid #FFE08A!important;border-radius:20px!important}
+  #modal{background:rgba(27,29,77,.5)!important}
+  [class*="bg-white/5"],[class*="bg-white/10"]{background:var(--soft)!important}
+  [class*="bg-white/20"]{background:var(--ind2)!important}
+  [class*="border-white"]{border-color:var(--ind2)!important}
+  .bg-white,#restartBtn,#closeModal{box-shadow:0 5px 0 #3841a8}
+  #modalCard button:hover{filter:brightness(1.05)}
+  .animate-breath{border-color:var(--ind)!important}
+
+  /* original animations */
+  @keyframes badgeGlow{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.06);opacity:1}}
+  .badge-pulse{animation:badgeGlow 2s infinite ease-in-out}
+  @keyframes breathCycle{0%,100%{transform:scale(.85);opacity:.6}40%{transform:scale(1.25);opacity:1}60%{transform:scale(1.25);opacity:1}}
+  .animate-breath{animation:breathCycle 10s ease-in-out infinite}
+  #sceneBgLayer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image .6s ease-in-out,filter .4s ease;z-index:0}
+  .panel-frame{position:relative}
+  #comicCanvas{position:relative;z-index:2}
+  .scene-mood-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--lav);border-radius:999px}
+
+  /* ---- spacing + visual hierarchy pass (CSS only) ---- */
+  body{gap:1.75rem!important}
+  header{margin-bottom:0!important;padding:1rem .25rem 0!important}
+  h1{font-size:1.75rem!important;line-height:1!important}
+  header span.uppercase{font-size:.72rem!important;margin-bottom:.25rem}
+  header .pill,header button,header div[class~="bg-[#1e304b]"]{padding:.6rem 1.1rem!important;font-size:.9rem!important}
+  .text-xs{font-size:.875rem!important;line-height:1.4!important}
+  [class*="text-[10px]"],[class*="text-[11px]"]{font-size:.75rem!important;line-height:1.35!important}
+
+  /* section headings: clear, sentence-case, one size */
+  h3{font-size:1.1rem!important;font-weight:800!important;text-transform:none!important;letter-spacing:0!important;color:var(--ink)!important}
+  #routeStatus,#chapterLabel{font-size:.8rem!important;padding:.3rem .8rem!important}
+  #chapterLabel{background:transparent!important;color:var(--mute)!important;font-weight:700!important;text-transform:none!important;letter-spacing:0!important;padding:0!important}
+
+  /* route strip */
+  div:has(> #mapList){padding:1.5rem 2rem 1.75rem!important}
+  div:has(> #mapList) > div:first-child{margin-bottom:1.5rem!important;gap:1rem}
+  #mapList > div{gap:.5rem!important}
+  #mapList h4{font-size:.95rem!important;line-height:1.2!important;font-weight:800!important}
+  #mapList span{font-size:.75rem!important;line-height:1.3!important}
+
+  /* scene */
+  div[class*="z-[15]"]{top:1rem!important;left:1rem!important;right:1rem!important}
+  div[class*="z-[15]"] > div{padding:.55rem 1rem!important;font-size:.8rem!important}
+  [class*="bg-[#1e304b]/95"]{margin:0 1rem 1rem!important;padding:1.25rem 1.5rem!important}
+  [class*="bg-[#1e304b]/95"] > div:first-child{margin-bottom:.75rem!important}
+  #sceneTag{font-size:.75rem!important;padding:.3rem .9rem!important}
+  #sceneDescription{font-size:1.05rem!important;line-height:1.55!important}
+
+  /* question card: the main focus */
+  #storyPanel{padding:2rem!important;gap:1.5rem!important}
+  #storyPanel > div:first-child > #qCountLabel{font-size:.85rem!important;letter-spacing:.08em}
+  .rounded-full.h-2{height:.75rem!important}
+  #questionText{font-size:2rem!important;line-height:1.15!important;margin:.25rem 0 .25rem!important}
+  #choicesContainer{gap:.875rem!important;margin:0!important}
+  #choicesContainer > button{padding:1rem 1.15rem!important;column-gap:1rem}
+  #choicesContainer > button > div > span:last-child{font-size:.75rem!important;margin-bottom:.15rem!important}
+  #choicesContainer p{font-size:1rem!important;line-height:1.35!important}
+  #replyBox{padding:1.25rem 1.5rem!important;font-size:.95rem!important;line-height:1.5!important}
+  div:has(> #nextBtn){padding-top:1.25rem!important;margin-top:.25rem}
+  #nextBtn{font-size:1rem!important;padding:.8rem 1.6rem!important}
+  #prevBtn{font-size:.95rem!important;padding:.75rem 1.3rem!important}
+
+  /* secondary cards (signals, reminder) sit quieter than the question */
+  #aMeter,#bMeter,#cMeter{border-radius:999px}
+  .space-y-3 > * + *{margin-top:1.15rem!important}
+  [class~="bg-[#1e304b]"]:has(#aMeter),[class*="bg-[#1e304b]/90"]:not([class*="z-"]):not([class*="backdrop"]):has(#pauseBtn){padding:1.5rem!important}
+  [class~="bg-[#1e304b]"]:has(#aMeter) p,[class*="bg-[#1e304b]/90"]:has(#pauseBtn) p{font-size:.85rem!important;line-height:1.55!important}
+
+
+  /* ending + modal */
+  #endScreen{padding:2.5rem 2rem!important;gap:1.5rem!important}
+  #endTitle{font-size:2rem!important;line-height:1.15!important}
+  #modalCard{padding:2rem!important}
+  #modalTitle{font-size:1.4rem!important}
+  #modalBody{font-size:.95rem!important;line-height:1.55!important}
+
+  button:focus-visible{outline:3px solid var(--ind);outline-offset:3px}
+  @media (max-width:640px){
+    body{gap:1.25rem!important}
+    #storyPanel{padding:1.4rem!important}
+    #questionText{font-size:1.6rem!important}
+    div:has(> #mapList){padding:1.25rem 1rem!important}
+    #mapList h4{font-size:.78rem!important}
+  }
+
+  /* ---- fixes ---- */
+  /* 1. keep the scene image steady: no width jump when the page gains a scrollbar, and a reserved caption height so the panel (and its cover image) never resizes when the caption text changes */
+  html{scrollbar-gutter:stable}
+  [class*="bg-[#1e304b]/95"]{min-height:11.5rem}
+  #sceneBgLayer{background-size:cover!important;background-position:center!important}
+  @media (max-width:640px){[class*="bg-[#1e304b]/95"]{min-height:14.5rem}}
+
+  /* 2. Story Signals removed from view (kept in the page because the script updates it) */
+  [class~="bg-[#1e304b]"]:has(#aMeter){display:none!important}
+
+  /* 3. dim the page behind any modal / popup */
+  #modal{background:rgba(10,12,40,.72)!important;backdrop-filter:blur(4px)}
+
+  /* ---- FIT TO ONE SCREEN (desktop / tablet landscape) ---- */
+  @media (min-width:1024px){
+    html,body{height:100dvh}
+    body{min-height:0!important;overflow:hidden;gap:.9rem!important;padding-top:.75rem!important;padding-bottom:5.5rem!important}
+    header{flex:none}
+    h1{font-size:1.5rem!important}
+
+    /* route strip: slimmer */
+    div:has(> #mapList){flex:none;padding:.7rem 1.5rem .8rem!important}
+    div:has(> #mapList) > div:first-child{margin-bottom:.6rem!important}
+    #mapList::before{top:14px}
+    #mapList > div{gap:.3rem!important}
+    #mapList > div > div:first-child{width:32px!important;height:32px!important;font-size:.9rem}
+    #mapList h4{font-size:.85rem!important}
+    #mapList span{font-size:.7rem!important}
+
+    /* main grid fills the remaining height */
+    .lg\:grid-cols-12{flex:1 1 0!important;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch!important;gap:1rem!important}
+    .lg\:col-span-7,.lg\:col-span-5{min-height:0;height:100%;gap:.75rem!important}
+    .lg\:col-span-5{overflow-y:auto}
+
+    /* scene: canvas flexes to whatever height is left */
+    .panel-frame{display:flex;flex-direction:column;flex:1 1 0;min-height:0}
+    #comicCanvas{flex:1 1 0!important;min-height:120px;height:auto!important}
+    div[class*="z-[15]"]{top:.5rem!important;left:.75rem!important;right:.75rem!important}
+    div[class*="z-[15]"] > div{padding:.4rem .85rem!important}
+    [class*="bg-[#1e304b]/95"]{flex:none;min-height:8.5rem!important;margin:0 .75rem .75rem!important;padding:.85rem 1.25rem!important}
+    [class*="bg-[#1e304b]/95"] > div:first-child{margin-bottom:.45rem!important}
+    #sceneDescription{font-size:.95rem!important;line-height:1.45!important}
+
+    /* reminder card: compact */
+
+    /* question panel: compact */
+    #storyPanel{flex:0 1 auto;min-height:0;overflow-y:auto;padding:1.1rem 1.4rem!important;gap:.8rem!important}
+    #questionText{font-size:1.45rem!important;margin:0!important}
+    #choicesContainer{gap:.55rem!important}
+    #choicesContainer > button{padding:.6rem .9rem!important;column-gap:.8rem}
+    #choicesContainer > button > div > span:first-child{width:34px!important;height:34px!important}
+    #choicesContainer p{font-size:.92rem!important;line-height:1.3!important}
+    #replyBox{padding:.75rem 1rem!important;font-size:.85rem!important;line-height:1.4!important}
+    div:has(> #nextBtn){padding-top:.75rem!important;margin-top:0}
+    #nextBtn{padding:.65rem 1.4rem!important}
+    #prevBtn{padding:.6rem 1.1rem!important}
+    #endScreen{padding:1.25rem 1.5rem!important;gap:.8rem!important;overflow-y:auto;min-height:0}
+    #endTitle{font-size:1.6rem!important}
+  }
+  /* shorter laptop screens: tighten a little more */
+  @media (min-width:1024px) and (max-height:820px){
+    body{gap:.6rem!important;padding-bottom:5rem!important}
+    div:has(> #mapList) > div:first-child{margin-bottom:.4rem!important}
+    #mapList span{display:none}
+    #questionText{font-size:1.25rem!important}
+    #choicesContainer > button{padding:.45rem .8rem!important}
+    #storyPanel{gap:.6rem!important}
+    [class*="bg-[#1e304b]/95"]{min-height:7.5rem!important}
+  }
+
+  /* ---- SCENE 05 · BOYS ROOM: contrast + spacing ---- */
+  /* lighten and soften the photo so the character and bubbles stand out from it */
+  .panel-frame[data-scene="4"] #sceneBgLayer{filter:blur(1.5px) brightness(1.2) saturate(.85)}
+  .panel-frame[data-scene="4"] .scene-mood-overlay{background:radial-gradient(ellipse at 50% 62%,rgba(255,255,255,.6) 0%,rgba(238,240,253,.38) 45%,rgba(120,130,230,.22) 100%)!important}
+  /* outline + soft shadow around sprites and thought bubbles */
+  .panel-frame[data-scene="4"] #comicCanvas{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 4px 10px rgba(27,29,77,.5))}
+  /* breathing room between the scene, the HUD pills and the caption */
+  .panel-frame[data-scene="4"] div[class*="z-[15]"]{top:.6rem!important}
+  .panel-frame[data-scene="4"] #comicCanvas{margin-bottom:.6rem}
+  .panel-frame[data-scene="4"] [class*="bg-[#1e304b]/95"]{box-shadow:0 6px 20px rgba(27,29,77,.25)!important}
+
+  /* ---- "What the story notices" box: spacing + clarity ---- */
+  #replyBox > div:first-child{margin-bottom:.85rem!important;gap:.75rem;align-items:center}
+  #replyBox strong{color:var(--ind)!important}
+  #xpBonusTag{box-shadow:none!important;border:2px solid #E3A700!important;padding:.25rem .75rem!important;flex:none;white-space:nowrap}
+  #replyText{display:block;line-height:1.55}
+
+  /* ---- scene caption tag: remove crowding shadow, add spacing ---- */
+  #sceneTag{box-shadow:none!important;padding:.35rem 1rem!important}
+  [class*="bg-[#1e304b]/95"] > div:first-child{margin-bottom:.9rem!important;gap:1rem}
+  #variantBadge{white-space:nowrap}
+
+  /* ---- route strip: remove heavy shadows, add spacing ---- */
+  #routeStatus{box-shadow:none!important}
+  div:has(> #mapList) > div:first-child{gap:1rem}
+  #chapterLabel{margin-left:auto}
+  #mapList > div,#mapList > div.bg-white{box-shadow:none!important}
+  #mapList > div.bg-white h4{color:var(--ind)!important}
+  #mapList > div.bg-white span{color:var(--ink)!important}
+  #mapList > div{gap:.6rem!important}
+
+  /* ---- buttons: clear primary vs secondary ---- */
+  /* secondary (Previous): quiet outline, no fill, no shadow */
+  #prevBtn{background:transparent!important;border:2px solid var(--lav)!important;color:var(--mute)!important;box-shadow:none!important;font-weight:600!important}
+  #prevBtn:hover:not(:disabled){background:var(--ind2)!important;color:var(--ink)!important;border-color:var(--ind)!important}
+  #prevBtn:disabled{opacity:.4}
+  /* primary (Next): solid, bolder, wider */
+  #nextBtn{font-weight:800!important;min-width:11rem;justify-content:center}
+
+  /* ---- modal action buttons: distinct from "Back to story" ---- */
+  #doneWalkBtn,#doneMusicBtn{background:linear-gradient(135deg,#D3D8FB,#E4D9F7)!important;color:#2C3190!important;border:0!important;box-shadow:0 5px 0 #A9A3E3!important;font-weight:800!important;cursor:pointer;transition:.15s}
+  #doneWalkBtn:hover,#doneMusicBtn:hover{filter:brightness(1.03);transform:translateY(-1px)}
+  #doneWalkBtn:active,#doneMusicBtn:active{transform:translateY(4px);box-shadow:0 1px 0 #A9A3E3!important}
+
+  /* ---- Insight XP + Streak: cute chips ---- */
+  #hud{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;gap:.6rem!important}
+  #hud > div{display:flex;align-items:center;gap:.5rem;padding:.3rem .5rem .3rem .9rem!important;border-radius:999px;border:2px solid transparent!important}
+  #hud > div:first-child{background:#FFF3C4;border-color:#FFC83D!important}
+  #hud > div:last-child{background:#E8EAFF;border-color:#C7CCF4!important}
+  #hud > div > span:first-child{color:var(--ink)!important;font-size:.9rem!important;font-weight:800;letter-spacing:0}
+  #scoreVal{display:inline-flex;align-items:center;justify-content:center;min-width:2.2rem;height:1.7rem;padding:0 .6rem;border-radius:999px;background:#fff;color:var(--ink)!important;font-size:.95rem!important;box-shadow:0 2px 6px rgba(79,91,213,.18)}
+  #streakVal{border-radius:999px!important}
+  .hud-ico{display:inline-block;animation:hudBob 2.4s ease-in-out infinite}
+  #hud > div:last-child .hud-ico{animation-delay:.6s}
+  @keyframes hudBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-8deg)}}
+  @media (prefers-reduced-motion:reduce){.hud-ico{animation:none}}
+
+  /* remove "Stop 1 of 5" label */
+  #chapterLabel{display:none!important}
+
+  /* streak value: text centred in its rectangle */
+  #streakVal{display:inline-flex;align-items:center;justify-content:center;min-width:2.4rem;height:1.7rem;padding:0 .5rem!important;line-height:1;box-shadow:none!important;text-align:center}
+
+  /* ---- emotional capacity bar: soft green / orange / red by level ---- */
+  #capacityBar{--cap:#8EDDBB;background:repeating-linear-gradient(90deg,var(--cap) 0 17px,transparent 17px 22px)!important}
+  #capacityBar[data-level="mid"]{--cap:#FFC892}
+  #capacityBar[data-level="low"]{--cap:#F5A3A3}
+
+  /* ---- slightly dark overlay on the scene images (all scenes) ---- */
+  .scene-mood-overlay,
+  .panel-frame[data-scene="4"] .scene-mood-overlay{background:linear-gradient(180deg,rgba(20,22,70,.16) 0%,rgba(20,22,70,.32) 100%)!important}
+  .panel-frame[data-scene="4"] #sceneBgLayer{filter:blur(1.5px)}
+
+  /* ---- mobile friendly (phones / small screens only; desktop untouched) ---- */
+  html,body{max-width:100%;overflow-x:hidden}
+  @media (max-width:640px){
+    html{scrollbar-gutter:auto}
+    body{padding-bottom:6.5rem!important}
+
+    /* header */
+    header{gap:.6rem!important}
+    header > div:first-child{flex:1 1 100%}
+    #hud{flex:1 1 auto;flex-wrap:wrap;gap:.4rem!important}
+    #hud > div{padding:.2rem .4rem .2rem .7rem!important}
+    header > div:last-child{flex:1 1 auto;justify-content:flex-end}
+    header button{padding:.5rem .9rem!important;font-size:.8rem!important;min-height:40px}
+
+    /* route strip */
+    div:has(> #mapList){padding:1rem .6rem!important}
+    #mapList > div > div:first-child{width:32px!important;height:32px!important;font-size:.85rem}
+    #mapList::before{top:14px;left:8%;right:8%}
+    #mapList h4{font-size:.68rem!important;word-break:break-word}
+    #mapList span{font-size:.62rem!important}
+
+    /* scene overlays: stack so nothing overflows */
+    div[class*="z-[15]"]{flex-direction:column;align-items:flex-start;gap:.4rem!important;top:.6rem!important;left:.6rem!important;right:.6rem!important}
+    div[class*="z-[15]"] > div{padding:.4rem .7rem!important;font-size:.7rem!important;max-width:100%}
+    div[class*="z-[15]"] [class*="w-24"]{width:4.5rem}
+    #comicCanvas{height:320px!important}
+    [class*="bg-[#1e304b]/95"]{margin:0 .6rem .6rem!important;padding:1rem!important}
+    #sceneDescription{font-size:.95rem!important}
+
+    /* question panel */
+    #storyPanel{padding:1.1rem!important}
+    #questionText{font-size:1.4rem!important}
+    #choicesContainer > button{min-height:56px;padding:.8rem .9rem!important;column-gap:.75rem;grid-template-columns:36px 1fr}
+    #choicesContainer > button > div > span:first-child{width:36px!important;height:36px!important}
+    #choicesContainer p{font-size:.95rem!important}
+    #replyBox{padding:1rem!important}
+    div:has(> #nextBtn){gap:.5rem}
+    #nextBtn{min-width:0;flex:1 1 auto;padding:.8rem 1rem!important}
+    #prevBtn{padding:.75rem 1rem!important}
+    #nextBtn,#prevBtn{min-height:48px}
+
+    /* floating buttons: keep clear of phone home bar */
+
+    /* ending + modal */
+    #endScreen{padding:1.5rem 1rem!important}
+    #endTitle{font-size:1.5rem!important}
+    #modalCard{padding:1.25rem!important;max-height:90dvh;overflow-y:auto}
+    #modalTitle{font-size:1.2rem!important}
+  }
+  /* ---- segmented progress bar (10 segments, one per question) ---- */
+  #storyPanel > div:first-child > div:has(> #progressBar){position:relative}
+  #storyPanel > div:first-child > div:has(> #progressBar)::after{content:'';position:absolute;inset:2px;pointer-events:none;background:linear-gradient(90deg,#fff 0,#fff 2px,transparent 2px,transparent calc(100% - 2px),#fff calc(100% - 2px),#fff 100%) 0 0/10% 100% repeat-x}
+  #progressBar{border-radius:0!important;box-shadow:none!important}
+  /* hide "0 / 5 Scenes" and the "Standard State / Variant" label */
+  #routeStatus,#variantBadge{display:none!important}
+  /* ---- "Your Route" redesign: small, calm adventure map (kid friendly, not distracting) ---- */
+  div:has(> #mapList){background:linear-gradient(135deg,#FFFFFF 0%,#F7F4FF 100%)!important;border:2px dashed #E3DCFF!important;border-radius:24px!important}
+  div:has(> #mapList) > div:first-child h3{font-size:.95rem!important;color:var(--ink)!important}
+  div:has(> #mapList) > div:first-child h3::before{content:'🗺️';display:inline-block;margin-right:.4rem;font-size:1rem;vertical-align:-.05em}
+  @media (min-width:641px){
+    div:has(> #mapList){padding:.8rem 1.5rem .85rem!important}
+    div:has(> #mapList) > div:first-child{margin-bottom:.5rem!important}
+  }
+  #mapList{--rs:38px}
+  #mapList::before{top:calc(var(--rs) / 2 - 2px)!important;left:10%!important;right:10%!important;height:4px!important;border-radius:2px;background:repeating-linear-gradient(90deg,#D6CEFA 0 10px,transparent 10px 18px)!important}
+  #mapList span{display:none!important}
+  /* stop "stickers": a soft pastel colour for each stop */
+  #mapList > div{gap:.3rem!important}
+  #mapList > div > div:first-child{width:var(--rs)!important;height:var(--rs)!important;font-size:1.05rem!important;line-height:1;border:3px solid #fff!important;box-shadow:0 2px 6px rgba(79,91,213,.15)!important}
+  #mapList > div:nth-child(1) > div:first-child{background:#CFF3E4!important}
+  #mapList > div:nth-child(2) > div:first-child{background:#FFEDB3!important}
+  #mapList > div:nth-child(3) > div:first-child{background:#FFD6EF!important}
+  #mapList > div:nth-child(4) > div:first-child{background:#D3E4FF!important}
+  #mapList > div:nth-child(5) > div:first-child{background:#E3D8FF!important}
+  /* stop names: plain, quiet text */
+  #mapList h4{display:block;padding:0;border-radius:0;background:transparent;border:0;color:var(--ink)!important;font-size:.9rem!important;font-weight:700!important}
+  /* upcoming stops: softer */
+  #mapList > [class*="text-white/50"] > div:first-child{opacity:.6}
+  #mapList > [class*="text-white/50"] h4{opacity:.6;color:var(--mute)!important}
+  /* finished stops: small green tick */
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child{border-color:#fff!important}
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child::after{content:'✓';position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:#2CC8A0;border:2px solid #fff;color:#fff;font-size:.875rem;font-weight:800;line-height:14px;text-align:center}
+  /* current stop: calm ring, no animation */
+  #mapList > div.bg-white > div:first-child{border-color:var(--ind)!important;box-shadow:0 0 0 4px rgba(79,91,213,.15)!important;animation:routePulse 2.2s ease-out infinite}
+  @keyframes routePulse{0%{box-shadow:0 0 0 0 rgba(79,91,213,.45);transform:scale(1)}50%{transform:scale(1.07)}100%{box-shadow:0 0 0 14px rgba(79,91,213,0);transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){#mapList > div.bg-white > div:first-child{animation:none}}
+  #mapList > div.bg-white h4{color:var(--ind)!important;font-weight:800!important}
+  /* phones */
+  @media (max-width:640px){
+    #mapList{--rs:32px}
+    #mapList > div > div:first-child{font-size:1rem!important;border-width:2px!important}
+    #mapList h4{font-size:.875rem!important}
+    #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child::after{width:16px;height:16px;line-height:12px;right:-4px;bottom:-4px}
+    div:has(> #mapList) > div:first-child h3{font-size:.95rem!important}
+  }
+  /* short laptop screens */
+  @media (min-width:1024px) and (max-height:820px){
+    #mapList{--rs:34px}
+    #mapList > div > div:first-child{font-size:1rem!important}
+  }
+  @media (max-width:380px){
+    #mapList h4{font-size:.6rem!important}
+    #questionText{font-size:1.25rem!important}
+  }
+
+
+</style>
+
+<style id="scene-wide">
+  /* ---- WIDE 16:9 SCENE (additive): scene keeps its full column width and a true 16:9 shape, never a flat strip ---- */
+  @media (min-width:641px){
+    #comicCanvas{flex:none!important;width:100%;height:auto!important;min-height:0!important;aspect-ratio:16/9}
+    .panel-frame{flex:none!important}
+  }
+  /* desktop: stop squeezing everything into the viewport height; the page scrolls only if the screen is too short */
+  @media (min-width:1024px){
+    html,body{height:auto!important}
+    body{min-height:100dvh!important;overflow-y:auto!important}
+    .lg\:grid-cols-12{flex:none!important;grid-template-rows:auto!important}
+    .lg\:col-span-7,.lg\:col-span-5{height:auto!important}
+  }
+</style>
+<style id="dark-blue-palette">
+  /* ===== V2 DARK BLUE PALETTE (original look: navy cards #1e304b, steel blue #314A6F, white text) ===== */
+  :root{--bg:#16243a;--ink:#fff;--mute:#B7C4DA;--ind:#314A6F;--ind2:#3d5a85;--lav:#1e304b;--soft:#243a5a}
+  [class~="bg-[#1e304b]"],[class*="bg-[#1e304b]/9"]{background:#1e304b!important;box-shadow:0 8px 24px rgba(0,0,0,.3)!important}
+  [class*="bg-[#1e304b]/40"]{background:#243a5a!important;border-color:#3d5a85!important}
+  header button{background:#314A6F!important;border-color:#4a6490!important;color:#fff!important;box-shadow:none!important}
+  header button:hover{background:#4a6490!important}
+  .bg-white{background:#fff!important;color:#314A6F!important;border-color:#fff!important}
+  [class~="bg-[#314A6F]"]{background:#314A6F!important;color:#fff!important}
+  .bg-white,#restartBtn,#closeModal{box-shadow:0 5px 0 #8da2c4!important}
+  .scene-mood-overlay{background:linear-gradient(180deg,rgba(22,36,58,.1) 0%,rgba(22,36,58,.45) 100%)!important}
+  div[class*="z-[15]"] > div{background:#1e304b!important;box-shadow:0 3px 10px rgba(0,0,0,.3)!important}
+  #sceneTag{background:#fff!important;color:#314A6F!important}
+  #progressBar{background:#fff!important}
+  #storyPanel > div:first-child > div:has(> #progressBar)::after{background:linear-gradient(90deg,#1e304b 0,#1e304b 2px,transparent 2px,transparent calc(100% - 2px),#1e304b calc(100% - 2px),#1e304b 100%) 0 0/10% 100% repeat-x!important}
+  #choicesContainer > button{background:#314A6F!important;border:2px solid #4a6490!important;color:#fff!important}
+  #choicesContainer > button:hover{background:#3b5a86!important;border-color:#fff!important}
+  #choicesContainer > button.bg-white{background:#fff!important;border-color:#fff!important;color:#1e304b!important;box-shadow:0 4px 0 #8da2c4!important}
+  #choicesContainer [class*="bg-white/20"]{background:#1e304b!important;color:#fff!important}
+  #choicesContainer [class*="text-white/70"]{color:#B7C4DA!important}
+  #choicesContainer [class*="text-[#314A6F]/80"]{color:#314A6F!important}
+  #replyBox,#endLine{background:rgba(255,200,61,.12)!important;border:2px solid rgba(255,200,61,.5)!important;color:#fff!important}
+  #prevBtn{background:#314A6F!important;border:2px solid #4a6490!important;color:#fff!important}
+  #prevBtn:hover:not(:disabled){background:#4a6490!important}
+  #nextBtn{background:#fff!important;color:#1e304b!important;box-shadow:0 5px 0 #8da2c4!important}
+  #nextBtn:disabled{background:#314A6F!important;color:#7f93b3!important;box-shadow:none!important}
+  #routeStatus{background:#314A6F!important;color:#fff!important}
+  div:has(> #mapList){background:#1e304b!important;border:2px dashed #3d5a85!important}
+  #mapList::before{background:repeating-linear-gradient(90deg,#4a6490 0 10px,transparent 10px 18px)!important}
+  #mapList > div > div:first-child,#mapList > div[class*="bg-[#314A6F]/60"] > div:first-child{border-color:#1e304b!important;box-shadow:none!important}
+  #mapList > div[class*="bg-[#314A6F]/60"] > div:first-child::after{border-color:#1e304b!important}
+  #modal{background:rgba(10,18,32,.7)!important}
+  ::-webkit-scrollbar-thumb{background:#3d5a85!important}
+</style>
+</head>
+<body class="min-h-screen flex flex-col p-3 sm:p-6 max-w-7xl mx-auto">
+
+
+  <!-- TOP APP BAR / BRANDING & GAMIFIED METRICS -->
+  <header class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-3 border-b border-white/20">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white text-[#314A6F] font-black text-xl flex items-center justify-center shadow-md">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 20C5 20 3 14 3 8c6 0 8 4 8 12z"/><path d="M13 20c0-8 2-13 9-14 0 7-3 14-9 14z"/><rect x="11.2" y="14" width="1.6" height="8" rx=".8"/></svg>
+      </div>
+      <div>
+        <span class="text-[10px] font-extrabold tracking-widest text-white/80 uppercase block">A Gamified Story Check-In</span>
+        <h1 class="text-lg font-bold text-white tracking-tight leading-none">BETWEEN STOPS</h1>
+      </div>
+    </div>
+
+    <!-- ACTION CONTROLS -->
+    <div class="flex items-center gap-2">
+      <button id="helpBtn" class="px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/30 bg-[#314A6F]/80 text-white hover:bg-white hover:text-[#314A6F] transition">
+        How to play?
+      </button>
+    </div>
+  </header>
+
+  <!-- ROUTE (top strip) -->
+  <!-- ROUTE PROGRESS MAP CARD -->
+      <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Your Route</h3>
+          <span id="routeStatus" class="text-[10px] font-bold text-[#314A6F] bg-white px-2 py-0.5 rounded border border-white">0 / 5 Scenes</span>
+          <span id="chapterLabel" class="ml-auto text-white uppercase tracking-wider font-bold">Stop 1 of 5</span>
+        </div>
+        <div id="mapList" class="flex flex-col gap-2.5">
+          <!-- Route items populated dynamically -->
+        </div>
+      </div>
+
+  <!-- MAIN APP GRID LAYOUT -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+    <section class="lg:col-span-7 flex flex-col gap-5">
+      <!-- GRAPHIC NOVEL CANVASTAGE WITH GAME OVERLAYS -->
+      <div class="panel-frame rounded-2xl bg-[#1e304b] overflow-hidden relative">
+        
+        <!-- Environment Image Background Layer -->
+        <div id="sceneBgLayer"></div>
+
+        <!-- Atmospheric Dark Gradient Overlay for Readability -->
+        <div class="scene-mood-overlay"></div>
+
+        <!-- Dynamic Emotional Energy Gauge HUD Overlay (Top Canvas) -->
+        <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-3 z-[15] pointer-events-none">
+          <div class="bg-[#1e304b]/90 border border-white/30 px-3 py-1.5 rounded-xl backdrop-blur-md text-[10px] font-bold text-white/90">
+            <span id="thoughtBubbleCount">💬 0 Floating Thoughts Active</span>
+          </div>
+        </div>
+
+        <!-- Canvas Element -->
+        <canvas id="comicCanvas" class="w-full h-[340px] sm:h-[400px] lg:h-[420px] block cursor-pointer"></canvas>
+
+        <!-- Dynamic Vignette Caption Box -->
+        <div class="relative z-[10] mx-4 mb-4 bg-[#1e304b]/95 border border-white/30 p-3.5 sm:p-4 rounded-xl backdrop-blur-md shadow-2xl">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span id="sceneTag" class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white text-[#314A6F] border border-white">
+              TRAIN RIDE
+            </span>
+            <span id="variantBadge" class="text-[10px] font-bold text-white/80 uppercase tracking-wider">
+              Standard State
+            </span>
+          </div>
+          <p id="sceneDescription" class="text-xs sm:text-sm text-white leading-relaxed font-medium">
+            The carriage is packed. He stands, face blank, gripping the strap.
+          </p>
+        </div>
+
+      </div>
+      <!-- SPECTRUM RESONANCE METERS -->
+      <div class="bg-[#1e304b] border border-white/20 p-5 rounded-2xl shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Story Signals</h3>
+          <span class="text-[10px] font-semibold text-white/70">Resonance</span>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-white">Guarded (A)</span>
+              <span id="aCount" class="text-white/70">0</span>
+            </div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="aMeter" class="h-full bg-white transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-white/90">Wavering (B)</span>
+              <span id="bCount" class="text-white/70">0</span>
+            </div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="bMeter" class="h-full bg-white/80 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-white/80">Open (C)</span>
+              <span id="cCount" class="text-white/70">0</span>
+            </div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div id="cMeter" class="h-full bg-white/60 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-[11px] text-white/70 leading-relaxed mt-4 pt-3 border-t border-white/10">
+          Your choices shape Wei Jie's perspective and the classmate's outreach.
+        </p>
+      </div>
+    </section>
+    <section class="lg:col-span-5 flex flex-col gap-5">
+      <!-- STORY QUESTION & INTERACTIVE GAMIFIED CHOICES PANEL -->
+      <div id="storyPanel" class="bg-[#1e304b] border border-white/20 p-5 sm:p-6 rounded-2xl shadow-xl flex flex-col gap-4 relative overflow-hidden">
+        
+        <!-- Progress Bar & Question Counter -->
+        <div class="flex items-center justify-between text-xs font-semibold text-white/70">
+          <div class="flex-1 mx-4 h-2 bg-white/20 rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div id="progressBar" class="h-full bg-white transition-all duration-300 rounded-full" style="width: 10%;"></div>
+          </div>
+          <span id="qCountLabel" class="text-white">Question: 1/10</span>
+        </div>
+
+        <!-- Current Question Header -->
+        <h2 id="questionText" class="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
+          for no reason?Tired out 
+        </h2>
+
+        <!-- Interactive Choice Buttons -->
+        <div id="choicesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-3 my-1">
+          <!-- Dynamically populated choices -->
+        </div>
+
+        <!-- Reflective Feedback & Quest Insight Box -->
+        <div id="replyBox" class="hidden bg-white/10 border border-white/30 p-4 rounded-xl text-white text-xs sm:text-sm leading-relaxed transition-all">
+          <div class="flex items-center justify-between mb-1">
+            <strong class="block text-[10px] uppercase tracking-widest text-white font-extrabold">
+              What the story notices
+            </strong>
+            <span id="xpBonusTag" class="text-[10px] font-black bg-white text-[#314A6F] px-2 py-0.5 rounded">✦ NOTICED</span>
+          </div>
+          <span id="replyText">...</span>
+        </div>
+
+        <!-- Footer Navigation Row -->
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+          <button id="prevBtn" disabled class="px-4 py-2.5 rounded-full text-xs font-bold border border-white/30 bg-[#314A6F]/80 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white hover:text-[#314A6F] transition-all flex items-center gap-1.5">
+            <span>←</span>
+            <span>Previous</span>
+          </button>
+          <button id="nextBtn" disabled class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/90 transition-all shadow-lg flex items-center gap-2">
+            <span>Choose an answer</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- OUTCOME / GAMIFIED ENDING SCREEN -->
+      <div id="endScreen" class="hidden bg-[#1e304b] border border-white/30 p-6 sm:p-8 rounded-2xl shadow-2xl text-center flex flex-col items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-white text-[#314A6F] font-black text-3xl flex items-center justify-center -rotate-6 shadow-xl badge-pulse">
+          🌟
+        </div>
+        <span class="text-xs font-extrabold text-white/80 tracking-widest uppercase">Journey Completed</span>
+        <h2 id="endTitle" class="text-2xl sm:text-3xl font-extrabold text-white">
+          You don't have to carry it alone.
+        </h2>
+
+        <div class="w-full max-w-md bg-[#1e304b]/40 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-3">
+          <p id="endText" class="text-sm text-white/90 leading-relaxed">
+            Wei Jie sits with his headphones in...
+          </p>
+          <blockquote id="endLine" class="w-full text-sm font-semibold italic text-white bg-[#314A6F]/80 p-4 rounded-xl border border-white/30">
+            "This sandwich is too big for me. Want half? No pressure."
+          </blockquote>
+        </div>
+
+        <p class="w-full max-w-md pt-4 border-t border-white/10 text-xs text-white/70 leading-relaxed">Every response is simply a reflection of how you're feeling right now. Thank you for sharing this moment with us.</p>
+
+        <div class="flex items-center gap-3 mt-2">
+          <button id="restartBtn" class="px-6 py-2.5 rounded-full text-xs font-bold bg-white text-[#314A6F] hover:bg-white/90 transition shadow-lg">
+            Replay the story   ↺
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL DIALOG -->
+  <div id="modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="modalCard" class="bg-[#1e304b] border border-white/30 max-w-md w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative my-6">
+      <h3 id="modalTitle" class="text-lg sm:text-xl font-bold text-white mb-3">Take your time</h3>
+      <div id="modalBody" class="text-xs sm:text-sm text-white/80 leading-relaxed my-4 space-y-3">
+        There is no timer and no wrong choice. Choose what feels closest to you today.
+      </div>
+      <button id="closeModal" class="w-full py-3 mt-2 rounded-xl bg-white text-[#314A6F] font-bold text-xs sm:text-sm hover:bg-white/90 transition shadow-md">
+        Back to story
+      </button>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    // --- STORY DATA ---
+    const storyData = {
+      scenes: [
+        { id: 0, title: "Train Ride", location: "TRAIN RIDE", icon: "🚇", bgImage: "MRT.jpg" },
+        { id: 1, title: "School Corridor", location: "SCHOOL CORRIDOR", icon: "🏫", bgImage: "School Corridor.jpg" },
+        { id: 2, title: "Void Deck", location: "VOID DECK", icon: "🏢", bgImage: "HDB Void Deck.jpg" },
+        { id: 3, title: "Outside Home", location: "HOME DOORWAY", icon: "👟", bgImage: "Home Corridor.jpg" },
+        { id: 4, title: "Bedroom", location: "BOYS ROOM", icon: "🛏️", bgImage: "Boys Room.jpg" }
+      ],
+      questions: [
+        {
+          sceneIdx: 0,
+          text: " How often did you feel tired out for no reason?",
+          descriptions: [
+            "The carriage is packed. He stands, yawning and rubbing his eyes, looking half-asleep.",
+            "A seat opens beside him. He glances at it, yawns, and rubs his eyes but remains standing.",
+            "He's standing with his backpack on, yawning and rubbing his eyes as his head droops with exhaustion."
+          ],
+          thoughts: [{ type: "body", text: "My legs feel like wet sand. The strap is the only thing holding me up." }, { type: "mind", text: "It's not even evening yet. Why am I already worn out?" }, { type: "unsaid", text: "If I say I'm tired, they'll just tell me to sleep earlier." }],
+          answers: [
+            { text: "I'm fine, just didn't sleep much.", reply: "Sleep explains some tiredness, not all of it. Worth noticing which kind this is." },
+            { text: "I don't even do anything, and I'm already dead by 3 pm.", reply: "Even when you're not doing much, feeling drained is still valid. Don't be too hard on yourself." },
+            { text: "Every day. I don't know why I'm always this tired.", reply: "Some days are just harder than others. That’s okay."}
+          ]
+        },
+        {
+          sceneIdx: 0,
+          text: "How often did you feel nervous?",
+          descriptions: [
+            "He grips his bag strap, maintaining a calm, neutral stance as the crowd shifts around him.",
+            "He shifts his weight nervously, keeping his eyes fixed on the door.",
+            "He grips the strap tightly, knuckles white, trying to stay steady amidst the morning rush."
+          ],
+          thoughts: [{ type: "body", text: "My fingers are white around this strap. When did I start gripping so hard?" }, { type: "mind", text: "New school, new faces. What if I say the wrong thing?" }, { type: "unsaid", text: "I keep my face blank so nobody asks. It's not as fine as it looks." }],
+          answers: [
+            { text: "Nah, I'm good.", reply: "Maybe you’re feeling more tense than you realise. It’s okay to take a moment." },
+            { text: "Not nervous nervous. Just... new school, new everything.", reply: "That's a big change to deal with. It makes sense that it feels like a lot." },
+            { text: "Honestly kind of a lot. I don't really talk about it, though.", reply: "It's not always easy to talk about. But you don't have to keep it to yourself." }
+          ]
+        },
+        {
+          sceneIdx: 1,
+          text: "How often did you feel so nervous that nothing could calm you down?",
+          descriptions: [
+            "Wei Jie stands alone in the school corridor, holding his backpack and taking a steady breath before shrugging as if nothing is wrong.",
+            "Wei Jie stands in the empty school corridor, gripping his backpack tightly as he repeatedly breathes in and out, struggling to focus.",
+            "Wei Jie stands alone in the school corridor, clutching his backpack with tense shoulders as he struggles to steady his breathing."
+          ],
+          thoughts: [{ type: "body", text: "My heart is racing and I'm just standing outside of my class..." }, { type: "mind", text: "I've read the same line on this worksheet four times." }, { type: "unsaid", text: "If I tell someone, they'll think I'm making a big deal out of nothing." }],
+          answers: [
+            { text: "It passes after a bit. It's not a big deal.", reply: "Sometimes these feelings come and go. It's okay to talk about it, even if it doesn't last long." },
+            { text: "Okay, maybe sometimes it's a lot. Like I can't even focus on my work.", reply: "I hear you. It must be frustrating when you want to focus but just can't seem to." },
+            { text: "Some days nothing helps. I just sit there stuck.", reply: "Stuck is a real place to be. Nothing working today doesn't mean nothing ever will." }
+          ]
+        },
+        {
+          sceneIdx: 1,
+          text: "How often did you feel hopeless?",
+          descriptions: [
+            "Wei Jie sits on the bench, glancing up occasionally as students walk past.",
+            "Wei Jie leans forward on his knees, staring blankly at the floor of the corridor.",
+            "Wei Jie sits completely still on the bench, looking overwhelmed and lost in thought."
+          ],
+          thoughts: [{ type: "body", text: "My feet stopped moving before I decided to stop." }, { type: "mind", text: "What's the point of all this when I feel like this?" }, { type: "unsaid", text: "I don't need it fixed. I just want someone to notice." }],
+          answers: [
+            { text: "Not really, I'm just tired.", reply: "Tired and hopeless can feel alike from the inside. You don't have to sort them apart right now." },
+            { text: "I don't know, man. Sometimes I just stand there and forget what I'm even doing.", reply: "It's okay. Sometimes our minds need a moment to catch up. Don't be too hard on yourself." },
+            { text: "More than I want to admit, if I'm honest.", reply: "It's okay to admit that you're struggling. You don't have to have it all figured out." }
+          ]
+        },
+        {
+          sceneIdx: 2,
+          text: "How often did you feel restless or fidgety?",
+          descriptions: [
+            "Evening settles over the void deck. Wei Jie sits on the bench, tapping his shoes against it casually.",
+            "The void deck is quiet, and the lights flick on. Wei Jie keeps tapping his shoes against the bench, barely noticing until he looks down.",
+            "The void deck grows darker. Wei Jie tries to keep his feet still, but his shoes keep tapping against the bench as he struggles to sit still."
+          ],
+          thoughts: [{ type: "body", text: "My leg keeps bouncing. It won't stop, even when I tell it to." }, { type: "mind", text: "Stretching. I'm just stretching. Nobody will ask." }, { type: "unsaid", text: "I don't know what to do with how I'm feeling right now." }],
+          answers: [
+            { text: "I'm just a fidgety person, always have been.", reply: "Maybe, it's just part of how you are. Just remember to be kind to yourself" },
+            { text: "My leg just does its own thing now. I don't even notice till someone points it out.", reply: "Sometimes we don't notice these little things ourselves. It's okay to take a moment and check in with how you're feeling." },
+            { text: "All the time. I can't sit still even when I try really hard to.", reply: "That sounds frustrating, especially when you're trying your best to sit still. I hope you're giving yourself some room to breathe."}
+          ]
+        },
+        {
+          sceneIdx: 2,
+          text: "How often did you feel so restless you could not sit still?",
+          descriptions: [
+            "Wei Jie walks nervously along the void deck, repeatedly glancing around as if something is bothering him.",
+            "Wei Jie paces back and forth across the void deck, turning around quickly each time.",
+            "Wei Jie paces rapidly back and forth along the void deck, unable to settle in one place."
+          ],
+          thoughts: [{ type: "body", text: "Five laps already. My legs want to keep going, but I don't know where to." }, { type: "mind", text: "If I keep moving, the heavy feeling will not catch up." }, { type: "unsaid", text: "I'm walking in circles and I'm not sure what I'm walking away from." }],
+          answers: [
+            { text: "Sometimes I just need to walk, that's all.", reply: "Taking a walk can help clear your head. Try to take things one step at a time." },
+            { text: "I walked around the void deck like five times yesterday. For no reason.", reply: "Whatever's on your mind, you don't have to work through it all today. Talking to someone you trust might help you feel a little less alone."},
+            { text: "A lot more than I used to. It's getting kind of annoying, actually.", reply: "That sounds frustrating, especially when it's happening more often than before. It's okay to talk about what's been bothering you." }
+          ]
+        },
+        {
+          sceneIdx: 3,
+          text: "How often did you feel depressed?",
+          descriptions: [
+            "Wei Jie sits beside his shoe rack, holding a result slip and shrugging as if everything is fine.",
+            "Wei Jie sits beside his shoe rack, holding the result slip in his hands as he stares down at it with a distant expression.",
+            "Wei Jie sits beside his shoe rack, holding the results slip loosely. He stares ahead with his shoulders drooping."
+          ],
+          thoughts: [{ type: "body", text: "The results slip sits in front of me. I can't seem to look away." }, { type: "mind", text: "I don't really get depressed. That's not me." }, { type: "unsaid", text: "I keep telling myself I'm fine so I don't have to explain it." }],
+          answers: [
+            { text: "I don't really get depressed. That's not me.", reply: "You know yourself best. It's okay if things feel different from how they used to." },
+            { text: "I'm not depressed depressed. I just feel kind of... grey. Is that even a thing?", reply: "Yeah, that’s a thing. You don’t have to know exactly how you feel for it to matter." },
+            { text: "It happens quite often, let's just say that.", reply: "I hear you. It can't be easy when you've been feeling this way so often." }
+          ]
+        },
+        {
+          sceneIdx: 3,
+          text: "How often did you feel that everything was an effort?",
+          descriptions: [
+          "Wei Jie sits beside his shoe rack, tying his shoelaces with a neutral expression.",
+          "Wei Jie slowly ties his shoelaces, looking down with a sad, distracted expression.",
+          "Wei Jie struggles to tie his shoelaces, his shoulders drooping as he looks down."
+          ],
+          thoughts: [{ type: "body", text: "My hands stop moving as I tie my shoes." }, { type: "mind", text: "Tying my shoes feels like a whole mountain now." }, { type: "unsaid", text: "I just want to sit here on the floor until tomorrow." }],
+          answers: [
+            { text: "Just normal school tiredness, nothing weird", reply: "Rest can help, but if you're still feeling tired, it's worth paying attention to." },
+            { text: "Even tying my shoes feels like a whole task now. That's so dumb to say out loud.", reply: "It isn't dumb. When little things feel difficult, it can be really frustrating." },
+            { text: "Everything. Literally everything feels like climbing a hill lately.", reply: "You're doing what you can right now, and that's enough. You don't have to figure everything out at once.." }
+          ]
+        },
+        {
+          sceneIdx: 4,
+          text: "How often did you feel so sad that nothing could cheer you up?",
+          descriptions: [
+            "Wei Jie looks at his phone without saying much. His mum walks over and places a sandwich beside him.",
+            "Wei Jie continues looking sadly at his phone as his mum gently places a sandwich beside him. He ignores it and doesn't reach for it.",
+            "Wei Jie stares sadly at his phone, barely reacting as his mum places a sandwich beside him before walking away."
+          ],
+          thoughts: [{ type: "body", text: "I glance at the sandwich Mum left beside me." }, { type: "mind", text: "Mum got it for me. I know she was trying to help." }, { type: "unsaid", text: "I don't know how to tell her that I still don't feel like eating." }],
+          answers: [
+            { text: "I still like the things I used to like, don't worry.", reply: "I'm glad those things still bring you some joy." },
+            { text: "My mum got my favourite snack and I just. Didn't want it. That's never happened before.", reply: "That must have been confusing, especially when it's something you normally enjoy. It's okay to take some time to understand what you're feeling."},
+            { text: "Honestly, nothing's been working lately. Not even the stuff I usually like.", reply: "It's hard when nothing seems to help. You don't have to figure it all out on your own." }
+          ]
+        },
+        {
+          sceneIdx: 4,
+          text: "How often did you feel worthless?",
+          descriptions: [
+           "Wei Jie scrolls through his phone, letting out a quiet sigh as the untouched sandwich sits beside him.",
+            "Wei Jie pauses scrolling and sighs, staring at his phone screen as it dims, the sandwich still untouched beside him.",
+            "Wei Jie sighs and turns his attention back to his phone, leaving the sandwich untouched."
+          ],
+          thoughts: [{ type: "body", text: "I hold my phone and keep scrolling, even though nothing makes me feel better." }, { type: "mind", text: "I got a good score but I still feel so empty." }, { type: "unsaid", text: "I don't know how to make sense of it..." }],
+          answers: [
+            { text: "I know I did okay, I'm not worthless, I'm just overthinking.", reply: "Even if you feel like you're overthinking, your feelings still matter. You don't have to dismiss them." },
+            { text: "I got a good score and I still feel like I'm not enough somehow. Make it make sense.", reply: "It doesn't have to make sense. Feelings and facts don't always line up, and that gap is worth looking at." },
+            { text: "More than I'd like to say. I don't know how to explain it properly.", reply: "You don't have to find the right words for everything. It's okay to take your time figuring out how you feel." }
+          ]
+        }
+      ]
+    };
+
+    // --- GAMIFIED STATE MANAGEMENT ---
+    let currentQIdx = 0;
+    let userAnswers = new Array(10).fill(null);
+    let insightXP = 0;
+    let streakCount = 0;
+    let totalThoughtsPopped = 0;
+    let activeFloatingBubbles = [];
+    let thoughtsHeard = Array.from({ length: 10 }, () => []);
+    let activeThoughtId = null;
+    let thoughtTimer = null;
+    let particles = [];
+    let emotionalCapacity = 100;
+    
+
+    let questionStartTime = Date.now();
+
+    // --- DOM ELEMENT REFERENCES ---
+    const comicCanvas = document.getElementById('comicCanvas');
+    const ctx = comicCanvas ? comicCanvas.getContext('2d') : null;
+
+    // --- SPRITE SHEETS CONFIGURATION ---
+    const spriteSheets = {
+      0: { src: 'character_tired.png', rows: 2, cols: 4, totalFrames: 8, fps: 4 },
+      1: { src: 'character_nervous.png', rows: 2, cols: 4, totalFrames: 8, fps: 4 },
+      2: { src: 'character_nervous_01.png', rows: 2, cols: 4, totalFrames: 8, fps: 4 },
+      3: { src: 'character_hopeless.png', rows: 2, cols: 3, totalFrames: 6, fps: 5 },
+      4: { src: 'character_bench_restless.png', rows: 2, cols: 4, totalFrames: 8, fps: 5 },
+      5: { src: 'character_pacing.png', rows: 3, cols: 4, totalFrames: 12, fps: 8 },
+      6: { src: 'character_depressed.png', rows: 2, cols: 3, totalFrames: 6, fps: 5 },
+      7: { src: 'character_shoelace.png', rows: 2, cols: 4, totalFrames: 8, fps: 5 },
+      8: { src: 'character_scroll phone.png', rows: 2, cols: 4, totalFrames: 8, fps: 6 },
+      9: { src: 'mother_sandwich2.png', rows: 3, cols: 4, totalFrames: 12, fps: 4 },
+      10: { src: 'boy_sandwich_ohone.png', rows: 2, cols: 3, totalFrames: 6, fps: 2 },
+    };
+
+    const loadedSprites = {};
+
+    Object.keys(spriteSheets).forEach(key => {
+      const config = spriteSheets[key];
+      const img = new Image();
+      img.src = config.src;
+      img.onload = () => { config.loaded = true; };
+      loadedSprites[key] = img;
+    });
+
+    const characterImg = new Image();
+    characterImg.src = 'character.png';
+    let characterLoaded = false;
+    characterImg.onload = () => { characterLoaded = true; };
+
+    let animFrameId = null;
+
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      setupCanvasResolution();
+      renderRouteMap();
+      renderQuestion();
+      setupEventListeners();
+      startAnimationLoop();
+    });
+
+    function startAnimationLoop() {
+      function loop() {
+        updateGameObjects();
+        drawComicPanel();
+        animFrameId = requestAnimationFrame(loop);
+      }
+      if (!animFrameId) {
+        loop();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      setupCanvasResolution();
+      spawnFloatingThoughts();
+      drawComicPanel();
+    });
+
+    // keep the canvas drawing buffer matched to its on-screen size (prevents stretched sprites)
+    if (comicCanvas && 'ResizeObserver' in window) {
+      let lastW = 0, lastH = 0;
+      new ResizeObserver(() => {
+        const r = comicCanvas.getBoundingClientRect();
+        if (Math.abs(r.width - lastW) < 1 && Math.abs(r.height - lastH) < 1) return;
+        lastW = r.width; lastH = r.height;
+        setupCanvasResolution();
+        spawnFloatingThoughts();
+      }).observe(comicCanvas);
+    }
+
+    function setupCanvasResolution() {
+      if (!comicCanvas) return;
+      const rect = comicCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      comicCanvas.width = rect.width * dpr;
+      comicCanvas.height = rect.height * dpr;
+      if (ctx) ctx.scale(dpr, dpr);
+    }
+
+    // --- FLOATING THOUGHT BUBBLES MECHANIC ---
+    const THOUGHT_TYPES = {
+      body:   { icon: '💓', label: 'Body',   caption: 'Inner voice · What his body feels' },
+      mind:   { icon: '💭', label: 'Mind',   caption: 'Inner voice · What runs through his mind' },
+      unsaid: { icon: '🤫', label: 'Unsaid', caption: 'Inner voice · What he won\'t say aloud' }
+    };
+
+    const THOUGHT_ANCHORS = {
+      body:   { x: 0.30, y: 0.50 },
+      mind:   { x: 0.64, y: 0.36 },
+      unsaid: { x: 0.72, y: 0.58 }
+    };
+
+    function restoreCaption() {
+      clearTimeout(thoughtTimer);
+      activeThoughtId = null;
+
+      const q = storyData.questions[currentQIdx];
+      const selectedAns = userAnswers[currentQIdx];
+      const desc = document.getElementById('sceneDescription');
+      desc.textContent = q.descriptions[selectedAns !== null ? selectedAns : 0];
+      desc.classList.remove('italic');
+      document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
+    }
+
+    function updateThoughtCounter() {
+      const el = document.getElementById('thoughtBubbleCount');
+      const heard = activeFloatingBubbles.filter(b => b.heard).length;
+      el.textContent = `💭 ${heard} / ${activeFloatingBubbles.length} thoughts heard`;
+    }
+
+    function showThought(b) {
+      activeThoughtId = b.id;
+      const desc = document.getElementById('sceneDescription');
+      desc.textContent = `\u201C${b.text}\u201D`;
+      desc.classList.add('italic');
+      document.getElementById('variantBadge').textContent = THOUGHT_TYPES[b.type].caption;
+      clearTimeout(thoughtTimer);
+      thoughtTimer = setTimeout(restoreCaption, 8000);
+    }
+
+    function spawnFloatingThoughts() {
+      if (!comicCanvas) return;
+      const rect = comicCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      restoreCaption();
+
+      const q = storyData.questions[currentQIdx];
+      activeFloatingBubbles = (q.thoughts || []).map((t, i) => {
+        // Question 9: spread the bubbles around the boy and mum so they don't cover the sprites
+        const Q9_ANCHORS = {
+          body:   { x: 0.12, y: 0.52 },
+          mind:   { x: 0.50, y: 0.22 },
+          unsaid: { x: 0.88, y: 0.52 }
+        };
+        const anchor = (currentQIdx === 8 ? Q9_ANCHORS[t.type] : THOUGHT_ANCHORS[t.type]) || { x: 0.5, y: 0.4 };
+        return {
+          id: i,
+          type: t.type,
+          text: t.text,
+          x: w * anchor.x,
+          y: h * anchor.y,
+          baseY: h * anchor.y,
+          r: 30,
+          floatOffset: Math.random() * Math.PI * 2,
+          heard: thoughtsHeard[currentQIdx].includes(i)
+        };
+      });
+
+      updateThoughtCounter();
+    }
+
+    if (comicCanvas) {
+      comicCanvas.addEventListener('click', (e) => {
+        const rect = comicCanvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        activeFloatingBubbles.forEach(b => {
+          const dx = clickX - b.x;
+          const dy = clickY - b.y;
+          if (Math.sqrt(dx * dx + dy * dy) < b.r + 10) {
+            showThought(b);
+            if (!b.heard) {
+              b.heard = true;
+              thoughtsHeard[currentQIdx].push(b.id);
+              totalThoughtsPopped++;
+                      spawnParticles(b.x, b.y);
+              updateThoughtCounter();
+            }
+          }
+        });
+      });
+    }
+
+    function spawnParticles(x, y) {
+      for (let i = 0; i < 12; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1.0,
+          decay: 0.03 + Math.random() * 0.02
+        });
+      }
+    }
+
+    function updateGameObjects() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      const time = Date.now() * 0.002;
+      activeFloatingBubbles.forEach(b => {
+        b.y = b.baseY + Math.sin(time + b.floatOffset) * 6;
+      });
+    }
+
+    function gainXP(amount) {
+      insightXP += amount;
+    }
+    // small celebratory particle burst (DOM-based, auto-removes itself)
+    function particleBurst(x, y, count = 40, spread = 200) {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const colors = ['#FFC83D', '#2CC8A0', '#4F5BD5', '#F5A3A3', '#FF9F43', '#8EDDBB'];
+      // expanding ring flash so the burst is easy to notice
+      const ring = document.createElement('div');
+      ring.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:30px;height:30px;border-radius:50%;border:4px solid #FFC83D;pointer-events:none;z-index:70;`;
+      document.body.appendChild(ring);
+      ring.animate([
+        { transform: 'translate(-50%,-50%) scale(.4)', opacity: 1 },
+        { transform: 'translate(-50%,-50%) scale(5)', opacity: 0 }
+      ], { duration: 700, easing: 'ease-out' }).onfinish = () => ring.remove();
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        const size = 9 + Math.random() * 9;
+        p.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:${size}px;height:${size * (Math.random() < 0.5 ? 1 : 0.55)}px;border-radius:${Math.random() < 0.4 ? '50%' : '3px'};background:${colors[i % colors.length]};box-shadow:0 0 6px rgba(0,0,0,.18);pointer-events:none;z-index:70;`;
+        document.body.appendChild(p);
+        const ang = Math.random() * Math.PI * 2;
+        const dist = spread * (0.55 + Math.random() * 0.7);
+        const dx = Math.cos(ang) * dist;
+        const dy = Math.sin(ang) * dist - spread * 0.35; // bias upward
+        const rot = (Math.random() - 0.5) * 900;
+        const anim = p.animate([
+          { transform: 'translate(-50%,-50%) rotate(0deg) scale(.6)', opacity: 1, offset: 0 },
+          { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${rot / 2}deg) scale(1.1)`, opacity: 1, offset: 0.45 },
+          { transform: `translate(calc(-50% + ${dx * 1.1}px), calc(-50% + ${dy + 140}px)) rotate(${rot}deg) scale(.7)`, opacity: 0, offset: 1 }
+        ], { duration: 1300 + Math.random() * 700, easing: 'cubic-bezier(.2,.7,.3,1)' });
+        anim.onfinish = () => p.remove();
+      }
+    }
+
+    function setSceneVisual(scene) {
+      const bgLayer = document.getElementById('sceneBgLayer');
+      if (!bgLayer) return;
+      const frame = bgLayer.closest('.panel-frame');
+      if (frame) frame.dataset.scene = scene.id;
+
+      if (scene.bgImage && scene.bgImage.trim() !== '') {
+        bgLayer.style.backgroundImage = `url('${encodeURI(scene.bgImage)}')`;
+      } else {
+        const fallbackGradients = [
+          'radial-gradient(circle at center, #314A6F 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #3c5a85 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #273b59 0%, #16243a 100%)',
+          'radial-gradient(circle at center, #415e8c 0%, #1e304b 100%)',
+          'radial-gradient(circle at center, #2b4263 0%, #16243a 100%)'
+        ];
+        bgLayer.style.backgroundImage = fallbackGradients[scene.id] || fallbackGradients[0];
+      }
+    }
+
+    let mumWalkStart = 0;
+
+    function renderQuestion() {
+      questionStartTime = Date.now();
+      if (currentQIdx === 8 && userAnswers[8] === null) mumWalkStart = Date.now();
+      else if (currentQIdx !== 8) mumWalkStart = 0;
+
+      const q = storyData.questions[currentQIdx];
+      const currentScene = storyData.scenes[q.sceneIdx];
+      const selectedAns = userAnswers[currentQIdx];
+
+      setSceneVisual(currentScene);
+      spawnFloatingThoughts();
+
+      const variantIdx = selectedAns !== null ? selectedAns : 0;
+      document.getElementById('sceneDescription').textContent = q.descriptions[variantIdx];
+      document.getElementById('sceneTag').textContent = currentScene.location;
+      document.getElementById('variantBadge').textContent = selectedAns !== null ? `Variant ${String.fromCharCode(65 + selectedAns)}` : "Standard State";
+
+      document.getElementById('chapterLabel').textContent = `Stop ${q.sceneIdx + 1} of 5`;
+      document.getElementById('qCountLabel').textContent = `Question: ${currentQIdx + 1}/10`;
+      document.getElementById('progressBar').style.width = `${((currentQIdx + 1) / 10) * 100}%`;
+      document.getElementById('questionText').textContent = q.text;
+
+      const choicesContainer = document.getElementById('choicesContainer');
+      choicesContainer.innerHTML = '';
+
+      q.answers.forEach((ans, i) => {
+        const btn = document.createElement('button');
+        const isSelected = selectedAns === i;
+        btn.className = `group relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-full overflow-hidden ${
+          isSelected
+            ? 'bg-white text-[#314A6F] border-white shadow-lg font-semibold scale-[1.02]'
+            : 'bg-[#314A6F]/70 border-white/20 text-white hover:border-white/50 hover:bg-[#314A6F]'
+        }`;
+
+        btn.innerHTML = `
+          <div class="flex items-center justify-between mb-2 pointer-events-none">
+            <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-[#314A6F] text-white' : 'bg-white/20 text-white'} text-xs font-black flex items-center justify-center">
+              ${String.fromCharCode(65 + i)}
+            </span>
+            <span class="text-[10px] ${isSelected ? 'text-[#314A6F]/80' : 'text-white/70'} font-semibold uppercase">
+              ${['A little', 'Sometimes', 'Often'][i]}
+            </span>
+          </div>
+          <p class="text-xs font-medium leading-snug pointer-events-none">${ans.text}</p>
+        `;
+
+        btn.addEventListener('click', () => selectChoice(i));
+        choicesContainer.appendChild(btn);
+      });
+
+      const replyBox = document.getElementById('replyBox');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      prevBtn.disabled = currentQIdx === 0;
+
+      if (selectedAns !== null) {
+        replyBox.classList.remove('hidden');
+        document.getElementById('replyText').textContent = q.answers[selectedAns].reply;
+        nextBtn.disabled = false;
+        nextBtn.querySelector('span').textContent = currentQIdx === 9 ? 'See Journey Outcome' : 'Continue Journey';
+      } else {
+        replyBox.classList.add('hidden');
+        nextBtn.disabled = true;
+        nextBtn.querySelector('span').textContent = 'Choose an answer';
+      }
+
+      updateMetersAndRoute();
+      drawComicPanel();
+    }
+
+    function selectChoice(ansIdx) {
+
+      userAnswers[currentQIdx] = ansIdx;
+
+
+      renderQuestion();
+    }
+
+    function prevQuestion() {
+      if (currentQIdx > 0) { currentQIdx--; renderQuestion(); }
+    }
+
+    function nextQuestion() {
+      if (userAnswers[currentQIdx] === null) return;
+      if (currentQIdx < 9) {
+        currentQIdx++;
+        renderQuestion();
+      } else {
+        showEnding();
+      }
+    }
+
+    function drawComicPanel() {
+      if (!ctx || !comicCanvas) return;
+      const w = comicCanvas.width / (window.devicePixelRatio || 1);
+      const h = comicCanvas.height / (window.devicePixelRatio || 1);
+
+      ctx.clearRect(0, 0, w, h);
+
+      const q = storyData.questions[currentQIdx];
+      drawCharacter(ctx, q.sceneIdx, userAnswers[currentQIdx], w, h);
+
+      activeFloatingBubbles.forEach(b => {
+        const type = THOUGHT_TYPES[b.type];
+        ctx.save();
+        ctx.globalAlpha = b.heard ? 0.6 : 1;
+
+        if (b.id === activeThoughtId) {
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r + 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        ctx.shadowColor = b.heard ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.55)';
+        ctx.shadowBlur = b.heard ? 8 : 16;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '18px "Baloo 2", sans-serif';
+        // richer, 3D-style emoji: soft drop shadow
+        ctx.save();
+        if ('filter' in ctx) {
+          const d = window.devicePixelRatio || 1;
+          ctx.filter = `drop-shadow(0 ${2 * d}px ${2 * d}px rgba(56,65,168,.45)) saturate(1.4)`;
+        } else {
+          ctx.shadowColor = 'rgba(56, 65, 168, 0.55)';
+          ctx.shadowBlur = 4;
+          ctx.shadowOffsetY = 2;
+        }
+        ctx.fillText(type.icon, b.x, b.y - 6);
+        ctx.restore();
+        ctx.fillStyle = '#314A6F';
+        ctx.font = 'bold 9px "Baloo 2", sans-serif';
+        ctx.fillText(b.heard ? type.label + ' ✓' : type.label, b.x, b.y + 15);
+        ctx.restore();
+      });
+
+      particles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.life})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3 * p.life, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    function drawSprite(c, spriteKey, offsetX, targetH, stateScale, frameOverride, flipX) {
+      const config = spriteSheets[spriteKey];
+      const spriteImg = loadedSprites[spriteKey];
+
+      if (config && config.loaded && spriteImg) {
+        // Slow down sprite 8 (boy on phone) so it animates gently without bobbing too much
+        const fps = (spriteKey === 8) ? config.fps * 0.35 : config.fps;
+        const frameIndex = frameOverride !== undefined
+          ? Math.min(frameOverride, config.totalFrames - 1)
+          : Math.floor(Date.now() / (1000 / fps)) % config.totalFrames;
+        const row = Math.floor(frameIndex / config.cols);
+        const col = frameIndex % config.cols;
+
+        const frameWidth = spriteImg.width / config.cols;
+        const frameHeight = spriteImg.height / config.rows;
+
+        const aspect = frameWidth / frameHeight || 1;
+        const targetHeight = targetH * stateScale;
+        const targetWidth = targetHeight * aspect;
+
+        c.save();
+        c.translate(offsetX, 0);
+        if (flipX) c.scale(-1, 1);
+        c.drawImage(
+          spriteImg,
+          col * frameWidth,
+          row * frameHeight,
+          frameWidth,
+          frameHeight,
+          -targetWidth / 2,
+          -targetHeight / 2,
+          targetWidth,
+          targetHeight
+        );
+        c.restore();
+      }
+    }
+
+    function drawCharacter(c, sceneIdx, ansState, w, h) {
+      const cy = h * 0.58;
+      let stateScale = ansState === 0 ? 0.92 : (ansState === 2 ? 1.08 : 1.0);
+
+      c.save();
+      c.translate(w * 0.5, cy);
+
+      c.save();
+      c.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      c.beginPath();
+      c.arc(0, -30, 80 * stateScale, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+
+      if (currentQIdx === 8) {
+
+        // Pair is centred on the middle of the three thought bubbles; mum walks in from the right toward the boy
+        // Mum plays once (all frames), disappears, waits 5s, then plays again. Sprite is mirrored so she faces the boy.
+        if (!mumWalkStart) mumWalkStart = Date.now();
+        const mumCfg = spriteSheets[9];
+        const mumPlayMs = (mumCfg.totalFrames / mumCfg.fps) * 1000;
+        const mumWaitMs = 5000;
+        const mumElapsed = (Date.now() - mumWalkStart) % (mumPlayMs + mumWaitMs);
+        c.save();
+        drawSprite(c, 8, -w * 0.09, h * 0.52, stateScale);
+        if (mumElapsed < mumPlayMs) {
+          const mumT = Math.min(1, mumElapsed / 2500);
+          const mumEased = 1 - Math.pow(1 - mumT, 3);
+          const mumX = (w * 0.42) + ((w * 0.09) - (w * 0.42)) * mumEased;
+          const mumFrame = Math.floor(mumElapsed / (1000 / mumCfg.fps));
+          drawSprite(c, 9, mumX, h * 0.52, stateScale, mumFrame, true);
+        }
+        c.restore();
+      } else if (currentQIdx === 9) {
+        drawSprite(c, 10, 0, h * 0.55, stateScale);
+      } else {
+        const spriteKey = currentQIdx % 8;
+        const config = spriteSheets[spriteKey];
+        const spriteImg = loadedSprites[spriteKey];
+
+        if (config && config.loaded && spriteImg) {
+          const frameIndex = Math.floor(Date.now() / (1000 / config.fps)) % config.totalFrames;
+          const row = Math.floor(frameIndex / config.cols);
+          const col = frameIndex % config.cols;
+
+          const frameWidth = spriteImg.width / config.cols;
+          const frameHeight = spriteImg.height / config.rows;
+
+          const aspect = frameWidth / frameHeight || 1;
+          const targetHeight = h * 0.55 * stateScale;
+          const targetWidth = targetHeight * aspect;
+
+          c.drawImage(
+            spriteImg,
+            col * frameWidth,
+            row * frameHeight,
+            frameWidth,
+            frameHeight,
+            -targetWidth / 2,
+            -targetHeight / 2,
+            targetWidth,
+            targetHeight
+          );
+        } else if (characterLoaded) {
+          const aspect = characterImg.width / characterImg.height || 1;
+          const targetHeight = h * 0.55 * stateScale;
+          const targetWidth = targetHeight * aspect;
+
+          c.drawImage(
+            characterImg,
+            -targetWidth / 2,
+            -targetHeight / 2,
+            targetWidth,
+            targetHeight
+          );
+        } else {
+          const r = 35 * stateScale;
+          c.fillStyle = '#ffffff';
+          c.beginPath();
+          c.arc(0, -r, r, 0, Math.PI * 2);
+          c.fill();
+        }
+      }
+
+      c.restore();
+    }
+
+    function updateMetersAndRoute() {
+      const counts = [0, 0, 0];
+      userAnswers.forEach(a => { if (a !== null) counts[a]++; });
+
+      document.getElementById('aCount').textContent = counts[0];
+      document.getElementById('bCount').textContent = counts[1];
+      document.getElementById('cCount').textContent = counts[2];
+
+      const answeredTotal = userAnswers.filter(a => a !== null).length;
+      const denominator = answeredTotal || 1;
+
+      document.getElementById('aMeter').style.width = `${(counts[0] / denominator) * 100}%`;
+      document.getElementById('bMeter').style.width = `${(counts[1] / denominator) * 100}%`;
+      document.getElementById('cMeter').style.width = `${(counts[2] / denominator) * 100}%`;
+
+      const scenesVisited = new Set(userAnswers.map((a, i) => a !== null ? storyData.questions[i].sceneIdx : null).filter(v => v !== null));
+      document.getElementById('routeStatus').textContent = `${scenesVisited.size} / 5 Scenes`;
+
+      renderRouteMap();
+    }
+
+    function renderRouteMap() {
+      const mapList = document.getElementById('mapList');
+      if (!mapList) return;
+      mapList.innerHTML = '';
+
+      const currentSceneIdx = storyData.questions[currentQIdx].sceneIdx;
+
+      storyData.scenes.forEach((sc, i) => {
+        const isCurrent = i === currentSceneIdx;
+        const isDone = userAnswers.some((a, qI) => storyData.questions[qI].sceneIdx === i && a !== null) && !isCurrent;
+
+        const item = document.createElement('div');
+        item.className = `flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
+          isCurrent
+            ? 'bg-white text-[#314A6F] border-white font-semibold'
+            : isDone
+            ? 'bg-[#314A6F]/60 border-white/20 text-white'
+            : 'bg-[#1e304b]/40 border-white/10 text-white/50'
+        }`;
+
+        item.innerHTML = `
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm ${isCurrent ? 'bg-[#314A6F] text-white' : 'bg-white/10'}">
+            ${sc.icon}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold leading-none mb-1">${sc.title}</h4>
+            <span class="text-[10px] block opacity-80 truncate">${sc.location}</span>
+          </div>
+        `;
+        mapList.appendChild(item);
+      });
+    }
+
+    function showEnding() {
+      const counts = [0, 0, 0];
+      userAnswers.forEach(a => { if (a !== null) counts[a]++; });
+
+      let lean = 'wavering';
+      if (counts[0] > counts[1] && counts[0] > counts[2]) lean = 'guarded';
+      if (counts[2] > counts[0] && counts[2] > counts[1]) lean = 'open';
+
+      const endings = {
+        guarded: {
+          title: "It's okay to take your time.",
+          text: "Wei Jie continues scrolling through his phone, occasionally letting out a sigh. His sandwich sits untouched beside him. For now, he keeps his thoughts to himself.",
+          line: '"I don\'t feel like eating right now... I think I just need a little time to myself."'
+        },
+        wavering: {
+          title: "You don't need the perfect words.",
+          text: "Wei Jie pauses his scrolling and stares at his phone for a moment. He considers reaching out to someone, but hesitates and returns to what he was doing.",
+          line: '"Should I tell someone how I\'ve been feeling?"'
+        },
+        open: {
+          title: "You don't have to carry it alone.",
+          text: "Wei Jie pauses his scrolling and takes a deep breath. After a moment, he begins typing a message to someone he trusts, finding the courage to reach out.",
+          line: '"Hey, are you free to talk? I\'ve had a lot on my mind lately."'
+        }
+      };
+
+      const ending = endings[lean];
+      document.getElementById('endTitle').textContent = ending.title;
+      document.getElementById('endText').textContent = ending.text;
+      document.getElementById('endLine').textContent = ending.line;
+
+      document.getElementById('storyPanel').classList.add('hidden');
+      document.getElementById('endScreen').classList.remove('hidden');
+      setTimeout(() => {
+        const er = document.getElementById('endScreen').getBoundingClientRect();
+        const cx = er.left + er.width / 2;
+        const cy = Math.min(Math.max(er.top + 70, 90), window.innerHeight - 120);
+        particleBurst(cx, cy, 90, 340);
+      }, 120);
+    }
+
+    function restartStory() {
+      currentQIdx = 0;
+      userAnswers = new Array(10).fill(null);
+      insightXP = 0;
+      streakCount = 0;
+      totalThoughtsPopped = 0;
+      thoughtsHeard = Array.from({ length: 10 }, () => []);
+      emotionalCapacity = 100;
+
+
+
+      document.getElementById('endScreen').classList.add('hidden');
+      document.getElementById('storyPanel').classList.remove('hidden');
+      renderQuestion();
+    }
+
+    function setupEventListeners() {
+      document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+      document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+      document.getElementById('restartBtn').addEventListener('click', restartStory);
+
+      const modal = document.getElementById('modal');
+      document.getElementById('helpBtn').addEventListener('click', () => {
+        document.getElementById('modalTitle').textContent = "How to play?";
+        document.getElementById('modalBody').innerHTML = `
+          <div class="flex flex-col gap-3.5">
+            <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">💬</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-white mb-0.5">1. Tap Floating Thoughts</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Tap floating thought bubbles on screen to hear Wei Jie's inner monologue.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 bg-white/5 border border-white/15 p-3 rounded-xl">
+              <div class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-base shrink-0 font-black">🎯</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-bold text-white mb-0.5">2. Choose Your Response</h4>
+                <p class="text-[11px] text-white/70 leading-relaxed">Tap the response that feels right for you.</p>
+              </div>
+            </div>
+
+          </div>
+        `;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+
+      document.getElementById('closeModal').addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+
+    }
+
+  </script>
+</body>
+</html>
